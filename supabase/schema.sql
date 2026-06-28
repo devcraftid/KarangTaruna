@@ -77,6 +77,14 @@ CREATE TABLE public.registrations (
     UNIQUE(member_id, competition_id)
 );
 
+-- 4.b Pengawas Lomba Table
+CREATE TABLE public.pengawas_lomba (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    nama_lengkap TEXT NOT NULL,
+    competition_id UUID REFERENCES public.competitions(id) ON DELETE CASCADE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
+);
+
 -- 5. Income Categories
 CREATE TABLE public.income_categories (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -151,6 +159,7 @@ ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.members ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.competitions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.registrations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.pengawas_lomba ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.income_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.expense_categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.income ENABLE ROW LEVEL SECURITY;
@@ -178,6 +187,10 @@ CREATE POLICY "Admin and Sekretaris can manage competitions" ON public.competiti
 -- Registrations: Public INSERT. Admin, Sekretaris ALL.
 CREATE POLICY "Public can create registrations" ON public.registrations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Admin and Sekretaris can manage registrations" ON public.registrations FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
+
+-- Pengawas Lomba: Public SELECT. Admin, Sekretaris ALL.
+CREATE POLICY "Public can view pengawas" ON public.pengawas_lomba FOR SELECT USING (true);
+CREATE POLICY "Admin and Sekretaris can manage pengawas" ON public.pengawas_lomba FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
 
 -- Income & Expense Categories: Bendahara, Admin ALL.
 CREATE POLICY "Bendahara and Admin can manage income categories" ON public.income_categories FOR ALL USING (public.get_auth_role() IN ('admin', 'bendahara'));

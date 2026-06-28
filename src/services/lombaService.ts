@@ -42,7 +42,7 @@ export const lombaService = {
   // --- Public Methods ---
   async getPublicCompetitions() {
     const { data, error } = await supabase.from('competitions')
-      .select('*, registrations (count)')
+      .select('*, registrations (count), pengawas_lomba (nama_lengkap)')
       .in('status', ['published', 'completed'])
       .order('tanggal', { ascending: false })
     if (error) throw error

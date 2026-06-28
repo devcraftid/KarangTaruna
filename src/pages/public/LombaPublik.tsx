@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import toast, { Toaster } from 'react-hot-toast'
-import { Trophy, Calendar, MapPin, Users, CheckCircle2 } from 'lucide-react'
+import { Trophy, Calendar, MapPin, Users, CheckCircle2, BadgeCheck } from 'lucide-react'
 
 export default function LombaPublik() {
   const queryClient = useQueryClient()
@@ -110,6 +110,21 @@ export default function LombaPublik() {
                       <Users className="w-4 h-4 mr-2 text-primary" />
                       Kuota: {lomba.registrations?.[0]?.count || 0} / {lomba.maksimal_peserta}
                     </div>
+                    {lomba.pengawas_lomba && lomba.pengawas_lomba.length > 0 && (
+                      <div className="flex items-start pt-2 border-t mt-2">
+                        <BadgeCheck className="w-4 h-4 mr-2 text-primary mt-0.5" />
+                        <div>
+                          <span className="font-semibold block mb-1">Pengawas:</span>
+                          <div className="flex flex-wrap gap-1">
+                            {lomba.pengawas_lomba.map((p: any, idx: number) => (
+                              <span key={idx} className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs border">
+                                {p.nama_lengkap}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 
