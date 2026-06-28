@@ -4,7 +4,10 @@ import { lombaService, Lomba } from '@/services/lombaService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, Eye, FileSpreadsheet, FileIcon, MessageCircle } from 'lucide-react'
+import * as XLSX from 'xlsx'
+import { jsPDF } from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -17,6 +20,7 @@ export default function LombaPage() {
   const queryClient = useQueryClient()
   const [isOpen, setIsOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [viewRegistrantsId, setViewRegistrantsId] = useState<string | null>(null)
 
   const { data: competitions, isLoading, error } = useQuery({
     queryKey: ['competitions'],
@@ -90,6 +94,80 @@ export default function LombaPage() {
     if (window.confirm('Hapus lomba ini? Pendaftaran yang terkait juga akan terhapus.')) {
       deleteMutation.mutate(id)
     }
+  }
+
+  const selectedLomba = competitions?.find(c => c.id === viewRegistrantsId)
+
+  const handleExportExcel = (lomba: any) => {
+    if (!lomba.registrations || lomba.registrations.length === 0) {
+      toast.error('Belum ada pendaftar')
+      return
+    }
+    const data = lomba.registrations.map((r: any, idx: number) => ({
+      No: idx + 1,
+      Nama: r.members?.nama,
+      NIK: r.members?.nik,
+      'Jenis Kelamin': r.members?.jenis_kelamin,
+      RT: r.members?.rt,
+      RW: r.members?.rw,
+      'No. HP': r.members?.nomor_hp || '-'
+    }))
+    const ws = XLSX.utils.json_to_sheet(data)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Pendaftar")
+    XLSX.writeFile(wb, `Pendaftar_Lomba_${lomba.nama_lomba}.xlsx`)
+  }
+
+  const handleExportPDF = (lomba: any) => {
+    if (!lomba.registrations || lomba.registrations.length === 0) {
+      toast.error('Belum ada pendaftar')
+      return
+    }
+    const doc = new jsPDF()
+    doc.text(`Daftar Pendaftar Lomba: ${lomba.nama_lomba}`, 14, 15)
+    
+    const tableColumn = ["No", "Nama", "L/P", "RT", "RW", "No. HP"]
+    const tableRows = lomba.registrations.map((r: any, idx: number) => [
+      idx + 1,
+      r.members?.nama,
+      r.members?.jenis_kelamin,
+      r.members?.rt,
+      r.members?.rw,
+      r.members?.nomor_hp || '-'
+    ])
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    })
+    doc.save(`Pendaftar_Lomba_${lomba.nama_lomba}.pdf`)
+  }
+
+  const handleSendWA = (nomorHp: string, nama: string, lombaName: string) => {
+    if (!nomorHp || nomorHp === '-') {
+      toast.error('Nomor HP tidak tersedia untuk pendaftar ini')
+      return
+    }
+    const cleanNumber = nomorHp.replace(/[^0-9]/g, '')
+    const formattedNumber = cleanNumber.startsWith('0') ? '62' + cleanNumber.substring(1) : cleanNumber
+    const message = encodeURIComponent(`Halo ${nama},\n\nTerkait pendaftaran Anda untuk lomba ${lombaName}, kami ingin menginformasikan bahwa...\n`)
+    window.open(`https://wa.me/${formattedNumber}?text=${message}`, '_blank')
+  }
+
+  const handleShareListWA = (lomba: any) => {
+    if (!lomba.registrations || lomba.registrations.length === 0) {
+      toast.error('Belum ada pendaftar')
+      return
+    }
+    
+    let text = `List Daftar Lomba ${lomba.nama_lomba}:\n\n`
+    lomba.registrations.forEach((r: any, idx: number) => {
+      text += `${idx + 1}. ${r.members?.nama} lomba ${lomba.nama_lomba} (${lomba.kategori})\n`
+    })
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
   }
 
   const openCreateDialog = () => {
@@ -214,14 +292,17 @@ export default function LombaPage() {
                   <TableCell className="font-medium">{lomba.nama_lomba}</TableCell>
                   <TableCell>{lomba.kategori}</TableCell>
                   <TableCell>{new Date(lomba.tanggal).toLocaleDateString('id-ID')} {lomba.jam}</TableCell>
-                  <TableCell>{lomba.maksimal_peserta} Orang</TableCell>
+                  <TableCell>{lomba.registrations?.length || 0} / {lomba.maksimal_peserta} Orang</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${lomba.status === 'published' ? 'bg-green-100 text-green-700 dark:bg-green-900/30' : lomba.status === 'completed' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30' : 'bg-gray-100 text-gray-700 dark:bg-gray-800'}`}>
                       {lomba.status}
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button variant="ghost" size="icon" onClick={() => handleEdit(lomba)}>
+                    <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => setViewRegistrantsId(lomba.id)} title="Lihat Pendaftar">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleEdit(lomba)} title="Edit Lomba">
                       <Edit2 className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(lomba.id)}>
@@ -234,6 +315,67 @@ export default function LombaPage() {
           </Table>
         )}
       </div>
+
+      <Dialog open={!!viewRegistrantsId} onOpenChange={(open) => !open && setViewRegistrantsId(null)}>
+        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="flex flex-row items-center justify-between border-b pb-4">
+            <DialogTitle>Pendaftar: {selectedLomba?.nama_lomba}</DialogTitle>
+            {selectedLomba?.registrations && selectedLomba.registrations.length > 0 && (
+              <div className="flex space-x-2 mr-8">
+                <Button size="sm" variant="outline" className="text-green-600 hover:text-green-700" onClick={() => handleExportExcel(selectedLomba)}>
+                  <FileSpreadsheet className="w-4 h-4 mr-2" /> Excel
+                </Button>
+                <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700" onClick={() => handleExportPDF(selectedLomba)}>
+                  <FileIcon className="w-4 h-4 mr-2" /> PDF
+                </Button>
+                <Button size="sm" variant="outline" className="text-green-600 hover:text-green-700" onClick={() => handleShareListWA(selectedLomba)}>
+                  <MessageCircle className="w-4 h-4 mr-2" /> Share WA
+                </Button>
+              </div>
+            )}
+          </DialogHeader>
+          <div className="py-4">
+            {(!selectedLomba?.registrations || selectedLomba.registrations.length === 0) ? (
+              <div className="text-center py-8 text-muted-foreground">Belum ada pendaftar untuk lomba ini.</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>No</TableHead>
+                    <TableHead>Nama</TableHead>
+                    <TableHead>L/P</TableHead>
+                    <TableHead>RT/RW</TableHead>
+                    <TableHead>No HP</TableHead>
+                    <TableHead className="text-right">Aksi</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {selectedLomba.registrations.map((reg: any, idx: number) => (
+                    <TableRow key={reg.id}>
+                      <TableCell>{idx + 1}</TableCell>
+                      <TableCell className="font-medium">{reg.members?.nama}</TableCell>
+                      <TableCell>{reg.members?.jenis_kelamin}</TableCell>
+                      <TableCell>{reg.members?.rt}/{reg.members?.rw}</TableCell>
+                      <TableCell>{reg.members?.nomor_hp || '-'}</TableCell>
+                      <TableCell className="text-right">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                          onClick={() => handleSendWA(reg.members?.nomor_hp, reg.members?.nama, selectedLomba.nama_lomba)}
+                          disabled={!reg.members?.nomor_hp}
+                        >
+                          <MessageCircle className="w-4 h-4 mr-1" /> WA
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

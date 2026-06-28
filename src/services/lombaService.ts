@@ -19,7 +19,7 @@ export const lombaService = {
   async getCompetitions() {
     const { data, error } = await supabase.from('competitions').select(`
       *,
-      registrations (count)
+      registrations (id, members(*))
     `).order('tanggal', { ascending: false })
     if (error) throw error
     return data
@@ -42,7 +42,7 @@ export const lombaService = {
   // --- Public Methods ---
   async getPublicCompetitions() {
     const { data, error } = await supabase.from('competitions')
-      .select('*, registrations (count), pengawas_lomba (nama_lengkap)')
+      .select('*, registrations (id, members(nama)), pengawas_lomba (nama_lengkap)')
       .in('status', ['published', 'completed'])
       .order('tanggal', { ascending: false })
     if (error) throw error

@@ -4,7 +4,7 @@ export const pendaftaranService = {
   async getPendaftaran() {
     const { data, error } = await supabase
       .from('registrations')
-      .select('*, members(nama, nik), competitions(nama_lomba)')
+      .select('*, members(nama, nik, rt, rw), competitions(nama_lomba)')
       .order('created_at', { ascending: false })
     if (error) throw error
     return data

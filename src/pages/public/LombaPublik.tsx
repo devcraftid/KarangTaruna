@@ -71,7 +71,7 @@ export default function LombaPublik() {
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {competitions?.map((lomba: any) => {
-            const isFull = lomba.registrations?.[0]?.count >= lomba.maksimal_peserta
+            const isFull = (lomba.registrations?.length || 0) >= lomba.maksimal_peserta
             const isCompleted = lomba.status === 'completed'
             
             return (
@@ -108,8 +108,23 @@ export default function LombaPublik() {
                     </div>
                     <div className="flex items-center">
                       <Users className="w-4 h-4 mr-2 text-primary" />
-                      Kuota: {lomba.registrations?.[0]?.count || 0} / {lomba.maksimal_peserta}
+                      Kuota: {lomba.registrations?.length || 0} / {lomba.maksimal_peserta}
                     </div>
+                    {lomba.registrations && lomba.registrations.length > 0 && (
+                      <div className="flex items-start pt-2 border-t mt-2">
+                        <Users className="w-4 h-4 mr-2 text-primary mt-0.5" />
+                        <div>
+                          <span className="font-semibold block mb-1">Pendaftar ({lomba.registrations.length}):</span>
+                          <div className="flex flex-wrap gap-1">
+                            {lomba.registrations.map((reg: any, idx: number) => (
+                              <span key={idx} className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs border">
+                                {reg.members?.nama}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {lomba.pengawas_lomba && lomba.pengawas_lomba.length > 0 && (
                       <div className="flex items-start pt-2 border-t mt-2">
                         <BadgeCheck className="w-4 h-4 mr-2 text-primary mt-0.5" />
