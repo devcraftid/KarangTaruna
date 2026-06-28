@@ -2,13 +2,13 @@ import { z } from "zod"
 
 export const memberSchema = z.object({
   nama: z.string().min(3, "Nama minimal 3 karakter"),
-  nik: z.string().min(16, "NIK harus 16 digit").max(16, "NIK maksimal 16 digit"),
-  jenis_kelamin: z.enum(["Laki-laki", "Perempuan"]),
-  tanggal_lahir: z.string().min(1, "Tanggal lahir harus diisi"),
-  alamat: z.string().min(5, "Alamat terlalu pendek"),
-  rt: z.string().min(1, "RT harus diisi"),
-  rw: z.string().min(1, "RW harus diisi"),
-  nomor_hp: z.string().min(10, "Nomor HP tidak valid").max(15, "Nomor HP tidak valid"),
+  nik: z.string().optional(),
+  jenis_kelamin: z.string().optional(),
+  tanggal_lahir: z.string().optional(),
+  alamat: z.string().optional(),
+  rt: z.string().optional(),
+  rw: z.string().optional(),
+  nomor_hp: z.string().optional(),
 })
 
 export type MemberFormValues = z.infer<typeof memberSchema>

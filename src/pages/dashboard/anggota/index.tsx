@@ -86,7 +86,19 @@ export default function Anggota() {
     if (editingId) {
       updateMutation.mutate({ id: editingId, data })
     } else {
-      createMutation.mutate(data)
+      // Auto-generate missing fields for new members
+      const pseudoNik = `KT-${Date.now().toString().slice(-13)}`
+      const finalData = {
+        ...data,
+        nik: data.nik || pseudoNik,
+        jenis_kelamin: data.jenis_kelamin || 'Laki-laki',
+        tanggal_lahir: data.tanggal_lahir || '2000-01-01',
+        alamat: data.alamat || '-',
+        rt: data.rt || '00',
+        rw: data.rw || '00',
+        nomor_hp: data.nomor_hp || ''
+      }
+      createMutation.mutate(finalData)
     }
   }
 
@@ -139,61 +151,63 @@ export default function Anggota() {
               <DialogTitle>{editingId ? 'Edit Anggota' : 'Tambah Anggota Baru'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>Nama Lengkap</Label>
                   <Input {...form.register('nama')} placeholder="Masukkan nama" />
                   {form.formState.errors.nama && <p className="text-sm text-destructive">{form.formState.errors.nama.message}</p>}
                 </div>
-                <div className="space-y-2">
-                  <Label>NIK</Label>
-                  <Input {...form.register('nik')} placeholder="16 digit NIK" />
-                  {form.formState.errors.nik && <p className="text-sm text-destructive">{form.formState.errors.nik.message}</p>}
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Jenis Kelamin</Label>
-                  <Select 
-                    onValueChange={(val) => form.setValue('jenis_kelamin', val as 'Laki-laki' | 'Perempuan')}
-                    defaultValue={form.getValues('jenis_kelamin')}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pilih jenis kelamin" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Laki-laki">Laki-laki</SelectItem>
-                      <SelectItem value="Perempuan">Perempuan</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Tanggal Lahir</Label>
-                  <Input type="date" {...form.register('tanggal_lahir')} />
-                  {form.formState.errors.tanggal_lahir && <p className="text-sm text-destructive">{form.formState.errors.tanggal_lahir.message}</p>}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Alamat Lengkap</Label>
-                <Input {...form.register('alamat')} placeholder="Jalan, No Rumah" />
-                {form.formState.errors.alamat && <p className="text-sm text-destructive">{form.formState.errors.alamat.message}</p>}
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>RT</Label>
-                  <Input {...form.register('rt')} placeholder="001" />
-                </div>
-                <div className="space-y-2">
-                  <Label>RW</Label>
-                  <Input {...form.register('rw')} placeholder="002" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Nomor HP</Label>
-                  <Input {...form.register('nomor_hp')} placeholder="08..." />
-                </div>
+                
+                {editingId && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>NIK</Label>
+                      <Input {...form.register('nik')} placeholder="16 digit NIK" />
+                      {form.formState.errors.nik && <p className="text-sm text-destructive">{form.formState.errors.nik.message}</p>}
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Jenis Kelamin</Label>
+                        <Select 
+                          onValueChange={(val) => form.setValue('jenis_kelamin', val as 'Laki-laki' | 'Perempuan')}
+                          defaultValue={form.getValues('jenis_kelamin')}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih jenis kelamin" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Laki-laki">Laki-laki</SelectItem>
+                            <SelectItem value="Perempuan">Perempuan</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Tanggal Lahir</Label>
+                        <Input type="date" {...form.register('tanggal_lahir')} />
+                        {form.formState.errors.tanggal_lahir && <p className="text-sm text-destructive">{form.formState.errors.tanggal_lahir.message}</p>}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Alamat Lengkap</Label>
+                      <Input {...form.register('alamat')} placeholder="Jalan, No Rumah" />
+                      {form.formState.errors.alamat && <p className="text-sm text-destructive">{form.formState.errors.alamat.message}</p>}
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>RT</Label>
+                        <Input {...form.register('rt')} placeholder="001" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>RW</Label>
+                        <Input {...form.register('rw')} placeholder="002" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Nomor HP</Label>
+                        <Input {...form.register('nomor_hp')} placeholder="08..." />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
 
               <div className="pt-4 flex justify-end space-x-2">
