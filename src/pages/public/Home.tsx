@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { Calendar, Newspaper, Users, Trophy, Handshake, CheckCircle } from 'lucide-react'
+import { Calendar, Newspaper, Users, CheckCircle } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { memberService } from '@/services/memberService'
 import { lombaService } from '@/services/lombaService'

@@ -17,7 +17,7 @@ import { useAuth } from '@/context/AuthContext'
 
 export default function KasKeluar() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { user, profile } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

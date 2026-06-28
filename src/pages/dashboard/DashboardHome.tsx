@@ -1,7 +1,7 @@
 import { useAuth } from '@/context/AuthContext'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Users, Trophy, Wallet, CreditCard, TrendingUp, TrendingDown, Activity } from 'lucide-react'
+import { Users, Trophy, Wallet, TrendingUp, TrendingDown, Activity } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function DashboardHome() {
