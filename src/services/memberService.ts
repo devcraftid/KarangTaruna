@@ -24,7 +24,7 @@ export const memberService = {
     return data as Member[]
   },
   
-  async createMember(member: Omit<Member, 'id' | 'created_at'>) {
+  async createMember(member: Partial<Omit<Member, 'id' | 'created_at'>>) {
     const { data, error } = await supabase
       .from('members')
       .insert(member)
@@ -35,7 +35,7 @@ export const memberService = {
     return data as Member
   },
 
-  async updateMember(id: string, member: Omit<Member, 'id' | 'created_at'>) {
+  async updateMember(id: string, member: Partial<Omit<Member, 'id' | 'created_at'>>) {
     const { data, error } = await supabase
       .from('members')
       .update(member)
