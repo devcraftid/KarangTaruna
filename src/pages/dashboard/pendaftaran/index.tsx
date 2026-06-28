@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Plus, Edit2, Trash2 } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
@@ -154,7 +154,14 @@ export default function Pendaftaran() {
                     <Select onValueChange={(val) => form.setValue('competition_id', val)} defaultValue={form.getValues('competition_id')} disabled={!!editingId}>
                       <SelectTrigger><SelectValue placeholder="Pilih lomba" /></SelectTrigger>
                       <SelectContent>
-                        {competitions?.filter(c => c.status === 'published').map(c => <SelectItem key={c.id} value={c.id}>{c.nama_lomba}</SelectItem>)}
+                        {Array.from(new Set(competitions?.filter(c => c.status === 'published').map(c => c.kategori) || [])).map(kategori => (
+                          <SelectGroup key={kategori}>
+                            <SelectLabel className="text-primary font-bold">{kategori}</SelectLabel>
+                            {competitions?.filter(c => c.status === 'published' && c.kategori === kategori).map(c => (
+                              <SelectItem key={c.id} value={c.id}>{c.nama_lomba}</SelectItem>
+                            ))}
+                          </SelectGroup>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -245,7 +252,14 @@ export default function Pendaftaran() {
                     <Select onValueChange={setPengawasLombaId} value={pengawasLombaId} required>
                       <SelectTrigger><SelectValue placeholder="Pilih lomba" /></SelectTrigger>
                       <SelectContent>
-                        {competitions?.map(c => <SelectItem key={c.id} value={c.id}>{c.nama_lomba}</SelectItem>)}
+                        {Array.from(new Set(competitions?.map(c => c.kategori) || [])).map(kategori => (
+                          <SelectGroup key={kategori}>
+                            <SelectLabel className="text-primary font-bold">{kategori}</SelectLabel>
+                            {competitions?.filter(c => c.kategori === kategori).map(c => (
+                              <SelectItem key={c.id} value={c.id}>{c.nama_lomba}</SelectItem>
+                            ))}
+                          </SelectGroup>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
