@@ -2,14 +2,12 @@ import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import { Calendar, Newspaper, Users, CheckCircle } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
-import { memberService } from '@/services/memberService'
 import { lombaService } from '@/services/lombaService'
 import { pendaftaranService } from '@/services/pendaftaranService'
 import { beritaService } from '@/services/beritaService'
 
 export default function Home() {
   // Fetch real data for stats
-  const { data: members } = useQuery({ queryKey: ['members'], queryFn: memberService.getMembers })
   const { data: competitions } = useQuery({ queryKey: ['competitions'], queryFn: lombaService.getCompetitions })
   const { data: registrations } = useQuery({ queryKey: ['registrations'], queryFn: pendaftaranService.getPendaftaran })
   const { data: berita } = useQuery({ queryKey: ['berita'], queryFn: beritaService.getBerita })
