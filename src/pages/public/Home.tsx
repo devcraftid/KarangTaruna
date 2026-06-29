@@ -92,7 +92,7 @@ export default function Home() {
               <Users className="w-10 h-10 text-yellow-400" />
               <div>
                 <div className="text-2xl font-bold tracking-tight">{stats.anggota}</div>
-                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Warga Terdaftar</div>
+                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Total Peserta</div>
               </div>
             </div>
 
