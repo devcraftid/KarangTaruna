@@ -3,7 +3,7 @@ import { Outlet, Navigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { 
   LayoutDashboard, Users, Trophy, DollarSign, LogOut,
-  Megaphone, Newspaper, Image as ImageIcon, Settings,
+  Megaphone, Newspaper, Image as ImageIcon,
   CreditCard, Wallet, ChevronLeft, ChevronRight, Menu, X
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
