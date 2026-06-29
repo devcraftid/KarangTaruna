@@ -19,7 +19,6 @@ import KategoriPengeluaran from '@/pages/dashboard/kategori-pengeluaran'
 import KasMasuk from '@/pages/dashboard/kas-masuk'
 import KasKeluar from '@/pages/dashboard/kas-keluar'
 import Laporan from '@/pages/dashboard/laporan'
-import Pengaturan from '@/pages/dashboard/pengaturan'
 
 const router = createBrowserRouter([
   {
@@ -99,10 +98,6 @@ const router = createBrowserRouter([
       {
         path: 'laporan',
         element: <Laporan />,
-      },
-      {
-        path: 'pengaturan',
-        element: <Pengaturan />,
       }
     ],
   },

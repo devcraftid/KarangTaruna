@@ -37,7 +37,6 @@ export default function DashboardLayout() {
     { name: 'Kas Masuk', href: '/dashboard/kas-masuk', icon: Wallet, roles: ['admin', 'bendahara'] },
     { name: 'Kas Keluar', href: '/dashboard/kas-keluar', icon: CreditCard, roles: ['admin', 'bendahara'] },
     { name: 'Laporan Keuangan', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
-    { name: 'Pengaturan Web', href: '/dashboard/pengaturan', icon: Settings, roles: ['admin'] },
   ]
 
   const filteredNav = navItems.filter(item => item.roles.includes(role || ''))

@@ -177,15 +177,18 @@ $$ LANGUAGE sql SECURITY DEFINER;
 CREATE POLICY "Users can view own profile" ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admin can view all profiles" ON public.profiles FOR ALL USING (public.get_auth_role() = 'admin');
 
--- Members: Admin, Sekretaris ALL.
+-- Members: Admin, Sekretaris ALL. Public INSERT and SELECT.
 CREATE POLICY "Admin and Sekretaris can manage members" ON public.members FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
+CREATE POLICY "Public can create members" ON public.members FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can view members" ON public.members FOR SELECT USING (true);
 
--- Competitions: Public SELECT (published). Admin, Sekretaris ALL.
-CREATE POLICY "Public can view published competitions" ON public.competitions FOR SELECT USING (status = 'published');
+-- Competitions: Public SELECT (published and completed). Admin, Sekretaris ALL.
+CREATE POLICY "Public can view published competitions" ON public.competitions FOR SELECT USING (status IN ('published', 'completed'));
 CREATE POLICY "Admin and Sekretaris can manage competitions" ON public.competitions FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
 
--- Registrations: Public INSERT. Admin, Sekretaris ALL.
+-- Registrations: Public INSERT and SELECT. Admin, Sekretaris ALL.
 CREATE POLICY "Public can create registrations" ON public.registrations FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can view registrations" ON public.registrations FOR SELECT USING (true);
 CREATE POLICY "Admin and Sekretaris can manage registrations" ON public.registrations FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
 
 -- Pengawas Lomba: Public SELECT. Admin, Sekretaris ALL.
