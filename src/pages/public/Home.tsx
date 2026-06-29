@@ -15,7 +15,7 @@ export default function Home() {
   const { data: berita } = useQuery({ queryKey: ['berita'], queryFn: beritaService.getBerita })
 
   const stats = {
-    anggota: members?.length || 0,
+    anggota: registrations ? new Set(registrations.map((r: any) => r.member_id)).size : 0,
     kegiatan: competitions?.length || 0,
     peserta: registrations?.length || 0,
     berita: berita?.length || 0
