@@ -21,14 +21,14 @@ export default function Laporan() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Laporan Keuangan</h2>
           <p className="text-muted-foreground">Ringkasan dan cetak laporan kas Karang Taruna</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => handleExport('Excel')}><FileText className="mr-2 h-4 w-4" /> Export Excel</Button>
-          <Button onClick={() => handleExport('PDF')}><Download className="mr-2 h-4 w-4" /> Export PDF</Button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => handleExport('Excel')}><FileText className="sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Export Excel</span></Button>
+          <Button className="flex-1 sm:flex-none" onClick={() => handleExport('PDF')}><Download className="sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Export PDF</span></Button>
         </div>
       </div>
 

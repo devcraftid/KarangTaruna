@@ -318,18 +318,18 @@ export default function LombaPage() {
 
       <Dialog open={!!viewRegistrantsId} onOpenChange={(open) => !open && setViewRegistrantsId(null)}>
         <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader className="flex flex-row items-center justify-between border-b pb-4">
+          <DialogHeader className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-4 gap-4">
             <DialogTitle>Pendaftar: {selectedLomba?.nama_lomba}</DialogTitle>
             {selectedLomba?.registrations && selectedLomba.registrations.length > 0 && (
-              <div className="flex space-x-2 mr-8">
-                <Button size="sm" variant="outline" className="text-green-600 hover:text-green-700" onClick={() => handleExportExcel(selectedLomba)}>
-                  <FileSpreadsheet className="w-4 h-4 mr-2" /> Excel
+              <div className="flex gap-2 sm:mr-8 w-full sm:w-auto">
+                <Button size="sm" variant="outline" className="flex-1 sm:flex-none text-green-600 hover:text-green-700" onClick={() => handleExportExcel(selectedLomba)} title="Export Excel">
+                  <FileSpreadsheet className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Excel</span>
                 </Button>
-                <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700" onClick={() => handleExportPDF(selectedLomba)}>
-                  <FileIcon className="w-4 h-4 mr-2" /> PDF
+                <Button size="sm" variant="outline" className="flex-1 sm:flex-none text-red-600 hover:text-red-700" onClick={() => handleExportPDF(selectedLomba)} title="Export PDF">
+                  <FileIcon className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">PDF</span>
                 </Button>
-                <Button size="sm" variant="outline" className="text-green-600 hover:text-green-700" onClick={() => handleShareListWA(selectedLomba)}>
-                  <MessageCircle className="w-4 h-4 mr-2" /> Share WA
+                <Button size="sm" variant="outline" className="flex-1 sm:flex-none text-green-600 hover:text-green-700" onClick={() => handleShareListWA(selectedLomba)} title="Share WA">
+                  <MessageCircle className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Share WA</span>
                 </Button>
               </div>
             )}

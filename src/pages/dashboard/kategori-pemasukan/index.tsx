@@ -109,11 +109,11 @@ export default function KategoriPemasukan() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button variant="outline" onClick={handleExportExcel} className="hidden sm:flex" title="Export Excel">
-            <FileText className="mr-2 h-4 w-4 text-green-600" /> Excel
+          <Button variant="outline" onClick={handleExportExcel} className="flex" title="Export Excel">
+            <FileText className="sm:mr-2 h-4 w-4 text-green-600" /> <span className="hidden sm:inline">Excel</span>
           </Button>
-          <Button variant="outline" onClick={handleExportPDF} className="hidden sm:flex" title="Export PDF">
-            <Download className="mr-2 h-4 w-4 text-red-600" /> PDF
+          <Button variant="outline" onClick={handleExportPDF} className="flex" title="Export PDF">
+            <Download className="sm:mr-2 h-4 w-4 text-red-600" /> <span className="hidden sm:inline">PDF</span>
           </Button>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
