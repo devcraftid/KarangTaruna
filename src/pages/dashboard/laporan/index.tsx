@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { keuanganService } from '@/services/keuanganService'
 import { Button } from '@/components/ui/button'
-import { Download, FileText } from 'lucide-react'
+import { Download, FileText, MessageCircle } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import toast from 'react-hot-toast'
 
@@ -19,6 +19,17 @@ export default function Laporan() {
     toast.success(`Fitur export ${type} akan mengunduh file...`)
   }
 
+  const handleShareWA = () => {
+    const text = `*Laporan Keuangan Karang Taruna*\n\n` +
+      `Total Pemasukan: ${formatRupiah(totalIncome)}\n` +
+      `Total Pengeluaran: ${formatRupiah(totalExpense)}\n` +
+      `*Saldo Akhir: ${formatRupiah(saldo)}*\n\n` +
+      `Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -29,6 +40,7 @@ export default function Laporan() {
         <div className="flex gap-2 w-full sm:w-auto">
           <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => handleExport('Excel')}><FileText className="sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Export Excel</span></Button>
           <Button className="flex-1 sm:flex-none" onClick={() => handleExport('PDF')}><Download className="sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Export PDF</span></Button>
+          <Button variant="outline" className="flex-1 sm:flex-none text-green-600 hover:text-green-700" onClick={handleShareWA}><MessageCircle className="sm:mr-2 h-4 w-4" /> <span className="hidden sm:inline">Share WA</span></Button>
         </div>
       </div>
 
