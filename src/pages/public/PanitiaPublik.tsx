@@ -1,6 +1,7 @@
 import { Users, Award, ShieldCheck, Heart } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { memberService } from '@/services/memberService'
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
 
 export default function PanitiaPublik() {
   const { data: panitia, isLoading } = useQuery({
@@ -39,10 +40,18 @@ export default function PanitiaPublik() {
           return (
           <div key={idx} className="bg-white dark:bg-slate-900 border rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col items-center text-center">
             <div className="relative mb-4">
-              <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 shadow-inner group-hover:scale-105 transition-transform duration-300">
-                <img src={imgUrl} alt={p.nama} className="w-full h-full object-cover" />
-              </div>
-              <div className="absolute -bottom-2 -right-2 bg-white dark:bg-slate-800 p-1.5 rounded-full shadow-md border">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 shadow-inner group-hover:scale-105 transition-transform duration-300 focus:outline-none focus:ring-4 focus:ring-primary/20">
+                    <img src={imgUrl} alt={p.nama} className="w-full h-full object-cover" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md bg-transparent border-none shadow-none flex justify-center items-center [&>button]:text-white">
+                  <DialogTitle className="sr-only">Foto Profil {p.nama}</DialogTitle>
+                  <img src={imgUrl} alt={p.nama} className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300" />
+                </DialogContent>
+              </Dialog>
+              <div className="absolute -bottom-2 -right-2 bg-white dark:bg-slate-800 p-1.5 rounded-full shadow-md border pointer-events-none z-10">
                 {getIcon(p.divisi || 'Umum')}
               </div>
             </div>
