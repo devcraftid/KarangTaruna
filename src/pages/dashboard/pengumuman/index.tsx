@@ -5,7 +5,7 @@ import { storageService } from '@/services/storageService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useForm } from 'react-hook-form'
@@ -55,6 +55,16 @@ export default function Pengumuman() {
       toast.success('Pengumuman dihapus')
     }
   })
+
+  const handleShareWA = (pengumuman: any) => {
+    const text = `*PENGUMUMAN KARANG TARUNA*\n\n` +
+      `*${pengumuman.judul}*\n\n` +
+      `${pengumuman.isi}\n\n` +
+      `Tanggal: ${new Date(pengumuman.created_at).toLocaleDateString('id-ID')}`
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
+  }
 
   const onSubmit = async (data: PengumumanFormValues) => {
     let finalGambar = data.gambar
@@ -142,6 +152,9 @@ export default function Pengumuman() {
                 <TableCell className="font-medium">{item.judul}</TableCell>
                 <TableCell className="truncate max-w-[300px]">{item.isi}</TableCell>
                 <TableCell className="text-right space-x-2">
+                  <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleShareWA(item)} title="Share WA">
+                    <MessageCircle className="h-4 w-4" />
+                  </Button>
                   <Button variant="ghost" size="icon" onClick={() => {
                     setEditingId(item.id)
                     form.reset({ judul: item.judul, isi: item.isi, gambar: item.gambar || '' })

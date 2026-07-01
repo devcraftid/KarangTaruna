@@ -4,7 +4,7 @@ import { memberService, Member } from '@/services/memberService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -121,6 +121,17 @@ export default function Anggota() {
     if (window.confirm('Apakah Anda yakin ingin menghapus anggota ini?')) {
       deleteMutation.mutate(id)
     }
+  }
+
+  const handleSendWA = (nomorHp: string | undefined | null, nama: string) => {
+    if (!nomorHp || nomorHp === '-') {
+      toast.error('Nomor HP tidak tersedia')
+      return
+    }
+    const cleanNumber = nomorHp.replace(/[^0-9]/g, '')
+    const formattedNumber = cleanNumber.startsWith('0') ? '62' + cleanNumber.substring(1) : cleanNumber
+    const message = encodeURIComponent(`Halo ${nama},\n\n`)
+    window.open(`https://wa.me/${formattedNumber}?text=${message}`, '_blank')
   }
 
   const openCreateDialog = () => {
@@ -252,6 +263,9 @@ export default function Anggota() {
                   <TableCell>{member.nomor_hp}</TableCell>
                   <TableCell>{member.rt}/{member.rw}</TableCell>
                   <TableCell className="text-right space-x-2">
+                    <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleSendWA(member.nomor_hp, member.nama)} title="Hubungi WA">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
                     <Button variant="ghost" size="icon" onClick={() => handleEdit(member)}>
                       <Edit2 className="h-4 w-4" />
                     </Button>
