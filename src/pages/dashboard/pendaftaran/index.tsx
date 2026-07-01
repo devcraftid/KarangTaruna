@@ -4,7 +4,7 @@ import { pendaftaranService } from '@/services/pendaftaranService'
 import { memberService } from '@/services/memberService'
 import { lombaService } from '@/services/lombaService'
 import { Button } from '@/components/ui/button'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from '@/components/ui/select'
@@ -87,6 +87,28 @@ export default function Pendaftaran() {
       toast.success('Pengawas dihapus')
     }
   })
+
+  const handleSendWA = (reg: any) => {
+    const hp = reg.members?.nomor_hp
+    if (!hp || hp === '-') {
+      toast.error('Nomor HP tidak tersedia')
+      return
+    }
+    const cleanNumber = hp.replace(/[^0-9]/g, '')
+    const formattedNumber = cleanNumber.startsWith('0') ? '62' + cleanNumber.substring(1) : cleanNumber
+    
+    let statusText = ''
+    if (reg.status === 'approved') statusText = 'telah *DISETUJUI*'
+    else if (reg.status === 'rejected') statusText = '*DITOLAK*'
+    else statusText = 'masih *PENDING*'
+
+    const text = `Halo ${reg.members?.nama},\n\n` +
+      `Pendaftaran Anda untuk lomba *${reg.competitions?.nama_lomba}* saat ini berstatus: ${statusText}.\n\n` +
+      `Terima kasih.`
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/${formattedNumber}?text=${message}`, '_blank')
+  }
 
   const onSubmit = (data: PendaftaranFormValues) => {
     if (editingId) updateMutation.mutate({ id: editingId, data })
@@ -211,6 +233,9 @@ export default function Pendaftaran() {
                       </span>
                     </TableCell>
                     <TableCell className="text-right space-x-2">
+                      <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleSendWA(item)} title="Kirim Status WA">
+                        <MessageCircle className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => {
                         setEditingId(item.id)
                         form.reset({ member_id: item.member_id, competition_id: item.competition_id, status: item.status })

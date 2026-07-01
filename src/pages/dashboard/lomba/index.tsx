@@ -170,6 +170,18 @@ export default function LombaPage() {
     window.open(`https://wa.me/?text=${message}`, '_blank')
   }
 
+  const handleShareLombaWA = (lomba: any) => {
+    const text = `*INFO LOMBA KARANG TARUNA*\n\n` +
+      `*${lomba.nama_lomba}*\n` +
+      `Kategori: ${lomba.kategori}\n` +
+      `Lokasi: ${lomba.lokasi}\n` +
+      `Waktu: ${new Date(lomba.tanggal).toLocaleDateString('id-ID')} Jam ${lomba.jam}\n\n` +
+      `${lomba.deskripsi || ''}\n\n` +
+      `Ayo segera mendaftar!`
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
+  }
+
   const openCreateDialog = () => {
     setEditingId(null)
     form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '' })
@@ -299,6 +311,9 @@ export default function LombaPage() {
                     </span>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
+                    <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleShareLombaWA(lomba)} title="Share Info Lomba WA">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
                     <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => setViewRegistrantsId(lomba.id)} title="Lihat Pendaftar">
                       <Eye className="h-4 w-4" />
                     </Button>

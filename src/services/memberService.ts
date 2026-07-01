@@ -18,6 +18,7 @@ export const memberService = {
     const { data, error } = await supabase
       .from('members')
       .select('*')
+      .not('nik', 'like', 'KID-%')
       .order('created_at', { ascending: false })
     
     if (error) throw error
