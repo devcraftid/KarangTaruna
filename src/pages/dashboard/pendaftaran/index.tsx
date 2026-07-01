@@ -110,6 +110,21 @@ export default function Pendaftaran() {
     window.open(`https://wa.me/${formattedNumber}?text=${message}`, '_blank')
   }
 
+  const handleShareAllPesertaWA = () => {
+    if (!registrations || registrations.length === 0) {
+      toast.error('Belum ada data pendaftar')
+      return
+    }
+    
+    let text = `*DAFTAR SELURUH PESERTA LOMBA*\n\n`
+    registrations.forEach((reg, idx) => {
+      text += `${idx + 1}. ${reg.members?.nama} - ${reg.competitions?.nama_lomba}\n`
+    })
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
+  }
+
   const onSubmit = (data: PendaftaranFormValues) => {
     if (editingId) updateMutation.mutate({ id: editingId, data })
     else createMutation.mutate(data)
@@ -152,7 +167,10 @@ export default function Pendaftaran() {
 
       {activeTab === 'peserta' ? (
         <div className="space-y-4 animate-in fade-in duration-300">
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50" onClick={handleShareAllPesertaWA}>
+              <MessageCircle className="mr-2 h-4 w-4" /> Share Semua Peserta
+            </Button>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
               <DialogTrigger asChild>
                 <Button onClick={() => { setEditingId(null); form.reset({ member_id: '', competition_id: '', status: 'pending' }); setIsOpen(true); }}>

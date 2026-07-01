@@ -182,6 +182,24 @@ export default function LombaPage() {
     window.open(`https://wa.me/?text=${message}`, '_blank')
   }
 
+  const handleShareAllLombaWA = () => {
+    if (!competitions || competitions.length === 0) {
+      toast.error('Belum ada data lomba')
+      return
+    }
+    
+    let text = `*DAFTAR LOMBA 17 AGUSTUS*\n\n`
+    competitions.forEach((lomba, idx) => {
+      text += `${idx + 1}. *${lomba.nama_lomba}*\n`
+      text += `   Kategori: ${lomba.kategori}\n`
+      text += `   Waktu: ${new Date(lomba.tanggal).toLocaleDateString('id-ID')} Jam ${lomba.jam}\n`
+      text += `   Lokasi: ${lomba.lokasi}\n\n`
+    })
+    
+    const message = encodeURIComponent(text)
+    window.open(`https://wa.me/?text=${message}`, '_blank')
+  }
+
   const openCreateDialog = () => {
     setEditingId(null)
     form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '' })
@@ -197,12 +215,18 @@ export default function LombaPage() {
           <p className="text-muted-foreground">Kelola agenda perlombaan 17 Agustus</p>
         </div>
         
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={openCreateDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Tambah Lomba
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50" onClick={handleShareAllLombaWA}>
+            <MessageCircle className="mr-2 h-4 w-4" /> Share Semua Lomba
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openCreateDialog}>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Lomba
+              </Button>
+            </DialogTrigger>
+          </Dialog>
+        </div>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Lomba' : 'Tambah Lomba Baru'}</DialogTitle>
