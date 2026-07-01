@@ -1,6 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
-import { Home, Trophy, Info, PieChart, User, LogIn, Image } from 'lucide-react'
+import { Home, Trophy, Info, PieChart, User, LogIn, Image, Users } from 'lucide-react'
 
 export default function PublicLayout() {
   const { user, loading } = useAuth()
@@ -33,6 +33,7 @@ export default function PublicLayout() {
             <Link to="/informasi" className={`hover:text-primary transition-colors ${isActive('/informasi') ? 'text-primary border-b-2 border-primary py-7' : 'py-7 text-slate-700 dark:text-slate-200'}`}>Informasi & Berita</Link>
             <Link to="/transparansi" className={`hover:text-primary transition-colors ${isActive('/transparansi') ? 'text-primary border-b-2 border-primary py-7' : 'py-7 text-slate-700 dark:text-slate-200'}`}>Transparansi Keuangan</Link>
             <Link to="/galeri" className={`hover:text-primary transition-colors ${isActive('/galeri') ? 'text-primary border-b-2 border-primary py-7' : 'py-7 text-slate-700 dark:text-slate-200'}`}>Galeri</Link>
+            <Link to="/panitia" className={`hover:text-primary transition-colors ${isActive('/panitia') ? 'text-primary border-b-2 border-primary py-7' : 'py-7 text-slate-700 dark:text-slate-200'}`}>Panitia</Link>
             
             {user ? (
               <Link to="/dashboard" className="bg-primary text-white px-6 py-2.5 rounded-full text-xs font-bold hover:bg-primary/90 transition-all flex items-center shadow-md ml-4">
@@ -78,6 +79,10 @@ export default function PublicLayout() {
         <Link to="/galeri" className={`flex flex-col items-center justify-center min-w-[72px] h-full space-y-1 ${isActive('/galeri') ? 'text-primary' : 'text-muted-foreground'}`}>
           <Image className={`w-5 h-5 ${isActive('/galeri') ? 'fill-primary/20' : ''}`} />
           <span className="text-[10px] font-medium">Galeri</span>
+        </Link>
+        <Link to="/panitia" className={`flex flex-col items-center justify-center min-w-[72px] h-full space-y-1 ${isActive('/panitia') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Users className={`w-5 h-5 ${isActive('/panitia') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Panitia</span>
         </Link>
         {user ? (
           <Link to="/dashboard" className="flex flex-col items-center justify-center min-w-[72px] h-full space-y-1 text-muted-foreground hover:text-primary">

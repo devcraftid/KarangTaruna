@@ -7,6 +7,7 @@ import Transparansi from '@/pages/public/Transparansi'
 import LombaPublik from '@/pages/public/LombaPublik'
 import InformasiPublik from '@/pages/public/InformasiPublik'
 import GaleriPublik from '@/pages/public/GaleriPublik'
+import PanitiaPublik from '@/pages/public/PanitiaPublik'
 
 import DashboardHome from '@/pages/dashboard/DashboardHome'
 import Anggota from '@/pages/dashboard/anggota'
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: 'galeri',
         element: <GaleriPublik />,
+      },
+      {
+        path: 'panitia',
+        element: <PanitiaPublik />,
       },
       {
         path: 'login',
