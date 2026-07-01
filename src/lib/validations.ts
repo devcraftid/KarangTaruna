@@ -9,6 +9,10 @@ export const memberSchema = z.object({
   rt: z.string().optional(),
   rw: z.string().optional(),
   nomor_hp: z.string().optional(),
+  is_panitia: z.boolean().optional().default(false),
+  jabatan: z.string().optional(),
+  divisi: z.string().optional(),
+  foto_url: z.string().optional(),
 })
 
 export type MemberFormValues = z.infer<typeof memberSchema>

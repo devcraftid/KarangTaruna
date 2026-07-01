@@ -25,11 +25,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { memberSchema, MemberFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
+import { storageService } from '@/services/storageService'
 
 export default function Anggota() {
   const queryClient = useQueryClient()
   const [isOpen, setIsOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
@@ -46,7 +49,11 @@ export default function Anggota() {
       alamat: '',
       rt: '',
       rw: '',
-      nomor_hp: ''
+      nomor_hp: '',
+      is_panitia: false,
+      jabatan: 'Anggota',
+      divisi: '',
+      foto_url: ''
     }
   })
 
@@ -82,28 +89,46 @@ export default function Anggota() {
     onError: (err: any) => toast.error(err.message || 'Gagal menghapus anggota')
   })
 
-  const onSubmit = (data: MemberFormValues) => {
-    if (editingId) {
-      updateMutation.mutate({ id: editingId, data })
-    } else {
-      // Auto-generate missing fields for new members
-      const pseudoNik = `KT-${Date.now().toString().slice(-13)}`
+  const onSubmit = async (data: MemberFormValues) => {
+    setIsUploading(true)
+    let uploadedUrl = data.foto_url || ''
+    
+    try {
+      if (selectedFile) {
+        uploadedUrl = await storageService.uploadFile('avatars', selectedFile)
+      }
+      
       const finalData = {
         ...data,
-        nik: data.nik || pseudoNik,
-        jenis_kelamin: data.jenis_kelamin || 'Laki-laki',
-        tanggal_lahir: data.tanggal_lahir || '2000-01-01',
-        alamat: data.alamat || '-',
-        rt: data.rt || '00',
-        rw: data.rw || '00',
-        nomor_hp: data.nomor_hp || ''
+        foto_url: uploadedUrl
       }
-      createMutation.mutate(finalData)
+
+      if (editingId) {
+        updateMutation.mutate({ id: editingId, data: finalData })
+      } else {
+        const pseudoNik = `KT-${Date.now().toString().slice(-13)}`
+        const finalNewData = {
+          ...finalData,
+          nik: finalData.nik || pseudoNik,
+          jenis_kelamin: finalData.jenis_kelamin || 'Laki-laki',
+          tanggal_lahir: finalData.tanggal_lahir || '2000-01-01',
+          alamat: finalData.alamat || '-',
+          rt: finalData.rt || '00',
+          rw: finalData.rw || '00',
+          nomor_hp: finalData.nomor_hp || ''
+        }
+        createMutation.mutate(finalNewData)
+      }
+    } catch (err: any) {
+      toast.error('Gagal mengupload foto: ' + err.message)
+    } finally {
+      setIsUploading(false)
     }
   }
 
   const handleEdit = (member: Member) => {
     setEditingId(member.id)
+    setSelectedFile(null)
     form.reset({
       nama: member.nama,
       nik: member.nik,
@@ -112,7 +137,11 @@ export default function Anggota() {
       alamat: member.alamat,
       rt: member.rt,
       rw: member.rw,
-      nomor_hp: member.nomor_hp
+      nomor_hp: member.nomor_hp,
+      is_panitia: member.is_panitia || false,
+      jabatan: member.jabatan || 'Anggota',
+      divisi: member.divisi || '',
+      foto_url: member.foto_url || ''
     })
     setIsOpen(true)
   }
@@ -136,8 +165,9 @@ export default function Anggota() {
 
   const openCreateDialog = () => {
     setEditingId(null)
+    setSelectedFile(null)
     form.reset({
-      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: ''
+      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: ''
     })
     setIsOpen(true)
   }
@@ -168,6 +198,70 @@ export default function Anggota() {
                   <Input {...form.register('nama')} placeholder="Masukkan nama" />
                   {form.formState.errors.nama && <p className="text-sm text-destructive">{form.formState.errors.nama.message}</p>}
                 </div>
+
+                <div className="space-y-2">
+                  <Label>Foto Profil (Opsional)</Label>
+                  <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input 
+                      type="checkbox" 
+                      id="is_panitia" 
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      checked={form.watch('is_panitia')} 
+                      onChange={(e) => form.setValue('is_panitia', e.target.checked)} 
+                    />
+                    <Label htmlFor="is_panitia" className="cursor-pointer">Jadikan sebagai Panitia 17-an?</Label>
+                  </div>
+                </div>
+
+                {form.watch('is_panitia') && (
+                  <div className="grid grid-cols-2 gap-4 animate-in fade-in zoom-in duration-300">
+                    <div className="space-y-2">
+                      <Label>Jabatan Kepanitiaan</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('jabatan', val)}
+                        defaultValue={form.getValues('jabatan') || 'Anggota'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih jabatan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Ketua">Ketua</SelectItem>
+                          <SelectItem value="Wakil Ketua">Wakil Ketua</SelectItem>
+                          <SelectItem value="Sekretaris">Sekretaris</SelectItem>
+                          <SelectItem value="Bendahara">Bendahara</SelectItem>
+                          <SelectItem value="Koordinator">Koordinator</SelectItem>
+                          <SelectItem value="Anggota">Anggota</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Divisi / Seksi</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('divisi', val)}
+                        defaultValue={form.getValues('divisi') || 'Umum'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih divisi" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Inti">Inti</SelectItem>
+                          <SelectItem value="Acara">Acara</SelectItem>
+                          <SelectItem value="Lomba">Lomba</SelectItem>
+                          <SelectItem value="Konsumsi">Konsumsi</SelectItem>
+                          <SelectItem value="Perlengkapan">Perlengkapan</SelectItem>
+                          <SelectItem value="Dokumentasi">Dokumentasi</SelectItem>
+                          <SelectItem value="Humas">Humas</SelectItem>
+                          <SelectItem value="Keamanan">Keamanan</SelectItem>
+                          <SelectItem value="Umum">Umum</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
                 
                 {editingId && (
                   <>
@@ -223,8 +317,8 @@ export default function Anggota() {
 
               <div className="pt-4 flex justify-end space-x-2">
                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>Batal</Button>
-                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-                  {editingId ? 'Simpan Perubahan' : 'Tambah Data'}
+                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending || isUploading}>
+                  {isUploading ? 'Menyimpan...' : editingId ? 'Simpan Perubahan' : 'Tambah Data'}
                 </Button>
               </div>
             </form>

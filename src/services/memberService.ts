@@ -10,6 +10,10 @@ export interface Member {
   rt: string
   rw: string
   nomor_hp: string
+  foto_url?: string
+  is_panitia?: boolean
+  jabatan?: string
+  divisi?: string
   created_at?: string
 }
 
@@ -19,6 +23,17 @@ export const memberService = {
       .from('members')
       .select('*')
       .not('nik', 'like', 'KID-%')
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    return data as Member[]
+  },
+  
+  async getPanitia() {
+    const { data, error } = await supabase
+      .from('members')
+      .select('*')
+      .eq('is_panitia', true)
       .order('created_at', { ascending: false })
     
     if (error) throw error
