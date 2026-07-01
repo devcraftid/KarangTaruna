@@ -225,9 +225,7 @@ export default function LombaPage() {
                 <Plus className="mr-2 h-4 w-4" /> Tambah Lomba
               </Button>
             </DialogTrigger>
-          </Dialog>
-        </div>
-          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Lomba' : 'Tambah Lomba Baru'}</DialogTitle>
             </DialogHeader>
@@ -298,6 +296,7 @@ export default function LombaPage() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="bg-card border rounded-xl shadow-sm">
