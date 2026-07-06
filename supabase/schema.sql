@@ -5,6 +5,7 @@ CREATE TYPE user_role AS ENUM ('admin', 'sekretaris', 'bendahara');
 CREATE TYPE competition_status AS ENUM ('draft', 'published', 'completed');
 CREATE TYPE registration_status AS ENUM ('pending', 'approved', 'rejected');
 CREATE TYPE transaction_status AS ENUM ('pending', 'verified', 'rejected');
+CREATE TYPE patungan_status AS ENUM ('active', 'completed', 'cancelled');
 
 -- 1. Profiles Table (extends auth.users)
 CREATE TABLE public.profiles (
@@ -154,6 +155,33 @@ CREATE TABLE public.news (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
 );
 
+-- 12. Patungan Campaigns
+CREATE TABLE public.patungan_campaigns (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    judul TEXT NOT NULL,
+    deskripsi TEXT NOT NULL,
+    target_dana NUMERIC NOT NULL,
+    batas_waktu DATE NOT NULL,
+    status patungan_status DEFAULT 'active' NOT NULL,
+    gambar TEXT,
+    created_by UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
+);
+
+-- 13. Patungan Contributions
+CREATE TABLE public.patungan_contributions (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    campaign_id UUID REFERENCES public.patungan_campaigns(id) ON DELETE CASCADE NOT NULL,
+    nama_donatur TEXT NOT NULL,
+    nominal NUMERIC NOT NULL,
+    tanggal DATE NOT NULL,
+    metode_pembayaran TEXT NOT NULL,
+    status transaction_status DEFAULT 'pending' NOT NULL,
+    bukti_transfer TEXT,
+    keterangan TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()) NOT NULL
+);
+
 -- RLS POLICIES --
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.members ENABLE ROW LEVEL SECURITY;
@@ -167,6 +195,8 @@ ALTER TABLE public.expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.news ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.patungan_campaigns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.patungan_contributions ENABLE ROW LEVEL SECURITY;
 
 -- Helper functions for RLS
 CREATE OR REPLACE FUNCTION public.get_auth_role() RETURNS user_role AS $$
@@ -216,9 +246,19 @@ CREATE POLICY "Admin and Sekretaris can manage gallery" ON public.gallery FOR AL
 CREATE POLICY "Public can view news" ON public.news FOR SELECT USING (true);
 CREATE POLICY "Admin and Sekretaris can manage news" ON public.news FOR ALL USING (public.get_auth_role() IN ('admin', 'sekretaris'));
 
+-- Patungan Campaigns: Public SELECT (active/completed). Admin/Bendahara ALL.
+CREATE POLICY "Public can view active campaigns" ON public.patungan_campaigns FOR SELECT USING (status IN ('active', 'completed'));
+CREATE POLICY "Admin and Bendahara can manage campaigns" ON public.patungan_campaigns FOR ALL USING (public.get_auth_role() IN ('admin', 'bendahara'));
+
+-- Patungan Contributions: Public INSERT, and SELECT verified. Admin/Bendahara ALL.
+CREATE POLICY "Public can create contribution" ON public.patungan_contributions FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public can view verified contribution" ON public.patungan_contributions FOR SELECT USING (status = 'verified');
+CREATE POLICY "Admin and Bendahara can manage contributions" ON public.patungan_contributions FOR ALL USING (public.get_auth_role() IN ('admin', 'bendahara'));
+
 -- Realtime Config
 ALTER PUBLICATION supabase_realtime ADD TABLE public.income;
 ALTER PUBLICATION supabase_realtime ADD TABLE public.expenses;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.patungan_contributions;
 
 -- Storage Buckets Setup (Must be executed by a superuser or via Supabase dashboard if RLS blocks it)
 INSERT INTO storage.buckets (id, name, public) VALUES ('avatars', 'avatars', true) ON CONFLICT DO NOTHING;
@@ -228,9 +268,10 @@ INSERT INTO storage.buckets (id, name, public) VALUES ('transfer', 'transfer', t
 INSERT INTO storage.buckets (id, name, public) VALUES ('nota', 'nota', true) ON CONFLICT DO NOTHING;
 INSERT INTO storage.buckets (id, name, public) VALUES ('proposal', 'proposal', true) ON CONFLICT DO NOTHING;
 INSERT INTO storage.buckets (id, name, public) VALUES ('lpj', 'lpj', true) ON CONFLICT DO NOTHING;
+INSERT INTO storage.buckets (id, name, public) VALUES ('patungan', 'patungan', true) ON CONFLICT DO NOTHING;
 
 -- Set up Storage Policies (Allow public to view, allow authenticated users to upload/update/delete)
-CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj') );
-CREATE POLICY "Authenticated Upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj') );
-CREATE POLICY "Authenticated Update" ON storage.objects FOR UPDATE TO authenticated USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj') );
-CREATE POLICY "Authenticated Delete" ON storage.objects FOR DELETE TO authenticated USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj') );
+CREATE POLICY "Public Access" ON storage.objects FOR SELECT USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj', 'patungan') );
+CREATE POLICY "Authenticated Upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj', 'patungan') );
+CREATE POLICY "Authenticated Update" ON storage.objects FOR UPDATE TO authenticated USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj', 'patungan') );
+CREATE POLICY "Authenticated Delete" ON storage.objects FOR DELETE TO authenticated USING ( bucket_id IN ('avatars', 'gallery', 'news', 'transfer', 'nota', 'proposal', 'lpj', 'patungan') );

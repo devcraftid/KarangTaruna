@@ -8,6 +8,8 @@ import LombaPublik from '@/pages/public/LombaPublik'
 import InformasiPublik from '@/pages/public/InformasiPublik'
 import GaleriPublik from '@/pages/public/GaleriPublik'
 import PanitiaPublik from '@/pages/public/PanitiaPublik'
+import PatunganPublik from '@/pages/public/Patungan'
+import PatunganDetail from '@/pages/public/PatunganDetail'
 
 import DashboardHome from '@/pages/dashboard/DashboardHome'
 import Anggota from '@/pages/dashboard/anggota'
@@ -21,6 +23,8 @@ import KategoriPengeluaran from '@/pages/dashboard/kategori-pengeluaran'
 import KasMasuk from '@/pages/dashboard/kas-masuk'
 import KasKeluar from '@/pages/dashboard/kas-keluar'
 import Laporan from '@/pages/dashboard/laporan'
+import PatunganDashboard from '@/pages/dashboard/patungan'
+import VerifikasiKontribusi from '@/pages/dashboard/patungan/kontribusi'
 
 const router = createBrowserRouter([
   {
@@ -54,6 +58,14 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <Login />,
+      },
+      {
+        path: 'patungan',
+        element: <PatunganPublik />,
+      },
+      {
+        path: 'patungan/:id',
+        element: <PatunganDetail />,
       }
     ],
   },
@@ -108,6 +120,14 @@ const router = createBrowserRouter([
       {
         path: 'laporan',
         element: <Laporan />,
+      },
+      {
+        path: 'patungan',
+        element: <PatunganDashboard />,
+      },
+      {
+        path: 'patungan/kontribusi',
+        element: <VerifikasiKontribusi />,
       }
     ],
   },
