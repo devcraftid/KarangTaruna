@@ -8,7 +8,7 @@ interface IdCardTemplateProps {
 // For print CSS, we use exact physical sizes.
 export default function IdCardTemplate({ member }: IdCardTemplateProps) {
   return (
-    <div className="id-card print:m-0 m-auto relative bg-white border border-slate-200 overflow-hidden shadow-lg print:shadow-none font-sans" 
+    <div className="id-card print:m-0 m-auto relative bg-white border border-slate-200 overflow-hidden shadow-lg print:shadow-none font-sans break-inside-avoid" 
          style={{ width: '54mm', height: '86mm', position: 'relative' }}>
       
       {/* Background Gradient/Pattern */}
@@ -30,8 +30,8 @@ export default function IdCardTemplate({ member }: IdCardTemplateProps) {
       {/* Content Container */}
       <div className="relative z-10 w-full h-full flex flex-col items-center pt-3 px-2">
         {/* Header Text & Prominent Logo */}
-        <div className="text-center w-full mb-3 flex flex-col items-center">
-          <img src="/logo.png" alt="Logo Karang Taruna" className="w-8 h-8 object-contain mb-1 drop-shadow-md bg-white rounded-full border border-white/20 p-0.5" onError={(e) => { e.currentTarget.style.display = 'none' }} />
+        <div className="text-center w-full mb-2 flex flex-col items-center">
+          <img src="/logo.png" alt="Logo Karang Taruna" className="w-12 h-12 object-contain mb-1 drop-shadow-md bg-white rounded-full border border-white/20 p-1" onError={(e) => { e.currentTarget.style.display = 'none' }} />
           <h2 className="text-white text-[9px] font-black tracking-widest uppercase leading-tight drop-shadow-sm">Karang Taruna</h2>
           <h3 className="text-white/90 text-[7px] font-bold tracking-widest uppercase mt-0.5">Pondok Betung</h3>
         </div>

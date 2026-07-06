@@ -35,6 +35,7 @@ export default function Anggota() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [printMember, setPrintMember] = useState<Member | null>(null)
+  const [printAllMembers, setPrintAllMembers] = useState(false)
 
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
@@ -183,12 +184,16 @@ export default function Anggota() {
           <p className="text-muted-foreground">Kelola data anggota karang taruna</p>
         </div>
         
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={openCreateDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Tambah Anggota
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setPrintAllMembers(true)} disabled={isLoading || !members?.length}>
+            <Printer className="mr-2 h-4 w-4" /> Cetak Semua
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openCreateDialog}>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Anggota
+              </Button>
+            </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Anggota' : 'Tambah Anggota Baru'}</DialogTitle>
@@ -326,14 +331,15 @@ export default function Anggota() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
         
-        {/* Print Dialog */}
+        {/* Print Dialog (Single) */}
         <Dialog open={!!printMember} onOpenChange={(open) => !open && setPrintMember(null)}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Pratinjau Kartu Anggota</DialogTitle>
             </DialogHeader>
-            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative">
+            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative max-h-[60vh] overflow-y-auto">
               {printMember && (
                 <div id="print-section">
                   <IdCardTemplate member={printMember} />
@@ -345,6 +351,29 @@ export default function Anggota() {
               <Button type="button" onClick={() => window.print()}>
                 <Printer className="w-4 h-4 mr-2" />
                 Cetak Sekarang
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Print Dialog (All) */}
+        <Dialog open={printAllMembers} onOpenChange={setPrintAllMembers}>
+          <DialogContent className="sm:max-w-[800px] max-w-[95vw] max-h-[95vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Pratinjau Semua Kartu Anggota</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative">
+              {printAllMembers && members && (
+                <div id="print-section" className="flex flex-wrap gap-4 p-4 justify-center">
+                  {members.map(m => <IdCardTemplate key={m.id} member={m} />)}
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setPrintAllMembers(false)}>Tutup</Button>
+              <Button type="button" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-2" />
+                Cetak Semua (Simpan PDF)
               </Button>
             </div>
           </DialogContent>
