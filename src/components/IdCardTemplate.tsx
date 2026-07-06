@@ -33,7 +33,7 @@ export default function IdCardTemplate({ member }: IdCardTemplateProps) {
         <div className="text-center w-full mb-2 flex flex-col items-center">
           <img src="/logo.png" alt="Logo Karang Taruna" className="w-16 h-16 object-contain mb-1 drop-shadow-md" onError={(e) => { e.currentTarget.style.display = 'none' }} />
           <h2 className="text-white text-[9px] font-black tracking-widest uppercase leading-tight drop-shadow-sm">Karang Taruna</h2>
-          <h3 className="text-white/90 text-[7px] font-bold tracking-widest uppercase mt-0.5">Pondok Betung</h3>
+          <h3 className="text-white/90 text-[7px] font-bold tracking-widest uppercase mt-0.5">Bina Pemuda</h3>
         </div>
 
         {/* Photo Container */}
