@@ -149,25 +149,18 @@ export default function PublicLayout() {
           <Home className={`w-5 h-5 ${isActive('/') ? 'fill-primary/20' : ''}`} />
           <span className="text-[10px] font-medium">Beranda</span>
         </Link>
-        <Link to="/voting" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/voting') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Vote className={`w-5 h-5 ${isActive('/voting') ? 'fill-primary/20' : ''}`} />
-          <span className="text-[10px] font-medium">Voting</span>
+        <Link to="/lomba" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/lomba') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Trophy className={`w-5 h-5 ${isActive('/lomba') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Lomba</span>
         </Link>
-        <Link to="/patungan" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/patungan') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Coins className={`w-5 h-5 ${isActive('/patungan') ? 'fill-primary/20' : ''}`} />
-          <span className="text-[10px] font-medium">Donasi</span>
+        <Link to="/transparansi" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/transparansi') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <PieChart className={`w-5 h-5 ${isActive('/transparansi') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Transpa</span>
         </Link>
-        {user ? (
-          <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center justify-center w-[20%] h-full space-y-1 text-muted-foreground hover:text-primary">
-            <User className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Akun</span>
-          </Link>
-        ) : (
-          <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center justify-center w-[20%] h-full space-y-1 text-muted-foreground hover:text-primary">
-            <LogIn className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Login</span>
-          </Link>
-        )}
+        <Link to="/galeri" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/galeri') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Image className={`w-5 h-5 ${isActive('/galeri') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Galeri</span>
+        </Link>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isMobileMenuOpen ? 'text-primary' : 'text-muted-foreground'}`}>
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           <span className="text-[10px] font-medium">Menu Lengkap</span>
