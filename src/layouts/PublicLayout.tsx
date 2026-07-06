@@ -149,9 +149,9 @@ export default function PublicLayout() {
           <Home className={`w-5 h-5 ${isActive('/') ? 'fill-primary/20' : ''}`} />
           <span className="text-[10px] font-medium">Beranda</span>
         </Link>
-        <Link to="/lomba" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/lomba') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Trophy className={`w-5 h-5 ${isActive('/lomba') ? 'fill-primary/20' : ''}`} />
-          <span className="text-[10px] font-medium">Program</span>
+        <Link to="/voting" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/voting') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <Vote className={`w-5 h-5 ${isActive('/voting') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Voting</span>
         </Link>
         <Link to="/patungan" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/patungan') ? 'text-primary' : 'text-muted-foreground'}`}>
           <Coins className={`w-5 h-5 ${isActive('/patungan') ? 'fill-primary/20' : ''}`} />
