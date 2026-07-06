@@ -106,7 +106,7 @@ export default function KasMasuk() {
   return (
     <div className="space-y-6">
       <Toaster />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Kas Masuk</h2>
           <p className="text-muted-foreground">Kelola pencatatan donasi dan pemasukan</p>
@@ -122,7 +122,7 @@ export default function KasMasuk() {
               <DialogTitle>{editingId ? 'Edit Pemasukan' : 'Tambah Pemasukan'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Kategori</Label>
                   <Select onValueChange={(val) => form.setValue('category_id', val)} defaultValue={form.getValues('category_id')}>
@@ -138,7 +138,7 @@ export default function KasMasuk() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Nama Donatur/Sumber</Label>
                   <Input {...form.register('nama_donatur')} />
@@ -157,7 +157,7 @@ export default function KasMasuk() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Tanggal</Label>
                   <Input type="date" {...form.register('tanggal')} />

@@ -175,7 +175,7 @@ export default function Anggota() {
   return (
     <div className="space-y-6">
       <Toaster />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Data Anggota</h2>
           <p className="text-muted-foreground">Kelola data anggota karang taruna</p>
@@ -218,7 +218,7 @@ export default function Anggota() {
                 </div>
 
                 {form.watch('is_panitia') && (
-                  <div className="grid grid-cols-2 gap-4 animate-in fade-in zoom-in duration-300">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in zoom-in duration-300">
                     <div className="space-y-2">
                       <Label>Jabatan Kepanitiaan</Label>
                       <Select 
@@ -270,7 +270,7 @@ export default function Anggota() {
                       <Input {...form.register('nik')} placeholder="16 digit NIK" />
                       {form.formState.errors.nik && <p className="text-sm text-destructive">{form.formState.errors.nik.message}</p>}
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Jenis Kelamin</Label>
                         <Select 
@@ -297,7 +297,7 @@ export default function Anggota() {
                       <Input {...form.register('alamat')} placeholder="Jalan, No Rumah" />
                       {form.formState.errors.alamat && <p className="text-sm text-destructive">{form.formState.errors.alamat.message}</p>}
                     </div>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="space-y-2">
                         <Label>RT</Label>
                         <Input {...form.register('rt')} placeholder="001" />

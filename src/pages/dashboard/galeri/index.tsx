@@ -56,7 +56,7 @@ export default function Galeri() {
   return (
     <div className="space-y-6">
       <Toaster />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div><h2 className="text-2xl font-bold tracking-tight">Galeri</h2></div>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>

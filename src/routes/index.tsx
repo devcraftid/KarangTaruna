@@ -10,6 +10,8 @@ import GaleriPublik from '@/pages/public/GaleriPublik'
 import PanitiaPublik from '@/pages/public/PanitiaPublik'
 import PatunganPublik from '@/pages/public/Patungan'
 import PatunganDetail from '@/pages/public/PatunganDetail'
+import Etalase from '@/pages/public/Etalase'
+import VotingPublik from '@/pages/public/VotingPublik'
 
 import DashboardHome from '@/pages/dashboard/DashboardHome'
 import Anggota from '@/pages/dashboard/anggota'
@@ -25,6 +27,11 @@ import KasKeluar from '@/pages/dashboard/kas-keluar'
 import Laporan from '@/pages/dashboard/laporan'
 import PatunganDashboard from '@/pages/dashboard/patungan'
 import VerifikasiKontribusi from '@/pages/dashboard/patungan/kontribusi'
+import Surat from '@/pages/dashboard/surat'
+import Inventaris from '@/pages/dashboard/inventaris'
+import Proker from '@/pages/dashboard/proker'
+import Voting from '@/pages/dashboard/voting'
+import Bumkt from '@/pages/dashboard/bumkt'
 
 const router = createBrowserRouter([
   {
@@ -66,6 +73,14 @@ const router = createBrowserRouter([
       {
         path: 'patungan/:id',
         element: <PatunganDetail />,
+      },
+      {
+        path: 'etalase',
+        element: <Etalase />,
+      },
+      {
+        path: 'voting',
+        element: <VotingPublik />,
       }
     ],
   },
@@ -76,6 +91,26 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <DashboardHome />,
+      },
+      {
+        path: 'surat',
+        element: <Surat />,
+      },
+      {
+        path: 'inventaris',
+        element: <Inventaris />,
+      },
+      {
+        path: 'proker',
+        element: <Proker />,
+      },
+      {
+        path: 'voting',
+        element: <Voting />,
+      },
+      {
+        path: 'bumkt',
+        element: <Bumkt />,
       },
       {
         path: 'anggota',

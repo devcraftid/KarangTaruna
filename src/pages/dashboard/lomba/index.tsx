@@ -209,7 +209,7 @@ export default function LombaPage() {
   return (
     <div className="space-y-6">
       <Toaster />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Data Lomba</h2>
           <p className="text-muted-foreground">Kelola agenda perlombaan 17 Agustus</p>
@@ -236,7 +236,7 @@ export default function LombaPage() {
                 {form.formState.errors.nama_lomba && <p className="text-sm text-destructive">{form.formState.errors.nama_lomba.message}</p>}
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Kategori</Label>
                   <Input {...form.register('kategori')} placeholder="Anak-anak / Dewasa" />
@@ -248,7 +248,7 @@ export default function LombaPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label>Tanggal</Label>
                   <Input type="date" {...form.register('tanggal')} />

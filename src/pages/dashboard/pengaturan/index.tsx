@@ -20,7 +20,7 @@ export default function Pengaturan() {
             <Label>Alamat Sekretariat</Label>
             <Input defaultValue="Jl. Merdeka No. 17, RW 01" />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Email Kontak</Label>
               <Input defaultValue="kontak@kt17agustus.com" />

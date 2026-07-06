@@ -92,7 +92,7 @@ export default function Pengumuman() {
   return (
     <div className="space-y-6">
       <Toaster />
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Pengumuman</h2>
           <p className="text-muted-foreground">Kelola pengumuman untuk warga</p>
