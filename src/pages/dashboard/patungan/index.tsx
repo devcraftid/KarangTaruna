@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Edit, Trash2, Loader2, Coins } from 'lucide-react'
+import { Plus, Edit, Trash2, Loader2, Coins, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -10,6 +10,7 @@ import { storageService } from '@/services/storageService'
 import { PatunganCampaign } from '@/types'
 import toast, { Toaster } from 'react-hot-toast'
 import { Link } from 'react-router-dom'
+import { exportToExcel } from '@/lib/exportUtils'
 
 export default function PatunganDashboard() {
   const [campaigns, setCampaigns] = useState<PatunganCampaign[]>([])
@@ -134,6 +135,21 @@ export default function PatunganDashboard() {
            <Link to="/dashboard/patungan/kontribusi">
              <Button variant="outline"><Coins className="w-4 h-4 mr-2" /> Verifikasi Kontribusi</Button>
            </Link>
+           <Button variant="outline" onClick={() => {
+             if (!campaigns) return;
+             const cols = ['Judul', 'Deskripsi', 'Target Dana', 'Terkumpul', 'Batas Waktu', 'Status'];
+             const data = campaigns.map((c: any) => [
+               c.judul,
+               c.deskripsi,
+               `Rp ${c.target_dana.toLocaleString('id-ID')}`,
+               `Rp ${c.terkumpul?.toLocaleString('id-ID') || 0}`,
+               new Date(c.batas_waktu).toLocaleDateString('id-ID'),
+               c.status
+             ]);
+             exportToExcel('Laporan_Patungan', cols, data);
+           }} disabled={loading || !campaigns.length}>
+             <Download className="w-4 h-4 mr-2" /> Laporan Excel
+           </Button>
            
            <Dialog open={isOpen} onOpenChange={setIsOpen}>
              <DialogTrigger asChild>

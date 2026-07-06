@@ -5,7 +5,7 @@ import { storageService } from '@/services/storageService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, Download } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { kasMasukSchema, KasMasukFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAuth } from '@/context/AuthContext'
+import { exportToExcel } from '@/lib/exportUtils'
 
 export default function KasMasuk() {
   const queryClient = useQueryClient()
@@ -111,12 +112,30 @@ export default function KasMasuk() {
           <h2 className="text-2xl font-bold tracking-tight">Kas Masuk</h2>
           <p className="text-muted-foreground">Kelola pencatatan donasi dan pemasukan</p>
         </div>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={openCreateDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Tambah Pemasukan
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => {
+            if (!income) return;
+            const cols = ['Tanggal', 'Nominal', 'Kategori', 'Nama Donatur', 'Jenis Donatur', 'Metode', 'Keterangan', 'Status'];
+            const data = income.map((i: any) => [
+              new Date(i.tanggal).toLocaleDateString('id-ID'),
+              `Rp ${i.nominal.toLocaleString('id-ID')}`,
+              i.kategori_pemasukan?.nama || '-',
+              i.nama_donatur || '-',
+              i.jenis_donatur || '-',
+              i.metode_pembayaran || '-',
+              i.keterangan || '-',
+              i.status || '-'
+            ]);
+            exportToExcel('Laporan_Kas_Masuk', cols, data);
+          }} disabled={isLoading || !income?.length}>
+            <Download className="mr-2 h-4 w-4" /> Laporan Excel
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openCreateDialog}>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Pemasukan
+              </Button>
+            </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Pemasukan' : 'Tambah Pemasukan'}</DialogTitle>
@@ -188,6 +207,7 @@ export default function KasMasuk() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="bg-card border rounded-xl shadow-sm">

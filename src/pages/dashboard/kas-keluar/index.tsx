@@ -5,7 +5,7 @@ import { storageService } from '@/services/storageService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2 } from 'lucide-react'
+import { Plus, Edit2, Trash2, Download } from 'lucide-react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { kasKeluarSchema, KasKeluarFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAuth } from '@/context/AuthContext'
+import { exportToExcel } from '@/lib/exportUtils'
 
 export default function KasKeluar() {
   const queryClient = useQueryClient()
@@ -111,12 +112,27 @@ export default function KasKeluar() {
           <h2 className="text-2xl font-bold tracking-tight">Kas Keluar</h2>
           <p className="text-muted-foreground">Kelola pencatatan pengeluaran kas</p>
         </div>
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={openCreateDialog}>
-              <Plus className="mr-2 h-4 w-4" /> Tambah Pengeluaran
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => {
+            if (!expenses) return;
+            const cols = ['Tanggal', 'Nominal', 'Kategori', 'Nama Pengeluaran', 'Keterangan'];
+            const data = expenses.map((e: any) => [
+              new Date(e.tanggal).toLocaleDateString('id-ID'),
+              `Rp ${e.nominal.toLocaleString('id-ID')}`,
+              e.kategori_pengeluaran?.nama || '-',
+              e.nama_pengeluaran || '-',
+              e.keterangan || '-'
+            ]);
+            exportToExcel('Laporan_Kas_Keluar', cols, data);
+          }} disabled={isLoading || !expenses?.length}>
+            <Download className="mr-2 h-4 w-4" /> Laporan Excel
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openCreateDialog}>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Pengeluaran
+              </Button>
+            </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Pengeluaran' : 'Tambah Pengeluaran'}</DialogTitle>
@@ -169,6 +185,7 @@ export default function KasKeluar() {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <div className="bg-card border rounded-xl shadow-sm">
