@@ -9,7 +9,7 @@ import {
 // Custom Dropdown Component
 function NavDropdown({ title, children, isActive }: { title: string, children: React.ReactNode, isActive: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   const handleMouseEnter = () => {
     clearTimeout(timeoutRef.current)

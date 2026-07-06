@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { Vote, CheckCircle, AlertCircle, Loader2, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,6 @@ import toast, { Toaster } from 'react-hot-toast'
 import { Poll, PollOption } from '@/types'
 
 export default function VotingPublik() {
-  const queryClient = useQueryClient()
   
   const [selectedOption, setSelectedOption] = useState<{ pollId: string, optionId: string, optionText: string, pollTitle: string } | null>(null)
   const [voterData, setVoterData] = useState({ nik: '', nama: '' })

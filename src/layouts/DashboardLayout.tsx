@@ -145,10 +145,11 @@ export default function DashboardLayout() {
                 {/* Group Header */}
                 <button 
                   onClick={() => toggleGroup(group.title)}
+                  title={group.title}
                   className={`w-full flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2 hover:text-slate-600 dark:hover:text-slate-300 transition-colors ${isCollapsed && !isMobileOpen ? 'justify-center' : ''}`}
                 >
                   {isCollapsed && !isMobileOpen ? (
-                    <group.icon className="w-5 h-5" title={group.title} />
+                    <group.icon className="w-5 h-5" />
                   ) : (
                     <>
                       <span>{group.title}</span>

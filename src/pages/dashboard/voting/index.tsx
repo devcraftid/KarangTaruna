@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Vote, Plus, Loader2, PieChart, CheckCircle, Edit, Trash2 } from 'lucide-react'
+import { Vote, Plus, Loader2, PieChart, Edit, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,15 +38,7 @@ export default function Voting() {
     }
   })
 
-  const { data: userVotes } = useQuery({
-    queryKey: ['poll_votes', profile?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('poll_votes').select('poll_id, option_id').eq('voter_id', profile?.id)
-      if (error) throw error
-      return data
-    },
-    enabled: !!profile?.id
-  })
+
 
   // get votes for results
   const { data: allVotes } = useQuery({
@@ -115,20 +107,7 @@ export default function Voting() {
     onError: (error) => toast.error('Gagal menghapus voting: ' + error.message)
   })
 
-  const voteMutation = useMutation({
-    mutationFn: async ({ poll_id, option_id }: { poll_id: string, option_id: string }) => {
-      const { error } = await supabase.from('poll_votes').insert([{
-        poll_id, option_id, voter_id: profile?.id
-      }])
-      if (error) throw error
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['poll_votes'] })
-      queryClient.invalidateQueries({ queryKey: ['polls'] })
-      toast.success('Suara Anda berhasil disimpan!')
-    },
-    onError: (error) => toast.error('Gagal menyimpan suara: ' + error.message)
-  })
+
 
   const handleAddOption = () => {
     setFormData({ ...formData, opsi: [...formData.opsi, ''] })
@@ -277,7 +256,6 @@ export default function Voting() {
           <div className="col-span-1 lg:col-span-2 text-center py-8 bg-white dark:bg-card border rounded-lg">Belum ada sesi pemilihan yang aktif</div>
         ) : (
           polls?.map((poll) => {
-            const hasVoted = userVotes?.find(v => v.poll_id === poll.id)
             const isClosed = new Date() > new Date(poll.tanggal_selesai) || poll.status === 'closed'
             
             return (
