@@ -4,7 +4,7 @@ import { memberService, Member } from '@/services/memberService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2, MessageCircle } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle, Printer } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -26,6 +26,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { memberSchema, MemberFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
 import { storageService } from '@/services/storageService'
+import IdCardTemplate from '@/components/IdCardTemplate'
 
 export default function Anggota() {
   const queryClient = useQueryClient()
@@ -33,6 +34,7 @@ export default function Anggota() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [printMember, setPrintMember] = useState<Member | null>(null)
 
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
@@ -324,6 +326,29 @@ export default function Anggota() {
             </form>
           </DialogContent>
         </Dialog>
+        
+        {/* Print Dialog */}
+        <Dialog open={!!printMember} onOpenChange={(open) => !open && setPrintMember(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Pratinjau Kartu Anggota</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative">
+              {printMember && (
+                <div id="print-section">
+                  <IdCardTemplate member={printMember} />
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setPrintMember(null)}>Tutup</Button>
+              <Button type="button" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-2" />
+                Cetak Sekarang
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="bg-card border rounded-xl shadow-sm">
@@ -357,6 +382,9 @@ export default function Anggota() {
                   <TableCell>{member.nomor_hp}</TableCell>
                   <TableCell>{member.rt}/{member.rw}</TableCell>
                   <TableCell className="text-right space-x-2">
+                    <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => setPrintMember(member)} title="Cetak ID Card">
+                      <Printer className="h-4 w-4" />
+                    </Button>
                     <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleSendWA(member.nomor_hp, member.nama)} title="Hubungi WA">
                       <MessageCircle className="h-4 w-4" />
                     </Button>

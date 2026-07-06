@@ -57,3 +57,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+@media print {
+  @page {
+    size: auto;
+    margin: 0; /* Removing margins so card fits nicely */
+  }
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #print-section, #print-section * {
+    visibility: visible;
+  }
+  #print-section {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
