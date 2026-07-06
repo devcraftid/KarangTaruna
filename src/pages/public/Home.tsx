@@ -5,15 +5,17 @@ import { useQuery } from '@tanstack/react-query'
 import { lombaService } from '@/services/lombaService'
 import { pendaftaranService } from '@/services/pendaftaranService'
 import { beritaService } from '@/services/beritaService'
+import { memberService } from '@/services/memberService'
 
 export default function Home() {
   // Fetch real data for stats
   const { data: competitions } = useQuery({ queryKey: ['competitions'], queryFn: lombaService.getCompetitions })
   const { data: registrations } = useQuery({ queryKey: ['registrations'], queryFn: pendaftaranService.getPendaftaran })
   const { data: berita } = useQuery({ queryKey: ['berita'], queryFn: beritaService.getBerita })
+  const { data: members } = useQuery({ queryKey: ['members'], queryFn: memberService.getMembers })
 
   const stats = {
-    anggota: registrations ? new Set(registrations.map((r: any) => r.member_id)).size : 0,
+    anggota: members?.length || 0,
     kegiatan: competitions?.length || 0,
     peserta: registrations?.length || 0,
     berita: berita?.length || 0
