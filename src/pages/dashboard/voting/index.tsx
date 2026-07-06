@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Vote, Plus, Loader2, PieChart, Edit, Trash2 } from 'lucide-react'
+import { Vote, Plus, Loader2, PieChart, Edit, Trash2, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -44,7 +44,7 @@ export default function Voting() {
   const { data: allVotes } = useQuery({
     queryKey: ['all_poll_votes', selectedPoll?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from('poll_votes').select('option_id').eq('poll_id', selectedPoll?.id)
+      const { data, error } = await supabase.from('poll_votes').select('option_id, voter_id, voter_name, created_at, poll_options(teks_opsi)').eq('poll_id', selectedPoll?.id).order('created_at', { ascending: false })
       if (error) throw error
       return data
     },
@@ -241,6 +241,23 @@ export default function Voting() {
                   )
                 })}
                 <p className="text-sm text-muted-foreground mt-4 pt-4 border-t">Total Suara Masuk: {allVotes.length}</p>
+
+                {isAdmin && allVotes.length > 0 && (
+                  <div className="mt-6 border-t pt-4">
+                    <h4 className="font-bold text-sm mb-3 flex items-center gap-2"><Users className="w-4 h-4"/> Riwayat Pemilih</h4>
+                    <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
+                      {allVotes.map((vote: any, idx: number) => (
+                        <div key={idx} className="bg-slate-50 dark:bg-slate-900 p-2 rounded text-xs border flex flex-col">
+                          <span className="font-bold text-slate-700 dark:text-slate-200">{vote.voter_name || 'Tanpa Nama'} ({vote.voter_id})</span>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-primary font-medium">Memilih: {vote.poll_options?.teks_opsi}</span>
+                            <span className="text-muted-foreground text-[10px]">{new Date(vote.created_at).toLocaleString('id-ID')}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
