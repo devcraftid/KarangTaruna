@@ -71,9 +71,9 @@ export default function PublicLayout() {
           <Trophy className={`w-5 h-5 ${isActive('/lomba') ? 'fill-primary/20' : ''}`} />
           <span className="text-[10px] font-medium">Lomba</span>
         </Link>
-        <Link to="/patungan" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/patungan') ? 'text-primary' : 'text-muted-foreground'}`}>
-          <Coins className={`w-5 h-5 ${isActive('/patungan') ? 'fill-primary/20' : ''}`} />
-          <span className="text-[10px] font-medium">Pendanaan</span>
+        <Link to="/transparansi" onClick={() => setIsMobileMenuOpen(false)} className={`flex flex-col items-center justify-center w-[20%] h-full space-y-1 ${isActive('/transparansi') ? 'text-primary' : 'text-muted-foreground'}`}>
+          <PieChart className={`w-5 h-5 ${isActive('/transparansi') ? 'fill-primary/20' : ''}`} />
+          <span className="text-[10px] font-medium">Keuangan</span>
         </Link>
         {user ? (
           <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex flex-col items-center justify-center w-[20%] h-full space-y-1 text-muted-foreground hover:text-primary">
@@ -99,9 +99,9 @@ export default function PublicLayout() {
              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Info className="text-primary w-5 h-5"/></div> 
              Informasi & Berita
            </Link>
-           <Link to="/transparansi" onClick={() => setIsMobileMenuOpen(false)} className="p-4 rounded-xl bg-slate-50 border hover:border-primary/50 flex items-center gap-4 text-lg font-bold text-slate-700">
-             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><PieChart className="text-primary w-5 h-5"/></div> 
-             Transparansi Keuangan
+           <Link to="/patungan" onClick={() => setIsMobileMenuOpen(false)} className="p-4 rounded-xl bg-slate-50 border hover:border-primary/50 flex items-center gap-4 text-lg font-bold text-slate-700">
+             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Coins className="text-primary w-5 h-5"/></div> 
+             Program Pendanaan
            </Link>
            <Link to="/galeri" onClick={() => setIsMobileMenuOpen(false)} className="p-4 rounded-xl bg-slate-50 border hover:border-primary/50 flex items-center gap-4 text-lg font-bold text-slate-700">
              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Image className="text-primary w-5 h-5"/></div> 
