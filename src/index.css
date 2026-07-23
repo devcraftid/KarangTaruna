@@ -81,4 +81,13 @@
     margin: 0;
     padding: 20px;
   }
+  
+  /* Reset any overflow or height constraints from ancestors in print mode so they don't clip */
+  body, html, [data-radix-popper-content-wrapper], [role="dialog"], .overflow-hidden, .overflow-y-auto, .max-h-\[60vh\], .max-h-\[95vh\] {
+    overflow: visible !important;
+    max-height: none !important;
+    height: auto !important;
+    position: static !important;
+    transform: none !important;
+  }
 }
