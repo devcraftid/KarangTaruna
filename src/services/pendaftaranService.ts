@@ -23,6 +23,16 @@ export const pendaftaranService = {
     const { error } = await supabase.from('registrations').delete().eq('id', id)
     if (error) throw error
   },
+  async verifikasiPembayaran(id: string, isPaid: boolean) {
+    const { data: res, error } = await supabase
+      .from('registrations')
+      .update({ is_paid: isPaid, status: isPaid ? 'approved' : 'pending' })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) throw error
+    return res
+  },
 
   // --- Pengawas Lomba ---
   async getPengawas() {

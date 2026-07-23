@@ -15,6 +15,7 @@ import { kasMasukSchema, KasMasukFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
 import { useAuth } from '@/context/AuthContext'
 import { exportToExcel } from '@/lib/exportUtils'
+import { getActiveEvents } from '@/services/eventService'
 
 export default function KasMasuk() {
   const queryClient = useQueryClient()
@@ -23,10 +24,13 @@ export default function KasMasuk() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [filterEventId, setFilterEventId] = useState<string>('all')
+
+  const { data: events } = useQuery({ queryKey: ['active-events'], queryFn: getActiveEvents })
 
   const { data: income, isLoading } = useQuery({
-    queryKey: ['income'],
-    queryFn: keuanganService.getIncome
+    queryKey: ['income', filterEventId],
+    queryFn: () => keuanganService.getIncome(filterEventId === 'all' ? undefined : filterEventId)
   })
 
   const { data: categories } = useQuery({
@@ -34,10 +38,10 @@ export default function KasMasuk() {
     queryFn: keuanganService.getKategoriPemasukan
   })
 
-  const form = useForm<KasMasukFormValues>({
-    resolver: zodResolver(kasMasukSchema),
+  const form = useForm<KasMasukFormValues & { event_id?: string }>({
+    resolver: zodResolver(kasMasukSchema as any), // bypass exact schema if we add event_id
     defaultValues: {
-      category_id: '', nama_donatur: '', jenis_donatur: 'Warga', nominal: 0, tanggal: new Date().toISOString().split('T')[0], metode_pembayaran: 'Tunai', status: 'verified', keterangan: '', bukti_transfer: ''
+      category_id: '', nama_donatur: '', jenis_donatur: 'Warga', nominal: 0, tanggal: new Date().toISOString().split('T')[0], metode_pembayaran: 'Tunai', status: 'verified', keterangan: '', bukti_transfer: '', event_id: ''
     }
   })
 
@@ -100,7 +104,7 @@ export default function KasMasuk() {
   const openCreateDialog = () => {
     setEditingId(null)
     setSelectedFile(null)
-    form.reset({ category_id: categories?.[0]?.id || '', nama_donatur: '', jenis_donatur: 'Warga', nominal: 0, tanggal: new Date().toISOString().split('T')[0], metode_pembayaran: 'Tunai', status: 'verified', keterangan: '', bukti_transfer: '' })
+    form.reset({ category_id: categories?.[0]?.id || '', nama_donatur: '', jenis_donatur: 'Warga', nominal: 0, tanggal: new Date().toISOString().split('T')[0], metode_pembayaran: 'Tunai', status: 'verified', keterangan: '', bukti_transfer: '', event_id: '' })
     setIsOpen(true)
   }
 
@@ -140,7 +144,17 @@ export default function KasMasuk() {
             <DialogHeader>
               <DialogTitle>{editingId ? 'Edit Pemasukan' : 'Tambah Pemasukan'}</DialogTitle>
             </DialogHeader>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+            <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Kaitkan ke Acara (Opsional)</Label>
+                <Select onValueChange={(val) => form.setValue('event_id', val === 'none' ? undefined : val)} defaultValue={form.getValues('event_id')}>
+                  <SelectTrigger><SelectValue placeholder="Pilih acara" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">-- Kas Umum Karang Taruna --</SelectItem>
+                    {events?.map(e => <SelectItem key={e.id} value={e.id}>{e.nama_acara}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Kategori</Label>
@@ -210,6 +224,23 @@ export default function KasMasuk() {
         </div>
       </div>
 
+      <div className="flex bg-slate-50 p-4 rounded-xl border items-end gap-4 w-full sm:w-1/3">
+        <div className="w-full space-y-2">
+          <Label>Filter Laporan Kas Masuk</Label>
+          <Select value={filterEventId} onValueChange={setFilterEventId}>
+            <SelectTrigger>
+              <SelectValue placeholder="Pilih Kas Acara atau Kas Umum" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Pemasukan (Global)</SelectItem>
+              {events?.map(e => (
+                <SelectItem key={e.id} value={e.id}>{e.nama_acara}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <div className="bg-card border rounded-xl shadow-sm">
         <Table>
           <TableHeader>
@@ -219,12 +250,13 @@ export default function KasMasuk() {
               <TableHead>Donatur</TableHead>
               <TableHead>Nominal</TableHead>
               <TableHead>Metode</TableHead>
+              <TableHead>Acara (Proyek)</TableHead>
               <TableHead className="text-right">Aksi</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={6} className="text-center py-4">Memuat...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} className="text-center py-4">Memuat...</TableCell></TableRow>
             ) : income?.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>{new Date(item.tanggal).toLocaleDateString('id-ID')}</TableCell>
@@ -232,12 +264,13 @@ export default function KasMasuk() {
                 <TableCell>{item.nama_donatur}</TableCell>
                 <TableCell className="font-medium text-green-600">Rp {item.nominal.toLocaleString('id-ID')}</TableCell>
                 <TableCell>{item.metode_pembayaran}</TableCell>
+                <TableCell>{item.events?.nama_acara || <span className="text-xs text-muted-foreground italic">Kas Umum</span>}</TableCell>
                 <TableCell className="text-right space-x-2">
                   {profile?.role === 'admin' && (
                     <>
                       <Button variant="ghost" size="icon" onClick={() => {
                         setEditingId(item.id)
-                        form.reset({ category_id: item.category_id, nama_donatur: item.nama_donatur, jenis_donatur: item.jenis_donatur as any, nominal: item.nominal, tanggal: item.tanggal, metode_pembayaran: item.metode_pembayaran, status: item.status as any, keterangan: item.keterangan || '' })
+                        form.reset({ category_id: item.category_id, nama_donatur: item.nama_donatur, jenis_donatur: item.jenis_donatur as any, nominal: item.nominal, tanggal: item.tanggal, metode_pembayaran: item.metode_pembayaran, status: item.status as any, keterangan: item.keterangan || '', event_id: item.event_id || '' })
                         setIsOpen(true)
                       }}><Edit2 className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive hover:bg-destructive/10" onClick={() => {

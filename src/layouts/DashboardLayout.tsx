@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Trophy, DollarSign, LogOut,
   Megaphone, Newspaper, Image as ImageIcon,
   CreditCard, Wallet, ChevronLeft, ChevronRight, ChevronDown, Menu, X,
-  Mail, Archive, Calendar, Vote, Store
+  Mail, Archive, Calendar, Vote, Store, Home as HomeIcon, FileText, Flag
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -45,6 +45,7 @@ export default function DashboardLayout() {
       icon: Archive,
       items: [
         { name: 'Data Anggota', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
+        { name: 'Data Rumah & Iuran', href: '/dashboard/warga', icon: HomeIcon, roles: ['admin', 'sekretaris', 'bendahara'] },
         { name: 'E-Surat', href: '/dashboard/surat', icon: Mail, roles: ['admin', 'sekretaris'] },
         { name: 'Inventaris', href: '/dashboard/inventaris', icon: Archive, roles: ['admin', 'sekretaris'] },
         { name: 'Proker & Absensi', href: '/dashboard/proker', icon: Calendar, roles: ['admin', 'sekretaris'] },
@@ -60,6 +61,7 @@ export default function DashboardLayout() {
         { name: 'Kat. Pengeluaran', href: '/dashboard/kategori-pengeluaran', icon: DollarSign, roles: ['admin', 'bendahara'] },
         { name: 'Prog. Pendanaan', href: '/dashboard/patungan', icon: Wallet, roles: ['admin', 'bendahara'] },
         { name: 'Etalase BUMKT', href: '/dashboard/bumkt', icon: Store, roles: ['admin', 'bendahara'] },
+        { name: 'Tracker Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
         { name: 'Laporan Keuangan', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
       ]
     },
@@ -74,8 +76,9 @@ export default function DashboardLayout() {
     },
     {
       title: 'Kegiatan & Interaksi',
-      icon: Users,
+      icon: Flag,
       items: [
+        { name: 'Manajemen Acara', href: '/dashboard/events', icon: Flag, roles: ['admin', 'sekretaris'] },
         { name: 'Pendaftaran', href: '/dashboard/pendaftaran', icon: Users, roles: ['admin', 'sekretaris'] },
         { name: 'Data Lomba', href: '/dashboard/lomba', icon: Trophy, roles: ['admin', 'sekretaris'] },
         { name: 'E-Voting', href: '/dashboard/voting', icon: Vote, roles: ['admin'] },

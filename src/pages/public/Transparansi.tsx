@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useQuery } from '@tanstack/react-query'
 import { Wallet, CreditCard, ArrowRightLeft, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import { getActiveEvents } from '@/services/eventService'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function Transparansi() {
   const [realtimeTrigger, setRealtimeTrigger] = useState(0)
+  const [filterEventId, setFilterEventId] = useState<string>('all')
 
   useEffect(() => {
     const incomeSub = supabase.channel('public:income').on('postgres_changes', { event: '*', schema: 'public', table: 'income' }, () => setRealtimeTrigger(prev => prev + 1)).subscribe()
@@ -12,8 +15,27 @@ export default function Transparansi() {
     return () => { supabase.removeChannel(incomeSub); supabase.removeChannel(expenseSub) }
   }, [])
 
-  const { data: income, isLoading: loadingIncome } = useQuery({ queryKey: ['public-income', realtimeTrigger], queryFn: async () => { const { data, error } = await supabase.from('income').select('*').eq('status', 'verified').order('tanggal', { ascending: false }); if (error) throw error; return data } })
-  const { data: expenses, isLoading: loadingExpenses } = useQuery({ queryKey: ['public-expenses', realtimeTrigger], queryFn: async () => { const { data, error } = await supabase.from('expenses').select('*').order('tanggal', { ascending: false }); if (error) throw error; return data } })
+  const { data: events } = useQuery({ queryKey: ['active-events'], queryFn: getActiveEvents })
+
+  const { data: income, isLoading: loadingIncome } = useQuery({ 
+    queryKey: ['public-income', realtimeTrigger, filterEventId], 
+    queryFn: async () => { 
+      let query = supabase.from('income').select('*').eq('status', 'verified').order('tanggal', { ascending: false });
+      if (filterEventId !== 'all') query = query.eq('event_id', filterEventId)
+      const { data, error } = await query
+      if (error) throw error; return data 
+    } 
+  })
+  
+  const { data: expenses, isLoading: loadingExpenses } = useQuery({ 
+    queryKey: ['public-expenses', realtimeTrigger, filterEventId], 
+    queryFn: async () => { 
+      let query = supabase.from('expenses').select('*').order('tanggal', { ascending: false });
+      if (filterEventId !== 'all') query = query.eq('event_id', filterEventId)
+      const { data, error } = await query
+      if (error) throw error; return data 
+    } 
+  })
 
   const totalIncome = income?.reduce((sum, item) => sum + Number(item.nominal), 0) || 0
   const totalExpense = expenses?.reduce((sum, item) => sum + Number(item.nominal), 0) || 0
@@ -32,10 +54,24 @@ export default function Transparansi() {
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">Transparansi Keuangan Terbuka</h1>
           <p className="text-slate-300 max-w-2xl mx-auto text-lg">Laporan arus kas masuk dan keluar organisasi Karang Taruna secara real-time dan akuntabel. Setiap rupiah dikelola dengan penuh amanah.</p>
+          
+          <div className="max-w-xs mx-auto mt-6">
+            <Select value={filterEventId} onValueChange={setFilterEventId}>
+              <SelectTrigger className="bg-white/10 border-white/20 text-white backdrop-blur-md hover:bg-white/20">
+                <SelectValue placeholder="Pilih Laporan Keuangan" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Semua / Global Kas</SelectItem>
+                {events?.map(e => (
+                  <SelectItem key={e.id} value={e.id}>Keuangan Acara: {e.nama_acara}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 -mt-20 relative z-20">
+      <div className="container mx-auto max-w-6xl px-4 -mt-16 relative z-20">
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white dark:bg-card border rounded-2xl p-6 shadow-xl shadow-slate-200/50 dark:shadow-none flex items-center space-x-5 transition-transform hover:-translate-y-1">
             <div className="p-4 bg-green-50 dark:bg-green-900/30 text-green-600 rounded-2xl"><Wallet className="h-8 w-8" /></div>

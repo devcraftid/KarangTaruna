@@ -232,6 +232,7 @@ export default function Pendaftaran() {
                 <TableRow>
                   <TableHead>Nama Peserta</TableHead>
                   <TableHead>Lomba</TableHead>
+                  <TableHead>Pembayaran</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
@@ -245,6 +246,37 @@ export default function Pendaftaran() {
                       {item.members?.nama} <span className="text-xs text-muted-foreground ml-1">(RT {item.members?.rt} / RW {item.members?.rw})</span>
                     </TableCell>
                     <TableCell>{item.competitions?.nama_lomba}</TableCell>
+                    <TableCell>
+                      {item.is_paid ? (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-semibold text-green-600">Lunas</span>
+                          {item.bukti_bayar && (
+                            <a href={item.bukti_bayar} target="_blank" rel="noreferrer" className="text-xs text-blue-600 hover:underline">
+                              Lihat Bukti
+                            </a>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-xs font-semibold text-yellow-600">Belum Lunas</span>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-6 text-xs px-2"
+                            onClick={() => {
+                              if (window.confirm('Verifikasi pembayaran lunas (offline)?')) {
+                                pendaftaranService.verifikasiPembayaran(item.id, true).then(() => {
+                                  queryClient.invalidateQueries({ queryKey: ['registrations'] })
+                                  toast.success('Pembayaran diverifikasi')
+                                }).catch(e => toast.error(e.message))
+                              }
+                            }}
+                          >
+                            Set Lunas
+                          </Button>
+                        </div>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.status === 'approved' ? 'bg-green-100 text-green-700 dark:bg-green-900/30' : item.status === 'rejected' ? 'bg-red-100 text-red-700 dark:bg-red-900/30' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30'}`}>
                         {item.status}

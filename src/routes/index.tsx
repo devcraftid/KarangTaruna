@@ -32,6 +32,9 @@ import Inventaris from '@/pages/dashboard/inventaris'
 import Proker from '@/pages/dashboard/proker'
 import Voting from '@/pages/dashboard/voting'
 import Bumkt from '@/pages/dashboard/bumkt'
+import Events from '@/pages/dashboard/events'
+import Warga from '@/pages/dashboard/warga'
+import Proposals from '@/pages/dashboard/proposals'
 
 const router = createBrowserRouter([
   {
@@ -163,6 +166,18 @@ const router = createBrowserRouter([
       {
         path: 'patungan/kontribusi',
         element: <VerifikasiKontribusi />,
+      },
+      {
+        path: 'events',
+        element: <Events />,
+      },
+      {
+        path: 'warga',
+        element: <Warga />,
+      },
+      {
+        path: 'proposals',
+        element: <Proposals />,
       }
     ],
   },

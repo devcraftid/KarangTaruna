@@ -130,3 +130,66 @@ export interface Product {
   created_by?: string
   created_at?: string
 }
+
+export interface Event {
+  id: string
+  nama_acara: string
+  deskripsi?: string
+  tanggal_mulai: string
+  tanggal_selesai: string
+  is_active: boolean
+  created_by?: string
+  created_at?: string
+}
+
+export interface Household {
+  id: string
+  kepala_keluarga: string
+  nomor_rumah: string
+  rt: string
+  rw: string
+  blok?: string
+  keterangan?: string
+  created_at?: string
+}
+
+export interface HouseholdDue {
+  id: string
+  household_id: string
+  event_id: string
+  nominal: number
+  status: 'pending' | 'verified' | 'rejected'
+  tanggal_bayar?: string
+  keterangan?: string
+  penerima?: string
+  created_at?: string
+  households?: Household
+  events?: Event
+}
+
+export interface Proposal {
+  id: string
+  event_id: string
+  instansi_tujuan: string
+  kontak_person?: string
+  nomor_hp?: string
+  tanggal_kirim: string
+  status: 'dikirim' | 'follow_up' | 'diterima' | 'ditolak'
+  nominal_cair?: number
+  keterangan?: string
+  file_proposal?: string
+  pic?: string
+  created_at?: string
+  events?: Event
+}
+
+export interface AuditLog {
+  id: string
+  table_name: string
+  record_id: string
+  action: string
+  old_data?: any
+  new_data?: any
+  changed_by?: string
+  created_at?: string
+}

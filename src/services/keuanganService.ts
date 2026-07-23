@@ -23,11 +23,17 @@ export const keuanganService = {
   },
 
   // --- Kas Masuk (Income) ---
-  async getIncome() {
-    const { data, error } = await supabase
+  async getIncome(eventId?: string) {
+    let query = supabase
       .from('income')
-      .select('*, income_categories(nama)')
+      .select('*, income_categories(nama), events(nama_acara)')
       .order('tanggal', { ascending: false })
+      
+    if (eventId) {
+      query = query.eq('event_id', eventId)
+    }
+    
+    const { data, error } = await query
     if (error) throw error
     return data
   },
@@ -68,11 +74,17 @@ export const keuanganService = {
   },
 
   // --- Kas Keluar (Expenses) ---
-  async getExpenses() {
-    const { data, error } = await supabase
+  async getExpenses(eventId?: string) {
+    let query = supabase
       .from('expenses')
-      .select('*, expense_categories(nama)')
+      .select('*, expense_categories(nama), events(nama_acara)')
       .order('tanggal', { ascending: false })
+      
+    if (eventId) {
+      query = query.eq('event_id', eventId)
+    }
+
+    const { data, error } = await query
     if (error) throw error
     return data
   },

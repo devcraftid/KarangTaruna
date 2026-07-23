@@ -6,8 +6,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import toast from 'react-hot-toast'
 
 export default function Laporan() {
-  const { data: income, isLoading: loadingIncome } = useQuery({ queryKey: ['income'], queryFn: keuanganService.getIncome })
-  const { data: expenses, isLoading: loadingExpenses } = useQuery({ queryKey: ['expenses'], queryFn: keuanganService.getExpenses })
+  const { data: income, isLoading: loadingIncome } = useQuery({ queryKey: ['income'], queryFn: () => keuanganService.getIncome() })
+  const { data: expenses, isLoading: loadingExpenses } = useQuery({ queryKey: ['expenses'], queryFn: () => keuanganService.getExpenses() })
 
   const totalIncome = income?.reduce((sum, item) => sum + Number(item.nominal), 0) || 0
   const totalExpense = expenses?.reduce((sum, item) => sum + Number(item.nominal), 0) || 0
