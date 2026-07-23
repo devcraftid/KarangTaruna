@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Trophy, DollarSign, LogOut,
   Megaphone, Newspaper, Image as ImageIcon,
   CreditCard, Wallet, ChevronLeft, ChevronRight, ChevronDown, Menu, X,
-  Mail, Archive, Calendar, Vote, Store, Home as HomeIcon, FileText, Flag
+  FileText, Flag, Home as HomeIcon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
