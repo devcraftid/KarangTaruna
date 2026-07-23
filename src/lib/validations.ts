@@ -46,6 +46,7 @@ export const kasMasukSchema = z.object({
   status: z.enum(["pending", "verified", "rejected"]).default("verified"),
   bukti_transfer: z.string().optional(),
   keterangan: z.string().optional(),
+  event_id: z.string().optional(),
 })
 export type KasMasukFormValues = z.infer<typeof kasMasukSchema>
 
@@ -56,6 +57,7 @@ export const kasKeluarSchema = z.object({
   tanggal: z.string().min(1, "Tanggal harus diisi"),
   bukti_nota: z.string().optional(),
   keterangan: z.string().optional(),
+  event_id: z.string().optional(),
 })
 export type KasKeluarFormValues = z.infer<typeof kasKeluarSchema>
 
