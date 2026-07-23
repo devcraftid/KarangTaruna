@@ -56,6 +56,8 @@ export default function DashboardLayout() {
       items: [
         { name: 'Kas Masuk', href: '/dashboard/kas-masuk', icon: Wallet, roles: ['admin', 'bendahara'] },
         { name: 'Kas Keluar', href: '/dashboard/kas-keluar', icon: CreditCard, roles: ['admin', 'bendahara'] },
+        { name: 'Kat. Pemasukan', href: '/dashboard/kategori-pemasukan', icon: DollarSign, roles: ['admin', 'bendahara'] },
+        { name: 'Kat. Pengeluaran', href: '/dashboard/kategori-pengeluaran', icon: DollarSign, roles: ['admin', 'bendahara'] },
         { name: 'Tracker Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
         { name: 'Laporan Kas', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
       ]

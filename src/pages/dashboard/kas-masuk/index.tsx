@@ -147,7 +147,7 @@ export default function KasMasuk() {
             <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-4 py-4">
               <div className="space-y-2">
                 <Label>Kaitkan ke Acara (Opsional)</Label>
-                <Select onValueChange={(val) => form.setValue('event_id', val === 'none' ? undefined : val)} defaultValue={form.getValues('event_id')}>
+                <Select onValueChange={(val) => form.setValue('event_id', val === 'none' ? undefined : val)} value={form.watch('event_id') || 'none'}>
                   <SelectTrigger><SelectValue placeholder="Pilih acara" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">-- Kas Umum Karang Taruna --</SelectItem>
@@ -158,7 +158,7 @@ export default function KasMasuk() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Kategori</Label>
-                  <Select onValueChange={(val) => form.setValue('category_id', val)} defaultValue={form.getValues('category_id')}>
+                  <Select onValueChange={(val) => form.setValue('category_id', val)} value={form.watch('category_id') || undefined}>
                     <SelectTrigger><SelectValue placeholder="Pilih kategori" /></SelectTrigger>
                     <SelectContent>
                       {categories?.map(c => <SelectItem key={c.id} value={c.id}>{c.nama}</SelectItem>)}
