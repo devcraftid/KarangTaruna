@@ -40,6 +40,8 @@ export default function Households() {
     blok: '',
     keterangan: ''
   })
+  
+  const [searchHousehold, setSearchHousehold] = useState('')
 
   // Iuran State
   const [isOpenIuran, setIsOpenIuran] = useState(false)
@@ -240,7 +242,7 @@ export default function Households() {
             </div>
             
             <div className="flex items-end">
-              <Dialog open={isOpenIuran} onOpenChange={(open) => { setIsOpenIuran(open); if (!open) resetDueForm(); }}>
+              <Dialog open={isOpenIuran} onOpenChange={(open) => { setIsOpenIuran(open); if (!open) { resetDueForm(); setSearchHousehold(''); } }}>
                 <DialogTrigger asChild>
                   <Button disabled={!selectedEventId}><Plus className="mr-2 h-4 w-4" /> Catat Iuran Warga</Button>
                 </DialogTrigger>
@@ -254,14 +256,33 @@ export default function Households() {
                     {!editingDue && (
                       <div className="space-y-2">
                         <Label>Pilih Rumah / KK</Label>
-                        <Select required onValueChange={(v) => setDueFormData({...dueFormData, household_id: v})}>
-                          <SelectTrigger><SelectValue placeholder="Pilih rumah" /></SelectTrigger>
-                          <SelectContent>
-                            {households?.map(h => (
-                              <SelectItem key={h.id} value={h.id}>{h.kepala_keluarga} - {h.nomor_rumah} (RT {h.rt})</SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          <Input 
+                            placeholder="Cari nama kepala keluarga atau no rumah..." 
+                            value={searchHousehold} 
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setSearchHousehold(val);
+                              const filtered = households?.filter(h => 
+                                h.kepala_keluarga.toLowerCase().includes(val.toLowerCase()) || 
+                                h.nomor_rumah.toLowerCase().includes(val.toLowerCase())
+                              );
+                              if (filtered && filtered.length > 0) {
+                                setDueFormData(prev => ({...prev, household_id: filtered[0].id}));
+                              }
+                            }} 
+                            className="mb-2 text-sm"
+                          />
+                          <Select required value={dueFormData.household_id || undefined} onValueChange={(v) => setDueFormData({...dueFormData, household_id: v})}>
+                            <SelectTrigger><SelectValue placeholder="Pilih rumah dari daftar" /></SelectTrigger>
+                            <SelectContent>
+                              {households?.filter(h => 
+                                h.kepala_keluarga.toLowerCase().includes(searchHousehold.toLowerCase()) || 
+                                h.nomor_rumah.toLowerCase().includes(searchHousehold.toLowerCase())
+                              ).map(h => (
+                                <SelectItem key={h.id} value={h.id}>{h.kepala_keluarga} - {h.nomor_rumah} (RT {h.rt})</SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                       </div>
                     )}
                     <div className="space-y-2">

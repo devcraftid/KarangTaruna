@@ -13,7 +13,7 @@ export default function DashboardLayout() {
   const { user, profile, loading, signOut } = useAuth()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [openGroups, setOpenGroups] = useState<string[]>(['Utama', 'Administrasi', 'Keuangan & Usaha', 'Publikasi', 'Kegiatan & Interaksi'])
+  const [openGroups, setOpenGroups] = useState<string[]>(['Utama', 'Manajemen Acara & Warga', 'Keuangan & Sponsor', 'Publikasi & Info'])
   
   const location = useLocation()
 
@@ -41,47 +41,33 @@ export default function DashboardLayout() {
       ]
     },
     {
-      title: 'Administrasi',
-      icon: Archive,
+      title: 'Manajemen Acara & Warga',
+      icon: Flag,
       items: [
-        { name: 'Data Anggota', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
+        { name: 'Acara / Proyek', href: '/dashboard/events', icon: Flag, roles: ['admin', 'sekretaris'] },
         { name: 'Data Rumah & Iuran', href: '/dashboard/warga', icon: HomeIcon, roles: ['admin', 'sekretaris', 'bendahara'] },
-        { name: 'E-Surat', href: '/dashboard/surat', icon: Mail, roles: ['admin', 'sekretaris'] },
-        { name: 'Inventaris', href: '/dashboard/inventaris', icon: Archive, roles: ['admin', 'sekretaris'] },
-        { name: 'Proker & Absensi', href: '/dashboard/proker', icon: Calendar, roles: ['admin', 'sekretaris'] },
+        { name: 'Pendaftaran Peserta', href: '/dashboard/pendaftaran', icon: Users, roles: ['admin', 'sekretaris'] },
+        { name: 'Katalog Lomba', href: '/dashboard/lomba', icon: Trophy, roles: ['admin', 'sekretaris'] },
       ]
     },
     {
-      title: 'Keuangan & Usaha',
+      title: 'Keuangan & Sponsor',
       icon: DollarSign,
       items: [
         { name: 'Kas Masuk', href: '/dashboard/kas-masuk', icon: Wallet, roles: ['admin', 'bendahara'] },
         { name: 'Kas Keluar', href: '/dashboard/kas-keluar', icon: CreditCard, roles: ['admin', 'bendahara'] },
-        { name: 'Kat. Pemasukan', href: '/dashboard/kategori-pemasukan', icon: DollarSign, roles: ['admin', 'bendahara'] },
-        { name: 'Kat. Pengeluaran', href: '/dashboard/kategori-pengeluaran', icon: DollarSign, roles: ['admin', 'bendahara'] },
-        { name: 'Prog. Pendanaan', href: '/dashboard/patungan', icon: Wallet, roles: ['admin', 'bendahara'] },
-        { name: 'Etalase BUMKT', href: '/dashboard/bumkt', icon: Store, roles: ['admin', 'bendahara'] },
         { name: 'Tracker Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
-        { name: 'Laporan Keuangan', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
+        { name: 'Laporan Kas', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
       ]
     },
     {
-      title: 'Publikasi',
+      title: 'Publikasi & Info',
       icon: Megaphone,
       items: [
         { name: 'Pengumuman', href: '/dashboard/pengumuman', icon: Megaphone, roles: ['admin', 'sekretaris'] },
         { name: 'Berita', href: '/dashboard/berita', icon: Newspaper, roles: ['admin', 'sekretaris'] },
-        { name: 'Galeri', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris'] },
-      ]
-    },
-    {
-      title: 'Kegiatan & Interaksi',
-      icon: Flag,
-      items: [
-        { name: 'Manajemen Acara', href: '/dashboard/events', icon: Flag, roles: ['admin', 'sekretaris'] },
-        { name: 'Pendaftaran', href: '/dashboard/pendaftaran', icon: Users, roles: ['admin', 'sekretaris'] },
-        { name: 'Data Lomba', href: '/dashboard/lomba', icon: Trophy, roles: ['admin', 'sekretaris'] },
-        { name: 'E-Voting', href: '/dashboard/voting', icon: Vote, roles: ['admin'] },
+        { name: 'Galeri & Dokumentasi', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris'] },
+        { name: 'Data Kepengurusan', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
       ]
     }
   ]

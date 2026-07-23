@@ -5,19 +5,20 @@ import { useQuery } from '@tanstack/react-query'
 import { lombaService } from '@/services/lombaService'
 import { pendaftaranService } from '@/services/pendaftaranService'
 import { beritaService } from '@/services/beritaService'
-import { memberService } from '@/services/memberService'
+import { getHouseholds } from '@/services/householdService'
+import { getEvents } from '@/services/eventService'
 
 export default function Home() {
   // Fetch real data for stats
   const { data: competitions } = useQuery({ queryKey: ['competitions'], queryFn: lombaService.getCompetitions })
-  const { data: registrations } = useQuery({ queryKey: ['registrations'], queryFn: pendaftaranService.getPendaftaran })
+  const { data: households } = useQuery({ queryKey: ['households'], queryFn: getHouseholds })
   const { data: berita } = useQuery({ queryKey: ['berita'], queryFn: beritaService.getBerita })
-  const { data: members } = useQuery({ queryKey: ['members'], queryFn: memberService.getMembers })
+  const { data: events } = useQuery({ queryKey: ['events'], queryFn: getEvents })
 
   const stats = {
-    anggota: members?.length || 0,
-    kegiatan: competitions?.length || 0,
-    peserta: registrations?.length || 0,
+    warga: households?.length || 0,
+    kegiatan: events?.length || competitions?.length || 0,
+    peserta: events?.length ? competitions?.length || 0 : competitions?.length || 0, // Using this as Lomba count
     berita: berita?.length || 0
   }
 
@@ -63,19 +64,19 @@ export default function Home() {
           <div className="w-20 h-1.5 bg-primary/80 mb-6 rounded-full"></div>
 
           <p className="text-slate-700 md:text-slate-800 text-lg md:text-xl leading-relaxed mb-8 font-medium">
-            <span className="font-bold text-primary">Rayakan Kemerdekaan ke-81 di Lingkungan Kita.</span><br/>
-            Platform manajemen modern untuk RT/RW mengelola lomba, donasi, dan transparansi kegiatan 17-an secara terpadu dan efisien.
+            <span className="font-bold text-primary">Sistem Informasi Warga & Karang Taruna</span><br/>
+            Platform modern untuk pendataan rumah, transparansi iuran & kas, serta publikasi berita warga secara terpadu dan efisien.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="h-14 px-8 text-base bg-[#C8102E] hover:bg-[#A00D24] text-white rounded-full shadow-lg shadow-primary/30">
-              <Link to="/lomba">
-                <Calendar className="mr-2 h-5 w-5" /> LIHAT AGENDA
+              <Link to="/transparansi">
+                <CheckCircle className="mr-2 h-5 w-5" /> TRANSPARANSI KAS
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-14 px-8 text-base bg-white border-2 border-slate-200 text-slate-800 hover:bg-slate-50 hover:border-slate-300 rounded-full shadow-md">
-              <Link to="/informasi">
-                <Newspaper className="mr-2 h-5 w-5" /> BERITA TERBARU
+              <Link to="/lomba">
+                <Calendar className="mr-2 h-5 w-5" /> AGENDA LOMBA
               </Link>
             </Button>
           </div>
@@ -91,8 +92,8 @@ export default function Home() {
             <div className="flex items-center gap-4 px-2 lg:px-6">
               <Users className="w-10 h-10 text-yellow-400" />
               <div>
-                <div className="text-2xl font-bold tracking-tight">{stats.anggota}</div>
-                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Total Anggota</div>
+                <div className="text-2xl font-bold tracking-tight">{stats.warga}</div>
+                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Data KK Warga</div>
               </div>
             </div>
 
@@ -100,7 +101,7 @@ export default function Home() {
               <Calendar className="w-10 h-10 text-yellow-400" />
               <div>
                 <div className="text-2xl font-bold tracking-tight">{stats.kegiatan}</div>
-                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Agenda Lomba</div>
+                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Acara & Proyek</div>
               </div>
             </div>
 
@@ -108,7 +109,7 @@ export default function Home() {
               <CheckCircle className="w-10 h-10 text-yellow-400" />
               <div>
                 <div className="text-2xl font-bold tracking-tight">{stats.peserta}</div>
-                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Pendaftar Lomba</div>
+                <div className="text-[10px] lg:text-xs font-bold tracking-wider uppercase text-yellow-400/90">Katalog Lomba</div>
               </div>
             </div>
 
