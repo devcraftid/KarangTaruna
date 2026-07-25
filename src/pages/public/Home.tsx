@@ -24,7 +24,7 @@ export default function Home() {
   const latestBerita = berita?.slice(0, 3) || []
 
   const features = [
-    { title: 'Agenda & Lomba', icon: Trophy, desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-100 text-orange-600' },
+    { title: 'Agenda & Lomba', icon: Trophy, imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
     { title: 'Transparansi Kas', icon: PieChart, desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-100 text-emerald-600' },
     { title: 'Hall of Fame', icon: Award, desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-100 text-indigo-600' },
     { title: 'Galeri Kegiatan', icon: ImageIcon, desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-100 text-pink-600' },
@@ -118,8 +118,12 @@ export default function Home() {
               <Link key={i} to={feature.to} className="group block h-full">
                 <Card className="h-full border-slate-100 dark:border-slate-800 hover:border-primary/50 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900 group-hover:-translate-y-2">
                   <CardContent className="p-8">
-                    <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                      <feature.icon className="w-8 h-8" />
+                    <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300 shadow-sm overflow-hidden p-2`}>
+                      {feature.imageSrc ? (
+                        <img src={feature.imageSrc} alt={feature.title} className="w-full h-full object-contain drop-shadow-md" />
+                      ) : (
+                        <feature.icon className="w-8 h-8" />
+                      )}
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
                     <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 line-clamp-2">{feature.desc}</p>
