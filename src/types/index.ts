@@ -193,3 +193,18 @@ export interface AuditLog {
   changed_by?: string
   created_at?: string
 }
+
+export interface Sponsor {
+  id: string
+  nama_perusahaan: string
+  bidang_industri: string
+  kontak_person?: string
+  nomor_hp?: string
+  email?: string
+  alamat?: string
+  tingkat_potensi: 'Tinggi' | 'Sedang' | 'Rendah'
+  penanggung_jawab?: string
+  dokumen_mou?: string
+  keterangan?: string
+  created_at?: string
+}
