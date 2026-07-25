@@ -13,6 +13,17 @@ export const memberSchema = z.object({
   jabatan: z.string().optional(),
   divisi: z.string().optional(),
   foto_url: z.string().optional(),
+  nomor_anggota: z.string().optional(),
+  pendidikan: z.string().optional(),
+  pekerjaan: z.string().optional(),
+  keahlian: z.array(z.string()).optional().default([]),
+  minat: z.array(z.string()).optional().default([]),
+  sertifikat: z.array(z.any()).optional().default([]),
+  prestasi: z.array(z.any()).optional().default([]),
+  riwayat_kepanitiaan: z.array(z.any()).optional().default([]),
+  riwayat_pelatihan: z.array(z.any()).optional().default([]),
+  jam_relawan: z.coerce.number().optional().default(0),
+  poin_keaktifan: z.coerce.number().optional().default(0),
 })
 
 export type MemberFormValues = z.infer<typeof memberSchema>

@@ -1,4 +1,5 @@
 import { Member } from '@/services/memberService'
+import QRCode from 'react-qr-code'
 
 interface IdCardTemplateProps {
   member: Member
@@ -13,6 +14,11 @@ export default function IdCardTemplate({ member }: IdCardTemplateProps) {
     : `https://ui-avatars.com/api/?name=${encodeURIComponent(member.nama)}&background=888&color=fff&size=400&bold=true`
 
   const displayName = member.nama.length > 12 ? member.nama.substring(0, 12) + '...' : member.nama;
+  const qrData = JSON.stringify({
+    id: member.id,
+    no: member.nomor_anggota || member.nik,
+    nama: member.nama
+  });
 
   return (
     <div
@@ -89,6 +95,17 @@ export default function IdCardTemplate({ member }: IdCardTemplateProps) {
           }} 
           onError={(e) => { e.currentTarget.style.display = 'none'; }}
         />
+      </div>
+
+      {/* =========================================================
+          LAYER 1.7: QR CODE (Top Right)
+      ========================================================= */}
+      <div style={{
+        position: 'absolute', top: '15px', right: '15px',
+        backgroundColor: '#FFF', padding: '4px', borderRadius: '4px',
+        boxShadow: '0 2px 5px rgba(0,0,0,0.2)', zIndex: 5
+      }}>
+        <QRCode value={qrData} size={45} level="M" />
       </div>
 
       {/* =========================================================

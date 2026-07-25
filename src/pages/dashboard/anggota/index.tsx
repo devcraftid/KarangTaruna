@@ -4,7 +4,7 @@ import { memberService, Member } from '@/services/memberService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2, MessageCircle, Printer } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle, Printer, Search, Star, Award, Briefcase, GraduationCap, X } from 'lucide-react'
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,8 @@ export default function Anggota() {
   const [isUploading, setIsUploading] = useState(false)
   const [printMember, setPrintMember] = useState<Member | null>(null)
   const [printAllMembers, setPrintAllMembers] = useState(false)
+  const [activeTab, setActiveTab] = useState("utama")
+  const [searchKeahlian, setSearchKeahlian] = useState("")
 
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
@@ -56,7 +59,14 @@ export default function Anggota() {
       is_panitia: false,
       jabatan: 'Anggota',
       divisi: '',
-      foto_url: ''
+      foto_url: '',
+      nomor_anggota: '',
+      pendidikan: '',
+      pekerjaan: '',
+      keahlian: [],
+      minat: [],
+      jam_relawan: 0,
+      poin_keaktifan: 0
     }
   })
 
@@ -144,8 +154,16 @@ export default function Anggota() {
       is_panitia: member.is_panitia || false,
       jabatan: member.jabatan || 'Anggota',
       divisi: member.divisi || '',
-      foto_url: member.foto_url || ''
+      foto_url: member.foto_url || '',
+      nomor_anggota: member.nomor_anggota || '',
+      pendidikan: member.pendidikan || '',
+      pekerjaan: member.pekerjaan || '',
+      keahlian: member.keahlian || [],
+      minat: member.minat || [],
+      jam_relawan: member.jam_relawan || 0,
+      poin_keaktifan: member.poin_keaktifan || 0
     })
+    setActiveTab("utama")
     setIsOpen(true)
   }
 
@@ -170,10 +188,20 @@ export default function Anggota() {
     setEditingId(null)
     setSelectedFile(null)
     form.reset({
-      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: ''
+      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: '', nomor_anggota: '', pendidikan: '', pekerjaan: '', keahlian: [], minat: [], jam_relawan: 0, poin_keaktifan: 0
     })
+    setActiveTab("utama")
     setIsOpen(true)
   }
+
+  // Filter members by keahlian
+  const filteredMembers = members?.filter(m => {
+    if (!searchKeahlian) return true;
+    const searchLower = searchKeahlian.toLowerCase();
+    return m.keahlian?.some((k: string) => k.toLowerCase().includes(searchLower)) || 
+           m.nama.toLowerCase().includes(searchLower) ||
+           m.pekerjaan?.toLowerCase().includes(searchLower);
+  });
 
   return (
     <div className="space-y-6">
@@ -184,9 +212,18 @@ export default function Anggota() {
           <p className="text-muted-foreground">Kelola data anggota karang taruna</p>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Cari nama, keahlian (Cth: MC)..." 
+              className="pl-9 w-full sm:w-[250px]"
+              value={searchKeahlian}
+              onChange={(e) => setSearchKeahlian(e.target.value)}
+            />
+          </div>
           <Button variant="outline" onClick={() => setPrintAllMembers(true)} disabled={isLoading || !members?.length}>
-            <Printer className="mr-2 h-4 w-4" /> Cetak Semua
+            <Printer className="mr-2 h-4 w-4" /> Cetak Kartu
           </Button>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -199,17 +236,30 @@ export default function Anggota() {
               <DialogTitle>{editingId ? 'Edit Anggota' : 'Tambah Anggota Baru'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Nama Lengkap</Label>
-                  <Input {...form.register('nama')} placeholder="Masukkan nama" />
-                  {form.formState.errors.nama && <p className="text-sm text-destructive">{form.formState.errors.nama.message}</p>}
-                </div>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="utama">Data Utama</TabsTrigger>
+                  <TabsTrigger value="profesional">Profesional</TabsTrigger>
+                  <TabsTrigger value="aktivitas">Aktivitas</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="utama" className="space-y-4 mt-4 animate-in fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Nama Lengkap</Label>
+                      <Input {...form.register('nama')} placeholder="Masukkan nama" />
+                      {form.formState.errors.nama && <p className="text-sm text-destructive">{form.formState.errors.nama.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Nomor Anggota (Opsional)</Label>
+                      <Input {...form.register('nomor_anggota')} placeholder="Cth: KT-001" />
+                    </div>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label>Foto Profil (Opsional)</Label>
-                  <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
-                </div>
+                  <div className="space-y-2">
+                    <Label>Foto Profil</Label>
+                    <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                  </div>
                 
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
@@ -320,7 +370,58 @@ export default function Anggota() {
                     </div>
                   </>
                 )}
-              </div>
+              </TabsContent>
+
+              <TabsContent value="profesional" className="space-y-4 mt-4 animate-in fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Pendidikan Terakhir</Label>
+                    <Input {...form.register('pendidikan')} placeholder="Cth: S1 Teknik Informatika" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Pekerjaan Saat Ini</Label>
+                    <Input {...form.register('pekerjaan')} placeholder="Cth: Fotografer, Mahasiswa" />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Keahlian (Pisahkan dengan koma)</Label>
+                  <Input 
+                    placeholder="Cth: Desain, MC, Fotografi, IT" 
+                    value={form.watch('keahlian')?.join(', ')}
+                    onChange={(e) => form.setValue('keahlian', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                  />
+                  <p className="text-xs text-muted-foreground">Membantu pencarian bakat saat pembentukan panitia acara.</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Minat / Hobi (Pisahkan dengan koma)</Label>
+                  <Input 
+                    placeholder="Cth: Olahraga, Musik, Membaca" 
+                    value={form.watch('minat')?.join(', ')}
+                    onChange={(e) => form.setValue('minat', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="aktivitas" className="space-y-4 mt-4 animate-in fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Jam Relawan (Total)</Label>
+                    <Input type="number" {...form.register('jam_relawan')} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Poin Keaktifan</Label>
+                    <Input type="number" {...form.register('poin_keaktifan')} />
+                  </div>
+                </div>
+                
+                {/* Note: In a real app, Sertifikat and Prestasi would be complex array fields (e.g. using useFieldArray). For now we just use a placeholder text area or leave them to be managed via a different interface. */}
+                <div className="p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-200">
+                  Riwayat kepanitiaan, sertifikat, dan presasi anggota dicatat secara otomatis oleh sistem ketika anggota dimasukkan ke dalam panitia acara atau memenangkan perlombaan.
+                </div>
+              </TabsContent>
+            </Tabs>
 
               <div className="pt-4 flex justify-end space-x-2">
                 <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>Batal</Button>
@@ -394,20 +495,37 @@ export default function Anggota() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nama</TableHead>
-                <TableHead>NIK</TableHead>
-                <TableHead>L/P</TableHead>
+                <TableHead>Nama Anggota</TableHead>
+                <TableHead>Keahlian / Profesi</TableHead>
+                <TableHead>Keaktifan</TableHead>
                 <TableHead>No. HP</TableHead>
-                <TableHead>RT/RW</TableHead>
+                <TableHead>Alamat</TableHead>
                 <TableHead className="text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {members?.map((member) => (
+              {filteredMembers?.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.nama}</TableCell>
-                  <TableCell>{member.nik}</TableCell>
-                  <TableCell>{member.jenis_kelamin}</TableCell>
+                  <TableCell>
+                    <div className="font-medium text-slate-900">{member.nama}</div>
+                    <div className="text-xs text-muted-foreground">{member.nomor_anggota || member.nik}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-sm font-medium">{member.pekerjaan || '-'}</div>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {member.keahlian?.slice(0,3).map((k: string, i: number) => (
+                        <span key={i} className="text-[10px] bg-slate-100 border text-slate-600 px-1.5 py-0.5 rounded-full">{k}</span>
+                      ))}
+                      {member.keahlian && member.keahlian.length > 3 && (
+                        <span className="text-[10px] bg-slate-100 border text-slate-600 px-1.5 py-0.5 rounded-full">+{member.keahlian.length - 3}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 text-xs text-amber-600 font-medium">
+                      <Star className="w-3 h-3 fill-amber-500" /> {member.poin_keaktifan || 0} Pts
+                    </div>
+                  </TableCell>
                   <TableCell>{member.nomor_hp}</TableCell>
                   <TableCell>{member.rt}/{member.rw}</TableCell>
                   <TableCell className="text-right space-x-2">

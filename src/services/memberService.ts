@@ -14,6 +14,17 @@ export interface Member {
   is_panitia?: boolean
   jabatan?: string
   divisi?: string
+  nomor_anggota?: string
+  pendidikan?: string
+  pekerjaan?: string
+  keahlian?: string[]
+  minat?: string[]
+  sertifikat?: any[]
+  prestasi?: any[]
+  riwayat_kepanitiaan?: any[]
+  riwayat_pelatihan?: any[]
+  jam_relawan?: number
+  poin_keaktifan?: number
   created_at?: string
 }
 
