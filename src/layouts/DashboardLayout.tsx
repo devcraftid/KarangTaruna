@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Trophy, DollarSign, LogOut,
   Megaphone, Newspaper, Image as ImageIcon,
   CreditCard, Wallet, ChevronLeft, ChevronRight, ChevronDown, Menu, X,
-  FileText, Flag, Home as HomeIcon
+  FileText, Flag, Home as HomeIcon, Award
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -70,6 +70,7 @@ export default function DashboardLayout() {
         { name: 'Berita', href: '/dashboard/berita', icon: Newspaper, roles: ['admin', 'sekretaris'] },
         { name: 'Galeri & Dokumentasi', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris'] },
         { name: 'Data Kepengurusan', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
+        { name: 'Hall of Fame', href: '/dashboard/hall-of-fame', icon: Award, roles: ['admin', 'sekretaris'] },
       ]
     }
   ]

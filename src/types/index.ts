@@ -208,3 +208,14 @@ export interface Sponsor {
   keterangan?: string
   created_at?: string
 }
+
+export interface HallOfFameEntry {
+  id: string
+  kategori: 'ketua' | 'pengurus_terbaik' | 'anggota_inspiratif' | 'prestasi' | 'juara_lomba' | 'sejarah'
+  judul: string
+  deskripsi?: string
+  tahun: string
+  foto_url?: string
+  created_at?: string
+}
+

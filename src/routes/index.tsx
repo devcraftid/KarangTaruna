@@ -12,6 +12,7 @@ import PatunganPublik from '@/pages/public/Patungan'
 import PatunganDetail from '@/pages/public/PatunganDetail'
 import Etalase from '@/pages/public/Etalase'
 import VotingPublik from '@/pages/public/VotingPublik'
+import HallOfFamePublik from '@/pages/public/HallOfFame'
 
 import DashboardHome from '@/pages/dashboard/DashboardHome'
 import Anggota from '@/pages/dashboard/anggota'
@@ -35,6 +36,7 @@ import Bumkt from '@/pages/dashboard/bumkt'
 import Events from '@/pages/dashboard/events'
 import Warga from '@/pages/dashboard/warga'
 import Proposals from '@/pages/dashboard/proposals'
+import HallOfFameDashboard from '@/pages/dashboard/hall-of-fame'
 
 const router = createBrowserRouter([
   {
@@ -84,6 +86,10 @@ const router = createBrowserRouter([
       {
         path: 'voting',
         element: <VotingPublik />,
+      },
+      {
+        path: 'hall-of-fame',
+        element: <HallOfFamePublik />,
       }
     ],
   },
@@ -178,6 +184,10 @@ const router = createBrowserRouter([
       {
         path: 'proposals',
         element: <Proposals />,
+      },
+      {
+        path: 'hall-of-fame',
+        element: <HallOfFameDashboard />,
       }
     ],
   },

@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { 
   Home, Trophy, Info, PieChart, User, LogIn, Image, Users, 
-  Menu, X, Coins, Store, Vote, ChevronDown 
+  Menu, X, Coins, Store, Vote, ChevronDown, Award
 } from 'lucide-react'
 
 // Custom Dropdown Component
@@ -107,6 +107,7 @@ export default function PublicLayout() {
               <DropdownItem to="/informasi" icon={Info}>Berita & Pengumuman</DropdownItem>
               <DropdownItem to="/lomba" icon={Trophy}>Lomba & Agenda</DropdownItem>
               <DropdownItem to="/galeri" icon={Image}>Galeri Kegiatan</DropdownItem>
+              <DropdownItem to="/hall-of-fame" icon={Award}>Hall of Fame</DropdownItem>
             </NavDropdown>
 
             <NavDropdown title="Keuangan & Usaha" isActive={isKeuanganActive}>
@@ -190,6 +191,10 @@ export default function PublicLayout() {
                 <Link to="/galeri" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-50 dark:bg-slate-900 border p-4 rounded-xl flex items-center gap-4 text-slate-700 dark:text-slate-200 font-bold active:scale-95 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Image className="text-primary w-5 h-5"/></div> 
                   Galeri Kegiatan
+                </Link>
+                <Link to="/hall-of-fame" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-50 dark:bg-slate-900 border p-4 rounded-xl flex items-center gap-4 text-slate-700 dark:text-slate-200 font-bold active:scale-95 transition-transform">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Award className="text-primary w-5 h-5"/></div> 
+                  Hall of Fame
                 </Link>
               </div>
             </div>
