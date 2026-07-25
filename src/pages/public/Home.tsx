@@ -47,7 +47,7 @@ export default function Home() {
           <img src="/logo.png" alt="Logo" className="w-[300px] h-[300px] xl:w-[500px] xl:h-[500px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.4)]" onError={(e) => { e.currentTarget.style.display = 'none' }} />
         </div>
 
-        <div className="container mx-auto px-4 z-20">
+        <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-2xl bg-white/90 dark:bg-card/90 lg:bg-transparent lg:dark:bg-transparent backdrop-blur-md lg:backdrop-blur-none p-8 lg:p-0 rounded-3xl shadow-xl lg:shadow-none border lg:border-none">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm mb-6 border border-primary/20">
               <MapPin className="w-4 h-4 mr-2" /> Pondok Betung - Pondok Aren
@@ -207,7 +207,7 @@ export default function Home() {
                 Mulai Donasi
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-14 px-8 text-base border-2 border-white/20 hover:bg-white/10 text-white rounded-full font-bold">
+            <Button asChild size="lg" variant="outline" className="h-14 px-8 text-base border-2 border-white/30 bg-transparent text-white hover:bg-white/20 hover:text-white rounded-full font-bold">
               <Link to="/etalase">
                 <Store className="w-5 h-5 mr-2" /> Kunjungi Etalase
               </Link>
