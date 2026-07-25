@@ -24,10 +24,10 @@ export default function Home() {
   const latestBerita = berita?.slice(0, 3) || []
 
   const features = [
-    { title: 'Agenda & Lomba', icon: Trophy, imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
-    { title: 'Transparansi Kas', icon: PieChart, desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-100 text-emerald-600' },
-    { title: 'Hall of Fame', icon: Award, desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-100 text-indigo-600' },
-    { title: 'Galeri Kegiatan', icon: ImageIcon, desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-100 text-pink-600' },
+    { title: 'Agenda & Lomba', icon: null, imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
+    { title: 'Transparansi Kas', icon: null, imageSrc: '/transparansi-icon.png', desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-50' },
+    { title: 'Hall of Fame', icon: null, imageSrc: '/halloffame-icon.png', desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-50' },
+    { title: 'Galeri Kegiatan', icon: null, imageSrc: '/galeri-icon.png', desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-50' },
   ]
 
   return (
