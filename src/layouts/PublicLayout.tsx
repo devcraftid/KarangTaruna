@@ -34,7 +34,7 @@ function NavDropdown({ title, children, isActive }: { title: string, children: R
       
       {/* Dropdown Menu */}
       <div 
-        className={`absolute top-full left-0 w-56 bg-white dark:bg-card border shadow-lg rounded-xl overflow-hidden transition-all duration-200 origin-top-left
+        className={`absolute top-full left-0 w-56 bg-white dark:bg-card border shadow-lg rounded-xl overflow-hidden transition-all duration-200 origin-top-left z-50
           ${isOpen ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible'}`}
       >
         <div className="flex flex-col p-2">
@@ -85,7 +85,7 @@ export default function PublicLayout() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col pb-16 md:pb-0">
-      <header className="border-b bg-white dark:bg-card sticky top-0 z-40 shadow-sm">
+      <header className="border-b bg-white dark:bg-card sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           
           {/* Logo & Title */}
