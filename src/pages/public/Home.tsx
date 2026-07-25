@@ -118,9 +118,9 @@ export default function Home() {
               <Link key={i} to={feature.to} className="group block h-full">
                 <Card className="h-full border-slate-100 dark:border-slate-800 hover:border-primary/50 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900 group-hover:-translate-y-2">
                   <CardContent className="p-8">
-                    <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300 shadow-sm overflow-hidden p-2`}>
+                    <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-6 transform group-hover:scale-110 transition-transform duration-300 shadow-sm overflow-hidden`}>
                       {feature.imageSrc ? (
-                        <img src={feature.imageSrc} alt={feature.title} className="w-full h-full object-contain drop-shadow-md" />
+                        <img src={feature.imageSrc} alt={feature.title} className="w-full h-full object-cover scale-[1.35] drop-shadow-md" />
                       ) : (
                         <feature.icon className="w-8 h-8" />
                       )}
