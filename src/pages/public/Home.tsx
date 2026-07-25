@@ -34,7 +34,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-background overflow-hidden">
       
       {/* 1. HERO SECTION */}
-      <section className="relative min-h-[90vh] flex items-center pt-20 pb-16 md:pt-0 md:pb-0">
+      <section className="relative min-h-[90vh] flex items-center pt-24 pb-32 lg:pt-0 lg:pb-0">
         <div className="absolute right-0 top-0 bottom-0 w-full lg:w-[65%] bg-primary rounded-bl-[60px] md:rounded-bl-[120px] lg:rounded-bl-[200px] z-0 overflow-hidden shadow-2xl">
           <div className="absolute inset-0 bg-cover bg-center mix-blend-multiply opacity-50" style={{ backgroundImage: "url('/banner.png')" }}></div>
           <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/80 to-transparent lg:bg-gradient-to-r lg:from-primary lg:via-primary/80 lg:to-transparent"></div>
