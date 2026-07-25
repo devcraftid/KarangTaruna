@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { Calendar, Newspaper, Users, CheckCircle, ArrowRight, Award, Trophy, PieChart, Image as ImageIcon, MapPin, Store } from 'lucide-react'
+import { Calendar, Newspaper, Users, ArrowRight, Trophy, PieChart, MapPin, Store } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { lombaService } from '@/services/lombaService'
 import { beritaService } from '@/services/beritaService'
@@ -24,10 +24,10 @@ export default function Home() {
   const latestBerita = berita?.slice(0, 3) || []
 
   const features = [
-    { title: 'Agenda & Lomba', icon: null, imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
-    { title: 'Transparansi Kas', icon: null, imageSrc: '/transparansi-icon.png', desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-50' },
-    { title: 'Hall of Fame', icon: null, imageSrc: '/halloffame-icon.png', desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-50' },
-    { title: 'Galeri Kegiatan', icon: null, imageSrc: '/galeri-icon.png', desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-50' },
+    { title: 'Agenda & Lomba', imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
+    { title: 'Transparansi Kas', imageSrc: '/transparansi-icon.png', desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-50' },
+    { title: 'Hall of Fame', imageSrc: '/halloffame-icon.png', desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-50' },
+    { title: 'Galeri Kegiatan', imageSrc: '/galeri-icon.png', desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-50' },
   ]
 
   return (
@@ -119,11 +119,7 @@ export default function Home() {
                 <Card className="h-full border-slate-100 dark:border-slate-800 hover:border-primary/50 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-900 group-hover:-translate-y-2">
                   <CardContent className="p-8">
                     <div className={`w-20 h-20 md:w-24 md:h-24 rounded-3xl ${feature.color} flex items-center justify-center mb-6 md:mb-8 transform group-hover:scale-110 transition-transform duration-300 shadow-md overflow-hidden`}>
-                      {feature.imageSrc ? (
-                        <img src={feature.imageSrc} alt={feature.title} className="w-full h-full object-cover scale-[1.5] drop-shadow-lg" />
-                      ) : (
-                        <feature.icon className="w-10 h-10 md:w-12 md:h-12" />
-                      )}
+                      <img src={feature.imageSrc} alt={feature.title} className="w-full h-full object-cover scale-[1.5] drop-shadow-lg" />
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
                     <p className="text-slate-600 dark:text-slate-400 font-medium mb-6 line-clamp-2">{feature.desc}</p>

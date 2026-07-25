@@ -4,7 +4,7 @@ import { memberService, Member } from '@/services/memberService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Plus, Edit2, Trash2, MessageCircle, Printer, Search, Star, Award, Briefcase, GraduationCap, X } from 'lucide-react'
+import { Plus, Edit2, Trash2, MessageCircle, Printer, Search, Star } from 'lucide-react'
 import {
   Table,
   TableBody,
