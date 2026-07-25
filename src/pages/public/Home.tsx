@@ -26,7 +26,7 @@ export default function Home() {
   const features = [
     { title: 'Agenda & Lomba', imageSrc: '/agenda-icon.png', desc: 'Ikuti berbagai lomba dan kegiatan menarik tingkat RW.', to: '/lomba', color: 'bg-orange-50' },
     { title: 'Transparansi Kas', imageSrc: '/transparansi-icon.png', desc: 'Pantau laporan keuangan dan penggunaan dana kas warga.', to: '/transparansi', color: 'bg-emerald-50' },
-    { title: 'Hall of Fame', imageSrc: '/halloffame-icon.png', desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-50' },
+    { title: 'Dinding Prestasi', imageSrc: '/halloffame-icon.png', desc: 'Apresiasi dan sejarah perjalanan Karang Taruna kami.', to: '/hall-of-fame', color: 'bg-indigo-50' },
     { title: 'Galeri Kegiatan', imageSrc: '/galeri-icon.png', desc: 'Dokumentasi foto dan video dari setiap program kami.', to: '/galeri', color: 'bg-pink-50' },
   ]
 

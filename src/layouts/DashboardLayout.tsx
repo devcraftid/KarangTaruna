@@ -37,7 +37,7 @@ export default function DashboardLayout() {
       title: 'Utama',
       icon: LayoutDashboard,
       items: [
-        { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'sekretaris', 'bendahara'] },
+        { name: 'Dasbor', href: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'sekretaris', 'bendahara'] },
       ]
     },
     {
@@ -58,7 +58,7 @@ export default function DashboardLayout() {
         { name: 'Kas Keluar', href: '/dashboard/kas-keluar', icon: CreditCard, roles: ['admin', 'bendahara'] },
         { name: 'Kat. Pemasukan', href: '/dashboard/kategori-pemasukan', icon: DollarSign, roles: ['admin', 'bendahara'] },
         { name: 'Kat. Pengeluaran', href: '/dashboard/kategori-pengeluaran', icon: DollarSign, roles: ['admin', 'bendahara'] },
-        { name: 'Tracker Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
+        { name: 'Pelacakan Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
         { name: 'Laporan Kas', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
       ]
     },
@@ -70,7 +70,7 @@ export default function DashboardLayout() {
         { name: 'Berita', href: '/dashboard/berita', icon: Newspaper, roles: ['admin', 'sekretaris'] },
         { name: 'Galeri & Dokumentasi', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris'] },
         { name: 'Data Kepengurusan', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
-        { name: 'Hall of Fame', href: '/dashboard/hall-of-fame', icon: Award, roles: ['admin', 'sekretaris'] },
+        { name: 'Dinding Prestasi', href: '/dashboard/hall-of-fame', icon: Award, roles: ['admin', 'sekretaris'] },
       ]
     }
   ]

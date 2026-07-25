@@ -107,7 +107,7 @@ export default function PublicLayout() {
               <DropdownItem to="/informasi" icon={Info}>Berita & Pengumuman</DropdownItem>
               <DropdownItem to="/lomba" icon={Trophy}>Lomba & Agenda</DropdownItem>
               <DropdownItem to="/galeri" icon={Image}>Galeri Kegiatan</DropdownItem>
-              <DropdownItem to="/hall-of-fame" icon={Award}>Hall of Fame</DropdownItem>
+              <DropdownItem to="/hall-of-fame" icon={Award}>Dinding Prestasi</DropdownItem>
             </NavDropdown>
 
             <NavDropdown title="Keuangan & Usaha" isActive={isKeuanganActive}>
@@ -118,17 +118,17 @@ export default function PublicLayout() {
 
             <NavDropdown title="Organisasi" isActive={isOrganisasiActive}>
               <DropdownItem to="/panitia" icon={Users}>Struktur Panitia</DropdownItem>
-              <DropdownItem to="/voting" icon={Vote}>E-Voting Publik</DropdownItem>
+              <DropdownItem to="/voting" icon={Vote}>Pemilihan Online</DropdownItem>
             </NavDropdown>
             
             <div className="ml-4 pl-4 border-l">
               {user ? (
                 <Link to="/dashboard" className="bg-primary text-white px-6 py-2.5 rounded-full text-xs font-bold hover:bg-primary/90 transition-all flex items-center shadow-md">
-                  <User className="w-4 h-4 mr-2" /> Dashboard
+                  <User className="w-4 h-4 mr-2" /> Dasbor Admin
                 </Link>
               ) : (
                 <Link to="/login" className="bg-primary text-white px-6 py-2.5 rounded-full text-xs font-bold hover:bg-primary/90 transition-all flex items-center shadow-md">
-                  <LogIn className="w-4 h-4 mr-2" /> Login Admin
+                  <LogIn className="w-4 h-4 mr-2" /> Masuk Admin
                 </Link>
               )}
             </div>
@@ -194,7 +194,7 @@ export default function PublicLayout() {
                 </Link>
                 <Link to="/hall-of-fame" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-50 dark:bg-slate-900 border p-4 rounded-xl flex items-center gap-4 text-slate-700 dark:text-slate-200 font-bold active:scale-95 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Award className="text-primary w-5 h-5"/></div> 
-                  Hall of Fame
+                  Dinding Prestasi
                 </Link>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function PublicLayout() {
                 </Link>
                 <Link to="/voting" onClick={() => setIsMobileMenuOpen(false)} className="bg-slate-50 dark:bg-slate-900 border p-4 rounded-xl flex items-center gap-4 text-slate-700 dark:text-slate-200 font-bold active:scale-95 transition-transform">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><Vote className="text-primary w-5 h-5"/></div> 
-                  E-Voting Publik
+                  Pemilihan Online
                 </Link>
               </div>
             </div>
@@ -240,12 +240,12 @@ export default function PublicLayout() {
                 {user ? (
                   <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="bg-primary text-white border-transparent p-4 rounded-xl flex items-center gap-4 font-bold active:scale-95 transition-transform shadow-md">
                     <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><User className="text-white w-5 h-5"/></div> 
-                    Masuk ke Dashboard
+                    Masuk ke Dasbor
                   </Link>
                 ) : (
                   <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="bg-primary text-white border-transparent p-4 rounded-xl flex items-center gap-4 font-bold active:scale-95 transition-transform shadow-md">
                     <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center"><LogIn className="text-white w-5 h-5"/></div> 
-                    Login Admin
+                    Masuk Admin
                   </Link>
                 )}
               </div>
