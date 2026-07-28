@@ -87,7 +87,7 @@ export default function DataUMKM() {
   }
 
   if (loading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (

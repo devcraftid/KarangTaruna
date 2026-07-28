@@ -71,7 +71,7 @@ export default function TentangKami() {
             <div className="relative space-y-12">
               <div className="absolute left-1/2 -translate-x-1/2 h-full w-1 bg-md-outline-variant hidden md:block"></div>
               
-              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 relative text-center md:text-left">
+              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4 md:p-8 relative text-center md:text-left">
                 <div className="md:w-1/2 text-center md:text-right md:pr-12 w-full">
                   <h3 className="text-2xl font-bold text-md-secondary">1960</h3>
                   <p className="text-base mt-2">Karang Taruna lahir sebagai respon atas kebutuhan wadah pembinaan bagi anak yatim piatu dan anak-anak yang kurang beruntung di Kampung Melayu.</p>
@@ -85,7 +85,7 @@ export default function TentangKami() {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row-reverse items-center gap-4 md:gap-8 relative text-center md:text-left mt-8 md:mt-0">
+              <div className="flex flex-col md:flex-row-reverse items-center gap-4 md:gap-4 md:p-8 relative text-center md:text-left mt-8 md:mt-0">
                 <div className="md:w-1/2 text-center md:text-left md:pl-12 w-full">
                   <h3 className="text-2xl font-bold text-md-secondary">1980</h3>
                   <p className="text-base mt-2">Ditetapkannya Karang Taruna sebagai Organisasi Sosial resmi di bawah pembinaan Departemen Sosial melalui Keputusan Menteri.</p>
@@ -99,7 +99,7 @@ export default function TentangKami() {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 relative text-center md:text-left mt-8 md:mt-0">
+              <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4 md:p-8 relative text-center md:text-left mt-8 md:mt-0">
                 <div className="md:w-1/2 text-center md:text-right md:pr-12 w-full">
                   <h3 className="text-2xl font-bold text-md-secondary">Sekarang</h3>
                   <p className="text-base mt-2">Transformasi digital Karang Taruna menjadi organisasi modern yang berfokus pada ekonomi kreatif, UMKM, dan pemberdayaan sosial berbasis teknologi.</p>
@@ -118,9 +118,9 @@ export default function TentangKami() {
 
         {/* Visi Misi: Bento Grid */}
         <section className="py-16 px-6 lg:px-10 max-w-7xl mx-auto mt-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 h-full">
-            <div className="md:col-span-4 bg-primary text-white p-8 rounded-3xl flex flex-col justify-between shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-full">
+            <div className="md:col-span-4 bg-primary text-white p-4 md:p-8 rounded-3xl flex flex-col justify-between shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 md:p-8 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4">
                  <Eye className="w-48 h-48" />
               </div>
               <div className="relative z-10">
@@ -133,8 +133,8 @@ export default function TentangKami() {
               </div>
             </div>
             
-            <div className="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white border border-md-outline-variant p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
+            <div className="md:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="bg-white border border-md-outline-variant p-4 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-shadow">
                 <CheckCircle className="w-10 h-10 text-md-secondary mb-4" />
                 <h3 className="text-2xl font-bold mb-4 text-md-on-surface">Misi Strategis</h3>
                 <ul className="space-y-4">
@@ -164,9 +164,9 @@ export default function TentangKami() {
                 </ul>
               </div>
               
-              <div className="bg-md-secondary-container/30 border border-md-secondary/20 p-8 rounded-3xl">
+              <div className="bg-md-secondary-container/30 border border-md-secondary/20 p-4 md:p-8 rounded-3xl">
                 <h3 className="text-2xl font-bold mb-6 text-md-on-surface">Nilai Dasar</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl text-center shadow-sm hover:-translate-y-1 transition-transform">
                     <Users className="w-6 h-6 text-md-secondary mb-2" />
                     <span className="text-sm font-bold">Solidaritas</span>
@@ -207,7 +207,7 @@ export default function TentangKami() {
                 <>
                   <div className="w-full max-w-sm">
                     <div 
-                      className="bg-white p-8 rounded-3xl shadow-md border border-md-outline-variant text-center transition-all cursor-pointer hover:-translate-y-2 hover:shadow-xl group"
+                      className="bg-white p-4 md:p-8 rounded-3xl shadow-md border border-md-outline-variant text-center transition-all cursor-pointer hover:-translate-y-2 hover:shadow-xl group"
                       onClick={() => setSelectedMember(ketua)}
                     >
                       {ketua.foto_profil ? (
@@ -226,7 +226,7 @@ export default function TentangKami() {
               ) : null}
 
               {otherMembers.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 w-full">
                   {otherMembers.map((member) => (
                     <div 
                       key={member.id} 
@@ -257,7 +257,7 @@ export default function TentangKami() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-1 space-y-6">
               {settings?.legalitas_sk || settings?.legalitas_npwp ? (
-                <div className="bg-md-surface-container-high p-8 rounded-3xl border border-md-outline-variant">
+                <div className="bg-md-surface-container-high p-4 md:p-8 rounded-3xl border border-md-outline-variant">
                   <h3 className="text-2xl font-bold mb-6">Aspek Legalitas</h3>
                   <div className="space-y-6">
                     {settings.legalitas_sk && (
@@ -284,7 +284,7 @@ export default function TentangKami() {
                   </div>
                 </div>
               ) : (
-                <div className="bg-md-surface-container-high p-8 rounded-3xl border border-md-outline-variant flex items-center justify-center h-full">
+                <div className="bg-md-surface-container-high p-4 md:p-8 rounded-3xl border border-md-outline-variant flex items-center justify-center h-full">
                   <p className="text-md-on-surface-variant text-center">Data Aspek Legalitas belum diatur.</p>
                 </div>
               )}

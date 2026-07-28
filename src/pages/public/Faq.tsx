@@ -28,7 +28,7 @@ export default function Faq() {
       </div>
 
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10 mt-12 max-w-3xl">
-        <div className="bg-white dark:bg-slate-900 p-8 md:p-12 rounded-3xl shadow-xl">
+        <div className="bg-white dark:bg-slate-900 p-4 md:p-8 md:p-12 rounded-3xl shadow-xl">
            <div className="flex items-center gap-3 mb-8 pb-6 border-b dark:border-slate-800">
              <div className="w-12 h-12 rounded-2xl bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-yellow-600">
                <HelpCircle className="w-6 h-6" />

@@ -66,7 +66,7 @@ export default function AspirasiPublik() {
 
         <Card className="border-none shadow-xl bg-white dark:bg-md-inverse-surface overflow-hidden rounded-3xl">
           <div className="h-2 w-full bg-secondary"></div>
-          <CardContent className="p-8 md:p-12">
+          <CardContent className="p-4 md:p-8 md:p-12">
             
             {success ? (
               <div className="text-center py-12 animate-in fade-in zoom-in duration-500">
@@ -91,7 +91,7 @@ export default function AspirasiPublik() {
                   </div>
                 )}
 
-                <div className="grid md:grid-cols-1 gap-6">
+                <div className="grid md:grid-cols-1 gap-4 md:gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Nama Lengkap / Inisial</label>
                     <input required name="nama_pengirim" value={formData.nama_pengirim} onChange={handleChange} className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-xl p-4 focus:ring-2 focus:ring-primary transition-all text-black" placeholder="Cth: Hamba Allah" type="text"/>

@@ -129,7 +129,7 @@ export default function Home() {
 
       {/* ===== 2. STATS FLOATING ===== */}
       <section className="relative z-30 -mt-16 max-w-[1280px] mx-auto px-6 lg:px-10 w-full">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 bg-white dark:bg-md-inverse-surface p-4 md:p-8 rounded-3xl shadow-2xl border border-md-outline-variant/20">
+        <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 bg-white dark:bg-md-inverse-surface p-4 md:p-8 rounded-3xl shadow-2xl border border-md-outline-variant/20">
           {[
             { label: 'Anggota Aktif', value: stats.anggota || '—', icon: Users },
             { label: 'Program Berjalan', value: stats.proker || '—', icon: Briefcase },
@@ -173,7 +173,7 @@ export default function Home() {
                 "{settings?.ketua_sambutan || 'Pesan sambutan belum diatur.'}"
               </p>
             </div>
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid sm:grid-cols-2 gap-4 md:gap-6">
               <div className="bg-md-surface-container-low p-6 rounded-2xl border-l-4 border-secondary">
                 <h4 className="text-lg font-bold text-primary mb-2">Visi</h4>
                 <p className="text-sm text-md-on-surface-variant leading-relaxed">Menjadi organisasi kepemudaan yang mandiri, profesional, dan garda terdepan dalam kesejahteraan sosial.</p>
@@ -202,7 +202,7 @@ export default function Home() {
               Semua Program <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-6 h-auto md:h-[600px]">
+              <div className="grid grid-cols-1 md:grid-cols-3 md:grid-rows-2 gap-4 md:gap-6 h-auto md:h-[600px]">
             {topProkers.length > 0 ? (
               <>
                 {/* Big card */}
@@ -218,7 +218,7 @@ export default function Home() {
                       <Briefcase className="absolute inset-0 w-full h-full p-20 object-cover opacity-10 group-hover:scale-110 transition-transform duration-700 text-white" />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 p-8 space-y-3">
+                    <div className="absolute bottom-0 p-4 md:p-8 space-y-3">
                       <div className="bg-secondary px-3 py-1 rounded-full text-[10px] text-white w-fit font-bold uppercase tracking-widest">{topProkers[0].bidang || 'Program'}</div>
                       <h3 className="text-white text-xl font-bold">{topProkers[0].nama_program}</h3>
                       <p className="text-white/80 text-sm leading-relaxed">{topProkers[0].deskripsi || 'Tidak ada deskripsi'}</p>
@@ -245,7 +245,7 @@ export default function Home() {
                   </div>
                 )}
                 {topProkers[3] && (
-                  <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white dark:bg-md-surface-container-high border border-md-outline-variant/30 flex items-center gap-8 p-8">
+                  <div className="md:col-span-2 group relative overflow-hidden rounded-3xl bg-white dark:bg-md-surface-container-high border border-md-outline-variant/30 flex items-center gap-4 md:p-8 p-4 md:p-8">
                     <div className="flex-1 space-y-3">
                       <div className="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase w-fit">{topProkers[3].bidang || 'Program'}</div>
                       <h3 className="text-primary font-bold text-xl">{topProkers[3].nama_program}</h3>
@@ -273,7 +273,7 @@ export default function Home() {
             <p className="font-semibold">Belum ada agenda yang dijadwalkan.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {events.map((ev) => {
               const d = formatDate(ev.date)
               return (
@@ -328,7 +328,7 @@ export default function Home() {
           {news.length === 0 ? (
             <p className="text-md-on-surface-variant text-center py-16">Belum ada berita yang dipublikasikan.</p>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:p-8">
               {/* Featured */}
               {news[0] && (
                 <Link to={`/informasi/${news[0].id}`} className="group cursor-pointer">
@@ -389,7 +389,7 @@ export default function Home() {
           {products.length === 0 ? (
             <p className="text-white/60 text-center py-12">Belum ada produk tersedia.</p>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {products.map(p => (
                 <div key={p.id} className="bg-white/5 backdrop-blur-md rounded-2xl p-4 border border-white/10 group">
                   <div className="relative aspect-square rounded-xl overflow-hidden mb-4 bg-white/10">
@@ -435,7 +435,7 @@ export default function Home() {
 
       {/* ===== 9. DONASI CTA ===== */}
       <section className="py-16 max-w-[1280px] mx-auto px-6 lg:px-10 w-full">
-        <div className="bg-gradient-to-r from-primary to-md-primary-container rounded-3xl p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+        <div className="bg-gradient-to-r from-primary to-md-primary-container rounded-3xl p-4 md:p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-4 md:p-8 text-center md:text-left">
           <div className="space-y-4">
             <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Mari Berdonasi Bersama</h2>
             <p className="text-white/80 text-lg max-w-lg mx-auto md:mx-0">Setiap kontribusi Anda membantu program sosial dan pemberdayaan masyarakat yang nyata.</p>

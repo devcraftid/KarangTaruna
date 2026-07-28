@@ -81,12 +81,12 @@ export default function DashboardHome() {
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {[1,2,3,4].map(i => <div key={i} className="h-32 bg-muted animate-pulse rounded-2xl"></div>)}
         </div>
       ) : (
         <>
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             
             {/* Card 1: Saldo */}
             <div className="group relative overflow-hidden bg-gradient-to-br from-primary to-blue-700 p-6 rounded-2xl shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:-translate-y-1">

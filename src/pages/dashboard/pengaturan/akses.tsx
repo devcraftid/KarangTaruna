@@ -99,11 +99,11 @@ export default function PengaturanAkses() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex justify-center p-8">
+            <div className="flex justify-center p-4 md:p-8">
               <Loader2 className="w-8 h-8 animate-spin text-primary" />
             </div>
           ) : users.length === 0 ? (
-            <div className="text-center p-8 text-muted-foreground border-2 border-dashed rounded-lg">
+            <div className="text-center p-4 md:p-8 text-muted-foreground border-2 border-dashed rounded-lg">
               Belum ada data pengguna.
             </div>
           ) : (

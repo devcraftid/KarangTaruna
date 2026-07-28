@@ -105,7 +105,7 @@ export default function Kepanitiaan() {
   }
 
   if (fetching) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (
@@ -118,7 +118,7 @@ export default function Kepanitiaan() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6">
         {/* Form Tambah Panitia */}
         <Card className="md:w-1/3">
           <CardHeader>
@@ -146,7 +146,7 @@ export default function Kepanitiaan() {
               </Select>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div className="space-y-2">
                 <Label>Divisi/Seksi</Label>
                 <Select value={formData.divisi} onValueChange={v => setFormData({...formData, divisi: v})}>

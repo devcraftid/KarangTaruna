@@ -255,7 +255,7 @@ export default function Anggota() {
             </DialogHeader>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
+                <TabsList className="grid w-full grid-cols-1 md:grid-cols-3">
                   <TabsTrigger value="utama">Data Utama</TabsTrigger>
                   <TabsTrigger value="profesional">Profesional</TabsTrigger>
                   <TabsTrigger value="aktivitas">Aktivitas</TabsTrigger>
@@ -537,9 +537,9 @@ export default function Anggota() {
 
       <div className="bg-card border rounded-xl shadow-sm">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">Memuat data...</div>
+          <div className="p-4 md:p-8 text-center text-muted-foreground">Memuat data...</div>
         ) : error ? (
-          <div className="p-8 text-center text-destructive">Gagal memuat data anggota.</div>
+          <div className="p-4 md:p-8 text-center text-destructive">Gagal memuat data anggota.</div>
         ) : members?.length === 0 ? (
           <div className="p-16 text-center">
             <h3 className="text-lg font-semibold">Belum ada anggota</h3>

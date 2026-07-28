@@ -86,7 +86,7 @@ export default function PendaftaranPublik() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
           {/* Registration Form Section */}
           <div className="lg:col-span-8 space-y-6">
             <div className="bg-md-surface-container-lowest p-6 md:p-8 rounded-xl shadow-sm border border-md-outline-variant">
@@ -256,7 +256,7 @@ export default function PendaftaranPublik() {
             <div className="bg-md-primary text-md-on-primary p-6 rounded-xl shadow-lg relative overflow-hidden">
               <div className="relative z-10">
                 <h4 className="font-bold text-2xl mb-4">Media Sosial</h4>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   <a className="flex items-center gap-2 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-all group" href="#">
                     <div className="w-8 h-8 rounded-full bg-md-secondary flex items-center justify-center shrink-0">
                       <Instagram className="w-4 h-4" />

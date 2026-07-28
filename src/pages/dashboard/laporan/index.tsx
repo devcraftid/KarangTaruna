@@ -44,7 +44,7 @@ export default function Laporan() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-4 md:gap-6">
         <div className="bg-card border rounded-xl p-6 shadow-sm">
           <p className="text-sm font-medium text-muted-foreground">Total Pemasukan</p>
           <p className="text-2xl font-bold text-green-600 mt-2">{formatRupiah(totalIncome)}</p>
@@ -59,7 +59,7 @@ export default function Laporan() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-4 md:p-8">
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">Pemasukan Terakhir</h3>
           <div className="bg-card border rounded-xl shadow-sm">

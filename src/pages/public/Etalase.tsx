@@ -99,7 +99,7 @@ export default function Etalase() {
             <p className="text-sm text-slate-400">Coba ubah kata kunci atau kategori pencarian Anda.</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:p-8">
             {filteredProducts.map((product) => (
               <Card key={product.id} className="group border-none shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-slate-900 rounded-2xl overflow-hidden flex flex-col h-full hover:-translate-y-2">
                 <div className="relative h-56 bg-slate-100 dark:bg-slate-800 overflow-hidden">

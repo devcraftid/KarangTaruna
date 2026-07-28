@@ -68,7 +68,7 @@ export default function PengaturanSistem() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <Card className="border-red-200">
           <CardHeader className="bg-red-50/50 rounded-t-xl">
             <CardTitle className="flex items-center gap-2 text-red-700">

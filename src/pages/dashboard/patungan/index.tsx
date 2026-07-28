@@ -220,11 +220,11 @@ export default function PatunganDashboard() {
         </div>
         
         {loading ? (
-          <div className="flex justify-center p-8">
+          <div className="flex justify-center p-4 md:p-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
           </div>
         ) : campaigns.length === 0 ? (
-          <div className="text-center p-8 text-muted-foreground border border-dashed rounded-lg">
+          <div className="text-center p-4 md:p-8 text-muted-foreground border border-dashed rounded-lg">
             Belum ada data program pendanaan.
           </div>
         ) : (

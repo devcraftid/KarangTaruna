@@ -266,7 +266,7 @@ export default function Voting() {
         </DialogContent>
       </Dialog>
 
-      <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
         {isLoading ? (
           <div className="col-span-1 lg:col-span-2 text-center py-8">Loading...</div>
         ) : polls?.length === 0 ? (

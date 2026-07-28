@@ -56,7 +56,7 @@ export default function Login() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center p-4">
       <Toaster />
-      <div className="w-full max-w-md space-y-8 bg-card p-8 rounded-xl shadow-sm border">
+      <div className="w-full max-w-md space-y-8 bg-card p-4 md:p-8 rounded-xl shadow-sm border">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight">Login</h2>
           <p className="text-muted-foreground mt-2">Masuk ke sistem informasi karang taruna</p>

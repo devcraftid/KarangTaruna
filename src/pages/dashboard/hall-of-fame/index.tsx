@@ -88,7 +88,7 @@ export default function HallOfFame() {
   }
 
   if (loading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   const getTingkatColor = (tingkat: string) => {
@@ -138,7 +138,7 @@ export default function HallOfFame() {
                 <Label>Judul Prestasi / Penghargaan</Label>
                 <Input value={formData.judul_prestasi} onChange={e => setFormData({...formData, judul_prestasi: e.target.value})} placeholder="Juara 1 Lomba Cerdas Cermat" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Tingkat</Label>
                   <Select value={formData.tingkat} onValueChange={(val) => setFormData({...formData, tingkat: val})}>
@@ -170,7 +170,7 @@ export default function HallOfFame() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
         {achievements.length === 0 ? (
           <div className="col-span-full p-12 text-center border-2 border-dashed rounded-lg bg-slate-50 dark:bg-slate-900/50">
             <Trophy className="w-12 h-12 text-slate-300 mx-auto mb-3" />

@@ -79,7 +79,7 @@ export default function PatunganDetail() {
           {/* Donation Action Sidebar */}
           <div>
             <Card className="border-none shadow-xl sticky top-24 overflow-hidden rounded-3xl border-t-8 border-t-sky-500 bg-white dark:bg-slate-900">
-              <CardContent className="p-8">
+              <CardContent className="p-4 md:p-8">
                 
                 <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-2">Dana Terkumpul</p>
                 <h2 className="text-4xl font-black text-sky-600 mb-6">{formatRupiah(campaign.terkumpul)}</h2>

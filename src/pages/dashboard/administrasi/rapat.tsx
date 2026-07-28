@@ -72,7 +72,7 @@ export default function Rapat() {
   }
 
   if (fetching) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (
@@ -99,7 +99,7 @@ export default function Rapat() {
                 <Label>Judul Rapat</Label>
                 <Input value={formData.judul_rapat} onChange={e => setFormData({...formData, judul_rapat: e.target.value})} placeholder="Rapat Persiapan 17-an" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Tanggal & Waktu</Label>
                   <Input type="datetime-local" value={formData.tanggal} onChange={e => setFormData({...formData, tanggal: e.target.value})} />

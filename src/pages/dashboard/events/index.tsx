@@ -98,7 +98,7 @@ export default function Events() {
   }
 
   if (fetching) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (
@@ -133,7 +133,7 @@ export default function Events() {
                 <Label>Lokasi</Label>
                 <Input value={formData.lokasi} onChange={e => setFormData({...formData, lokasi: e.target.value})} placeholder="Lapangan Utama" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Tanggal Mulai</Label>
                   <Input type="date" value={formData.tanggal_mulai} onChange={e => setFormData({...formData, tanggal_mulai: e.target.value})} />

@@ -68,7 +68,7 @@ export default function RealisasiAnggaran() {
   }
 
   if (loading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   const formatRupiah = (angka: number) => {
@@ -87,7 +87,7 @@ export default function RealisasiAnggaran() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <Card className="flex flex-col">
           <CardHeader>
             <CardTitle>Distribusi Pengeluaran</CardTitle>

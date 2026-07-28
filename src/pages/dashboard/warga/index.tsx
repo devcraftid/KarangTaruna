@@ -163,7 +163,7 @@ export default function Households() {
                     <Label>Kepala Keluarga / Penanggung Jawab</Label>
                     <Input required value={formData.kepala_keluarga} onChange={(e) => setFormData({...formData, kepala_keluarga: e.target.value})} />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Nomor Rumah</Label>
                       <Input required value={formData.nomor_rumah} onChange={(e) => setFormData({...formData, nomor_rumah: e.target.value})} placeholder="Misal: A12" />
@@ -173,7 +173,7 @@ export default function Households() {
                       <Input value={formData.blok} onChange={(e) => setFormData({...formData, blok: e.target.value})} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>RT</Label>
                       <Input required value={formData.rt} onChange={(e) => setFormData({...formData, rt: e.target.value})} />
@@ -315,9 +315,9 @@ export default function Households() {
 
           <div className="bg-card border rounded-xl shadow-sm">
             {!selectedEventId ? (
-              <div className="p-8 text-center text-muted-foreground">Silakan pilih acara terlebih dahulu.</div>
+              <div className="p-4 md:p-8 text-center text-muted-foreground">Silakan pilih acara terlebih dahulu.</div>
             ) : isLoadingD ? (
-              <div className="p-8 text-center text-muted-foreground">Memuat data iuran...</div>
+              <div className="p-4 md:p-8 text-center text-muted-foreground">Memuat data iuran...</div>
             ) : dues?.length === 0 ? (
               <div className="p-16 text-center">
                 <h3 className="text-lg font-semibold">Belum ada catatan iuran</h3>

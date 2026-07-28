@@ -84,7 +84,7 @@ export default function Galeri() {
         </Dialog>
       </div>
 
-      {isLoading ? <div className="text-center p-8">Memuat...</div> : (
+      {isLoading ? <div className="text-center p-4 md:p-8">Memuat...</div> : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {gallery?.map(item => (
             <div key={item.id} className="relative group bg-card border rounded-xl overflow-hidden shadow-sm">

@@ -64,7 +64,7 @@ export default function RiwayatTransaksiPublik() {
   }
 
   if (loading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   const formatRupiah = (angka: number) => {
@@ -83,7 +83,7 @@ export default function RiwayatTransaksiPublik() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         <Card className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900 border-none shadow-sm">
           <CardContent className="p-6">
             <div className="flex justify-between items-start">

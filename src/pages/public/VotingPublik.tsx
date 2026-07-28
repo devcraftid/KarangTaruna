@@ -170,7 +170,7 @@ export default function VotingPublik() {
                 
                 <div className="p-6 md:p-8">
                   {isVoted ? (
-                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-8 rounded-xl text-center">
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 p-4 md:p-8 rounded-xl text-center">
                       <div className="w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-300" />
                       </div>

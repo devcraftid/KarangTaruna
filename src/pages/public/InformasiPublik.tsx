@@ -83,7 +83,7 @@ export default function InformasiPublik() {
               )}
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-8 md:p-12 max-w-3xl">
+            <div className="absolute bottom-0 left-0 p-4 md:p-8 md:p-12 max-w-3xl">
               <span className="bg-secondary text-white px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">
                 UTAMA • BERITA
               </span>
@@ -93,7 +93,7 @@ export default function InformasiPublik() {
               <p className="text-white/80 text-base md:text-lg mb-6 line-clamp-2">
                 {heroNews.isi?.replace(/<[^>]*>?/gm, '').slice(0, 150) + '...'}
               </p>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4 md:gap-6">
                 <div className="flex items-center gap-2 text-white/70 text-sm">
                   <Calendar className="w-4 h-4" />
                   {new Date(heroNews.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
@@ -109,7 +109,7 @@ export default function InformasiPublik() {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:p-8">
 
           {/* ===== NEWS COLUMN ===== */}
           <div className="lg:col-span-8">
@@ -156,7 +156,7 @@ export default function InformasiPublik() {
                 <p className="font-semibold text-md-on-surface-variant">Belum ada berita ditemukan.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {pagedBerita.map(item => (
                   <Link to={`/informasi`} key={item.id} className="group">
                     <article className="bg-white rounded-2xl border border-md-outline-variant/30 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
@@ -239,7 +239,7 @@ export default function InformasiPublik() {
           <aside className="lg:col-span-4 space-y-6">
 
             {/* Pengumuman Penting */}
-            <div className="bg-white/70 backdrop-blur-md rounded-3xl p-8 shadow-sm border border-md-outline-variant/20">
+            <div className="bg-white/70 backdrop-blur-md rounded-3xl p-4 md:p-8 shadow-sm border border-md-outline-variant/20">
               <div className="flex items-center gap-3 mb-6">
                 <div className="bg-red-50 text-red-600 p-2 rounded-xl">
                   <Bell className="w-5 h-5" />
@@ -276,7 +276,7 @@ export default function InformasiPublik() {
             </div>
 
             {/* Newsletter */}
-            <div className="bg-primary rounded-3xl p-8 text-white overflow-hidden relative shadow-lg">
+            <div className="bg-primary rounded-3xl p-4 md:p-8 text-white overflow-hidden relative shadow-lg">
               <div className="absolute top-0 right-0 w-32 h-32 bg-secondary opacity-20 blur-3xl -mr-16 -mt-16 rounded-full" />
               <div className="relative z-10 space-y-4">
                 <h2 className="text-xl font-bold">Jangan Lewatkan Kabar Terbaru</h2>
@@ -297,9 +297,9 @@ export default function InformasiPublik() {
             </div>
 
             {/* Media Sosial */}
-            <div className="bg-md-surface-container rounded-3xl p-8 border border-md-outline-variant/30">
+            <div className="bg-md-surface-container rounded-3xl p-4 md:p-8 border border-md-outline-variant/30">
               <h2 className="text-xs font-bold text-primary uppercase tracking-widest mb-5">Ikuti Media Sosial</h2>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {[
                   { label: 'Instagram', href: '#', icon: '📸' },
                   { label: 'Facebook', href: '#', icon: '🌐' },

@@ -79,7 +79,7 @@ export default function DokumenPublik() {
           <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-800">
              <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {filteredDocs.map((doc) => (
-                  <div key={doc.id} className="p-6 flex flex-col sm:flex-row sm:items-center gap-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                  <div key={doc.id} className="p-6 flex flex-col sm:flex-row sm:items-center gap-4 md:gap-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                      
                      <div className="shrink-0 flex items-center justify-center w-16 h-16 bg-rose-50 dark:bg-rose-900/20 rounded-2xl">
                        {getFormatIcon(doc.format || 'pdf')}

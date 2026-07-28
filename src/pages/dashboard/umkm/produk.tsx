@@ -108,7 +108,7 @@ export default function KatalogProduk() {
   }
 
   if (loading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   const formatRupiah = (angka: number) => {
@@ -152,7 +152,7 @@ export default function KatalogProduk() {
                 <Label>Nama Produk</Label>
                 <Input value={formData.nama_produk} onChange={e => setFormData({...formData, nama_produk: e.target.value})} placeholder="Misal: Keripik Singkong" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Harga (Rp)</Label>
                   <Input type="number" value={formData.harga} onChange={e => setFormData({...formData, harga: parseInt(e.target.value) || 0})} />

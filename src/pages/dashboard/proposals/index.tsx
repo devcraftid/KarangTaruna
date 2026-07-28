@@ -239,7 +239,7 @@ export default function Proposals() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-3 max-w-[600px] bg-slate-100/50 p-1 mb-6 border">
+        <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 max-w-[600px] bg-slate-100/50 p-1 mb-6 border">
           <TabsTrigger value="database" className="data-[state=active]:bg-white data-[state=active]:shadow-sm"><Database className="w-4 h-4 mr-2"/> Database Sponsor</TabsTrigger>
           <TabsTrigger value="tracker" className="data-[state=active]:bg-white data-[state=active]:shadow-sm"><ListTodo className="w-4 h-4 mr-2"/> Tracker Proposal</TabsTrigger>
           <TabsTrigger value="ai" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-indigo-700 data-[state=active]:text-indigo-700"><Sparkles className="w-4 h-4 mr-2"/> Rekomendasi AI</TabsTrigger>
@@ -333,7 +333,7 @@ export default function Proposals() {
 
           <div className="bg-card border rounded-xl shadow-sm">
             {sponsorLoading ? (
-              <div className="p-8 text-center text-muted-foreground">Memuat data sponsor...</div>
+              <div className="p-4 md:p-8 text-center text-muted-foreground">Memuat data sponsor...</div>
             ) : sponsors?.length === 0 ? (
               <div className="p-16 text-center">
                 <Building className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -501,9 +501,9 @@ export default function Proposals() {
 
           <div className="bg-card border rounded-xl shadow-sm">
             {isLoading ? (
-              <div className="p-8 text-center text-muted-foreground">Memuat data...</div>
+              <div className="p-4 md:p-8 text-center text-muted-foreground">Memuat data...</div>
             ) : error ? (
-              <div className="p-8 text-center text-destructive">Gagal memuat.</div>
+              <div className="p-4 md:p-8 text-center text-destructive">Gagal memuat.</div>
             ) : proposals?.length === 0 ? (
               <div className="p-16 text-center">
                 <FileText className="w-12 h-12 text-slate-300 mx-auto mb-4" />
@@ -654,7 +654,7 @@ export default function Proposals() {
           )}
 
           {!isAiLoading && aiRecommendations.length === 0 && selectedEventForAI && (
-            <div className="p-8 text-center border rounded-xl bg-slate-50">
+            <div className="p-4 md:p-8 text-center border rounded-xl bg-slate-50">
               <p className="text-slate-500">Tidak ada rekomendasi dengan persentase cocok (&gt;40%). Coba tambahkan lebih banyak variasi industri di Database Sponsor.</p>
             </div>
           )}

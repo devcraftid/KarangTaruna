@@ -91,7 +91,7 @@ export default function LombaPublik() {
             <h3 className="text-lg font-bold text-slate-500">Belum ada agenda terdekat.</h3>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {combinedAgenda.map((item) => (
               <Link to={`/lomba/${item.id}?type=${item.type}`} key={item.id} className="group">
                 <Card className="border-none shadow-lg h-full overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-slate-900 flex flex-col relative">

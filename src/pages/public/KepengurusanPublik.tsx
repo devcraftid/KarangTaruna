@@ -51,7 +51,7 @@ export default function KepengurusanPublik() {
             <h3 className="text-lg font-bold text-slate-500">Belum ada data kepengurusan.</h3>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {pengurus.map((p, index) => (
               <Card key={p.id || index} className="border-none shadow-lg overflow-hidden group hover:-translate-y-2 transition-transform duration-300">
                 <div className="h-48 bg-slate-200 relative overflow-hidden">

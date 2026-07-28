@@ -331,9 +331,9 @@ export default function LombaPage() {
 
       <div className="bg-card border rounded-xl shadow-sm">
         {isLoading ? (
-          <div className="p-8 text-center text-muted-foreground">Memuat data...</div>
+          <div className="p-4 md:p-8 text-center text-muted-foreground">Memuat data...</div>
         ) : error ? (
-          <div className="p-8 text-center text-destructive">Gagal memuat data lomba.</div>
+          <div className="p-4 md:p-8 text-center text-destructive">Gagal memuat data lomba.</div>
         ) : competitions?.length === 0 ? (
           <div className="p-16 text-center">
             <h3 className="text-lg font-semibold">Belum ada perlombaan</h3>

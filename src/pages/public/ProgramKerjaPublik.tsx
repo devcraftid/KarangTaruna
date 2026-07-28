@@ -62,7 +62,7 @@ export default function ProgramKerjaPublik() {
     <div className="bg-md-surface text-md-on-surface font-inter selection:bg-md-primary-fixed selection:text-md-on-primary-fixed">
       <main className="max-w-7xl mx-auto px-6 lg:px-10 py-12 space-y-12">
         {/* Hero Section */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-center">
           <div className="space-y-4">
             <span className="px-3 py-1 bg-md-secondary-container text-md-on-secondary-container rounded-full text-sm font-bold uppercase tracking-wider inline-block">Agenda Komunitas</span>
             <h1 className="text-4xl md:text-5xl font-extrabold text-primary mb-2 leading-tight">Bergerak Maju Melalui Program Berkelanjutan</h1>
@@ -91,7 +91,7 @@ export default function ProgramKerjaPublik() {
               <p className="text-md-on-surface-variant">Status pelaksanaan program strategis Karang Taruna periode ini.</p>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {prokers.map((proker, idx) => {
               const prog = getProgress(proker.status)
               const icons = ['school', 'storefront', 'volunteer_activism']
@@ -129,7 +129,7 @@ export default function ProgramKerjaPublik() {
         </section>
 
         {/* Calendar & Upcoming Events */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
           {/* Calendar Widget (Simplified for dynamic context) */}
           <div className="lg:col-span-5 bg-white rounded-3xl p-6 shadow-sm border border-md-outline-variant/30 flex flex-col justify-center text-center">
              <Calendar className="w-20 h-20 text-md-outline mx-auto mb-4 opacity-50" />
@@ -209,7 +209,7 @@ export default function ProgramKerjaPublik() {
               <p className="text-md-on-surface-variant">Momen-momen berkesan dari kegiatan sebelumnya.</p>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:grid-cols-4 gap-4">
             {galleries.map((gal, idx) => (
               <div key={gal.id} className={`aspect-square rounded-2xl overflow-hidden group relative ${idx === 2 ? 'md:col-span-2 md:row-span-2' : ''}`}>
                 {gal.gambar ? (
@@ -237,7 +237,7 @@ export default function ProgramKerjaPublik() {
             <h2 className="text-3xl md:text-4xl font-bold">Hall of Fame</h2>
             <p className="text-md-on-surface-variant">Penghargaan dan apresiasi atas dedikasi serta prestasi luar biasa anggota Karang Taruna.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 pt-4">
             {fames.map((fame, idx) => {
               const borderColors = ['border-md-secondary', 'border-primary', 'border-md-tertiary', 'border-primary']
               const bgColors = ['bg-md-secondary-fixed text-md-secondary', 'bg-md-primary-fixed text-primary', 'bg-md-tertiary-fixed text-md-on-tertiary-fixed-variant', 'bg-md-surface-container-highest text-primary']

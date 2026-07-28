@@ -51,7 +51,7 @@ export default function GaleriPublik() {
       <main className="max-w-[1280px] mx-auto px-6 lg:px-10 py-12">
         {/* Hero Section & Header */}
         <header className="mb-12 text-center md:text-left">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
             <div>
               <h1 className="font-extrabold text-4xl md:text-5xl text-md-primary mb-4 tracking-tight">Galeri & Dokumentasi</h1>
               <p className="text-lg text-md-on-surface-variant max-w-2xl leading-relaxed">
@@ -71,7 +71,7 @@ export default function GaleriPublik() {
 
         {/* Filters Section */}
         <section className="bg-md-surface-container-low p-6 rounded-xl mb-6 border border-md-outline-variant sticky top-24 z-40 backdrop-blur-md">
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
+          <div className="flex flex-col lg:flex-row gap-4 md:gap-6 items-center justify-between">
             <div className="flex flex-wrap gap-3 items-center">
               <span className="font-semibold text-sm text-md-primary mr-2 flex items-center gap-1">
                 <Filter className="w-5 h-5" /> Saring:
@@ -133,7 +133,7 @@ export default function GaleriPublik() {
               <h3 className="text-xl font-bold text-slate-500">Foto tidak ditemukan</h3>
             </div>
           ) : (
-            <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-4 md:gap-6 space-y-6">
               {filteredGalleries.map((item) => (
                 <div key={item.id} className="break-inside-avoid group relative overflow-hidden rounded-xl border border-md-outline-variant bg-white cursor-zoom-in shadow-sm hover:shadow-xl transition-shadow">
                   <img 

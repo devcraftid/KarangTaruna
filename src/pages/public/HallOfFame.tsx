@@ -75,7 +75,7 @@ export default function HallOfFamePublik() {
             <h3 className="text-xl font-bold text-slate-500">Belum ada data pemenang tercatat.</h3>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:p-8">
             {filteredWinners.map((item, index) => {
                // Assign dynamic medal colors based on index just for visual flair if we don't have actual ranking data
                const isTop = index % 3 === 0
@@ -84,7 +84,7 @@ export default function HallOfFamePublik() {
                     {/* Decorative Background */}
                     <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-amber-500/20 transition-colors"></div>
                     
-                    <CardContent className="p-8 relative z-10 text-center">
+                    <CardContent className="p-4 md:p-8 relative z-10 text-center">
                        <div className="w-20 h-20 mx-auto bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/40 dark:to-amber-800/40 rounded-full flex items-center justify-center mb-6 shadow-inner border border-amber-300/30">
                          {isTop ? <Trophy className="w-10 h-10 text-amber-600 dark:text-amber-400" /> : <Medal className="w-10 h-10 text-amber-600 dark:text-amber-400" />}
                        </div>

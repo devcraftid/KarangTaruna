@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950">
       <Card className="w-full max-w-[420px] rounded-2xl border-slate-100 dark:border-slate-800 shadow-xl overflow-hidden bg-white dark:bg-slate-900">
-        <CardContent className="p-8 md:p-10 flex flex-col items-center text-center">
+        <CardContent className="p-4 md:p-8 md:p-10 flex flex-col items-center text-center">
           
           <div className="w-20 h-20 bg-red-50 dark:bg-red-500/10 rounded-full flex items-center justify-center mb-6">
             <FileQuestion className="w-10 h-10 text-red-500" />

@@ -78,7 +78,7 @@ export default function BeritaDetail() {
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6">
             {berita.judul}
           </h1>
-          <div className="flex flex-wrap items-center gap-6 text-sm text-slate-500 border-b dark:border-slate-800 pb-6">
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm text-slate-500 border-b dark:border-slate-800 pb-6">
              <div className="flex items-center gap-2">
                <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400">
                  <User className="w-4 h-4" />

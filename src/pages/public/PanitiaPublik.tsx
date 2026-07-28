@@ -27,7 +27,7 @@ export default function PanitiaPublik() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:p-8">
         {isLoading ? (
           <div className="col-span-full text-center py-12 text-muted-foreground">Memuat data panitia...</div>
         ) : panitia?.length === 0 ? (
@@ -65,7 +65,7 @@ export default function PanitiaPublik() {
         )})}
       </div>
       
-      <div className="mt-16 bg-primary/5 border border-primary/20 rounded-3xl p-8 text-center max-w-3xl mx-auto">
+      <div className="mt-16 bg-primary/5 border border-primary/20 rounded-3xl p-4 md:p-8 text-center max-w-3xl mx-auto">
         <h3 className="text-2xl font-bold text-primary mb-2" style={{ fontFamily: 'cursive' }}>"Terima Kasih Panitia!"</h3>
         <p className="text-muted-foreground">
           Semangat gotong royong dan kerja keras kalian adalah kunci suksesnya acara kita. Merdeka!

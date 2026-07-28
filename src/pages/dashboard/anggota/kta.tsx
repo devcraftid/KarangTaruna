@@ -24,7 +24,7 @@ export default function KtaDigital() {
   }
 
   if (isLoading) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (
@@ -51,7 +51,7 @@ export default function KtaDigital() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="print-section">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6" id="print-section">
         {filteredMembers?.map(member => (
           <div key={member.id} className="flex justify-center p-4 bg-slate-50 border rounded-xl">
             <IdCardTemplate member={member} />

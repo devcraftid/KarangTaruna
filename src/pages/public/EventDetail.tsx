@@ -136,11 +136,11 @@ export default function EventDetail() {
           <ArrowLeft className="w-4 h-4 mr-2" /> Kembali ke Agenda
         </Link>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-4 md:p-8">
           
           {/* Main Content */}
           <div className="md:col-span-2 space-y-8">
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border-t-8 border-t-emerald-500" style={{ borderTopColor: isLomba ? '#f97316' : '#10b981' }}>
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 md:p-8 shadow-xl border-t-8 border-t-emerald-500" style={{ borderTopColor: isLomba ? '#f97316' : '#10b981' }}>
               <div className="flex flex-wrap gap-2 mb-4">
                 <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${lightBgColor} ${primaryColor}`}>
                   {isLomba ? 'Kompetisi / Lomba' : 'Kegiatan Warga'}
@@ -154,7 +154,7 @@ export default function EventDetail() {
                 {event.title}
               </h1>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
                 <div className="flex items-start gap-4">
                    <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${lightBgColor} ${primaryColor}`}>
                      <Calendar className="w-5 h-5" />

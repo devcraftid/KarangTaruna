@@ -93,7 +93,7 @@ export default function Transparansi() {
       <main className="max-w-[1280px] mx-auto px-6 md:px-10 py-12">
         {/* Hero Section */}
         <section className="mb-12">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 md:gap-6">
             <div className="max-w-2xl">
               <span className="bg-md-secondary-container text-md-on-secondary-container px-3 py-1 rounded-full text-xs font-semibold mb-4 inline-block uppercase tracking-wider">Amanah & Transparan</span>
               <h1 className="font-extrabold text-4xl md:text-5xl text-md-primary mb-4 leading-tight">Transparansi Kas Karang Taruna</h1>
@@ -107,7 +107,7 @@ export default function Transparansi() {
         </section>
 
         {/* Summary Grid (Bento Style) */}
-        <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <section className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6 mb-12">
           {/* Main Balance Card */}
           <div className="md:col-span-2 bg-md-primary-container text-md-on-primary-container p-6 md:p-8 rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-between h-64 border border-md-primary/20">
             <div className="absolute -right-12 -top-12 w-48 h-48 bg-md-primary-fixed/10 rounded-full blur-3xl"></div>
@@ -167,7 +167,7 @@ export default function Transparansi() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
             {/* Bar Chart Sim: Pemasukan vs Pengeluaran */}
             <div className="md:col-span-8 bg-white dark:bg-slate-900 p-6 md:p-8 rounded-xl border border-md-outline-variant">
               <p className="text-sm font-semibold text-md-on-surface-variant mb-6">Tren Pemasukan vs Pengeluaran (6 Bulan Terakhir)</p>
@@ -175,14 +175,14 @@ export default function Transparansi() {
                 {[6, 5, 4, 3, 2, 1].map((m) => (
                   <div key={m} className="flex flex-col items-center flex-1 max-w-[60px]">
                     <div className="flex gap-1 items-end h-full w-full">
-                      <div className="bg-md-primary/40 hover:bg-md-primary w-1/2 rounded-t-sm transition-all" style={{ height: `${Math.max(20, 100 - m * 10)}%` }}></div>
-                      <div className="bg-md-secondary/60 hover:bg-md-secondary w-1/2 rounded-t-sm transition-all" style={{ height: `${Math.max(10, 80 - m * 15)}%` }}></div>
+                      <div className="bg-md-primary/40 hover:bg-md-primary w-full md:w-1/2 rounded-t-sm transition-all" style={{ height: `${Math.max(20, 100 - m * 10)}%` }}></div>
+                      <div className="bg-md-secondary/60 hover:bg-md-secondary w-full md:w-1/2 rounded-t-sm transition-all" style={{ height: `${Math.max(10, 80 - m * 15)}%` }}></div>
                     </div>
                     <span className="text-[10px] font-semibold mt-2">{new Date(new Date().setMonth(new Date().getMonth() - m)).toLocaleDateString('id-ID', { month: 'short' }).toUpperCase()}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-6 flex justify-center gap-8">
+              <div className="mt-6 flex justify-center gap-4 md:p-8">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-md-primary rounded-full"></div>
                   <span className="text-xs font-semibold">Pemasukan</span>
@@ -364,7 +364,7 @@ export default function Transparansi() {
         </section>
 
         {/* Donation & Sponsorship */}
-        <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div className="bg-md-secondary/5 rounded-2xl p-6 md:p-8 border border-md-secondary/20 flex flex-col justify-between">
             <div>
               <h4 className="text-2xl font-bold text-md-secondary mb-2">Program Donasi Aktif</h4>
@@ -393,7 +393,7 @@ export default function Transparansi() {
           
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 md:p-8 border border-md-outline-variant">
             <h4 className="text-2xl font-bold text-md-primary mb-6 text-center">Mitra & Sponsor</h4>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sponsors.length === 0 ? (
                 <div className="col-span-2 text-center text-sm text-md-outline py-8">Belum ada data mitra</div>
               ) : sponsors.map(sponsor => (
@@ -424,7 +424,7 @@ export default function Transparansi() {
             <h3 className="text-2xl font-bold text-md-primary">Laporan & Dokumen Publik</h3>
             <Link to="/dokumen" className="text-sm font-bold text-md-primary hover:underline hidden sm:block">Lihat Semua</Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {documents.length === 0 ? (
               <div className="col-span-3 text-center py-12 text-md-outline bg-white dark:bg-slate-900 rounded-xl border border-md-outline-variant">
                 Belum ada dokumen publik yang dibagikan.
@@ -485,7 +485,7 @@ export default function Transparansi() {
             </div>
           </div>
           
-          <div className="bg-md-surface-container-high dark:bg-slate-900 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 border border-md-primary/10">
+          <div className="bg-md-surface-container-high dark:bg-slate-900 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 md:p-8 border border-md-primary/10">
             <div className="w-32 h-32 bg-white p-2 rounded-lg shadow-sm border border-md-outline-variant shrink-0 flex items-center justify-center">
               <span className="material-symbols-outlined text-6xl text-md-outline/30">qr_code_scanner</span>
             </div>

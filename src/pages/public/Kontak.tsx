@@ -73,12 +73,12 @@ export default function Kontak() {
       </div>
 
       <div className="container mx-auto px-4 mt-12 max-w-6xl">
-        <div className="grid lg:grid-cols-5 gap-8">
+        <div className="grid lg:grid-cols-5 gap-4 md:p-8">
           
           {/* Contact Info (2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="border-none shadow-xl bg-gradient-to-br from-primary to-rose-600 text-white h-full">
-               <CardContent className="p-8">
+               <CardContent className="p-4 md:p-8">
                  <h2 className="text-2xl font-bold mb-8">Informasi Kontak</h2>
                  
                  <div className="space-y-6">
@@ -144,12 +144,12 @@ export default function Kontak() {
           {/* Form & Map (3 cols) */}
           <div className="lg:col-span-3 space-y-8">
             <Card className="border-none shadow-xl">
-              <CardContent className="p-8">
+              <CardContent className="p-4 md:p-8">
                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Kirim Pesan</h2>
                 <p className="text-slate-500 mb-8">Punya ide, masukan, atau ingin berkolaborasi? Silakan isi formulir di bawah ini.</p>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="nama">Nama Lengkap</Label>
                       <Input id="nama" value={formData.nama} onChange={handleChange} required placeholder="Contoh: Budi Santoso" className="bg-slate-50 dark:bg-slate-900" />

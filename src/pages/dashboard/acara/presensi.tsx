@@ -122,7 +122,7 @@ export default function PresensiEvent() {
   }
 
   if (fetching) {
-    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+    return <div className="flex justify-center p-4 md:p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
   }
 
   return (
@@ -135,7 +135,7 @@ export default function PresensiEvent() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6">
+      <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
         
         <div className="w-full lg:w-1/3 space-y-6">
           <Card>
