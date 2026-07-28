@@ -79,9 +79,11 @@ export default function KepengurusanPublik() {
                         <Phone className="w-3.5 h-3.5" />
                       </a>
                     )}
-                    <button className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/10 transition-colors">
-                      <Mail className="w-3.5 h-3.5" />
-                    </button>
+                    {p.email && (
+                      <a href={`mailto:${p.email}`} className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-primary hover:bg-primary/10 transition-colors">
+                        <Mail className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                   </div>
                 </CardContent>
               </Card>

@@ -46,8 +46,8 @@ export default function TentangKami() {
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">{settings?.tentang_judul || 'Penggerak Perubahan & Pilar Sosial Pemuda Desa.'}</h1>
               <p className="text-lg text-md-on-surface-variant mb-8">{settings?.tentang_deskripsi || 'Karang Taruna adalah organisasi sosial wadah pengembangan generasi muda yang tumbuh atas dasar kesadaran dan tanggung jawab sosial dari, oleh, dan untuk masyarakat.'}</p>
               <div className="flex flex-wrap gap-4">
-                <button className="bg-primary text-white px-8 py-3 rounded-xl text-sm font-bold shadow-lg hover:shadow-xl transition-all">Lihat Visi Misi</button>
-                <button className="border-2 border-primary text-primary px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/5 transition-all">Struktur Pengurus</button>
+                <a href="#visi-misi" className="inline-block bg-primary text-white px-8 py-3 rounded-xl text-sm font-bold shadow-lg hover:shadow-xl transition-all">Lihat Visi Misi</a>
+                <Link to="/kepengurusan" className="inline-block border-2 border-primary text-primary px-8 py-3 rounded-xl text-sm font-bold hover:bg-primary/5 transition-all">Struktur Pengurus</Link>
               </div>
             </div>
             <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-md-surface-container-highest flex items-center justify-center">
@@ -117,7 +117,7 @@ export default function TentangKami() {
         </section>
 
         {/* Visi Misi: Bento Grid */}
-        <section className="py-16 px-6 lg:px-10 max-w-7xl mx-auto mt-12">
+        <section id="visi-misi" className="py-16 px-6 lg:px-10 max-w-7xl mx-auto mt-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6 h-full">
             <div className="md:col-span-4 bg-primary text-white p-4 md:p-8 rounded-3xl flex flex-col justify-between shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 p-4 md:p-8 opacity-10 pointer-events-none transform translate-x-4 -translate-y-4">
@@ -197,9 +197,9 @@ export default function TentangKami() {
                 <h2 className="text-3xl font-bold mb-2">Struktur Organisasi</h2>
                 <p className="text-md-on-surface-variant text-base">Sinergi kepemimpinan untuk mewujudkan program kerja yang nyata dan berdampak luas bagi komunitas.</p>
               </div>
-              <button className="flex items-center gap-2 text-primary font-bold mt-4 md:mt-0 hover:underline">
+              <Link to="/dokumen" className="flex items-center gap-2 text-primary font-bold mt-4 md:mt-0 hover:underline">
                   Unduh Struktur (PDF) <Download className="w-5 h-5" />
-              </button>
+              </Link>
             </div>
             
             <div className="flex flex-col items-center gap-12">

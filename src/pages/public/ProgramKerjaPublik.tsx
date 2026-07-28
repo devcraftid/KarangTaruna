@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Calendar, MapPin, Eye, Award } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { Link } from 'react-router-dom'
 
 type Proker = { id: string; nama_program: string; deskripsi: string; bidang: string; status: string }
 type EventItem = { id: string; nama_acara: string; tanggal_mulai: string; lokasi: string; deskripsi: string; is_active: boolean }
@@ -135,7 +136,7 @@ export default function ProgramKerjaPublik() {
              <Calendar className="w-20 h-20 text-md-outline mx-auto mb-4 opacity-50" />
              <h3 className="text-2xl font-bold mb-2">Jadwal Komunitas</h3>
              <p className="text-md-on-surface-variant mb-6">Pantau terus jadwal kegiatan Karang Taruna agar tidak ketinggalan momen penting.</p>
-             <button className="bg-primary text-white font-bold py-3 px-6 rounded-xl w-full hover:shadow-lg transition-all">Lihat Kalender Penuh</button>
+             <Link to="/lomba" className="inline-block bg-primary text-white font-bold py-3 px-6 rounded-xl w-full hover:shadow-lg transition-all">Lihat Kalender Penuh</Link>
           </div>
           {/* Event Cards */}
           <div className="lg:col-span-7 space-y-6">
@@ -157,7 +158,7 @@ export default function ProgramKerjaPublik() {
                     </div>
                   </div>
                   <div className="flex justify-between items-center mt-4">
-                    <button className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all ml-auto">Daftar Sekarang</button>
+                    <Link to={`/lomba/${event.id}?type=event`} className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium hover:shadow-lg transition-all ml-auto">Daftar Sekarang</Link>
                   </div>
                 </div>
               </div>

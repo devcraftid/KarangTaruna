@@ -59,7 +59,13 @@ export default function GaleriPublik() {
               </p>
             </div>
             <div className="flex gap-4">
-              <button className="flex items-center gap-2 px-6 py-3 bg-md-secondary text-md-on-secondary rounded-lg font-semibold text-sm hover:shadow-xl transition-all">
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('Tautan disalin ke papan klip!');
+                }}
+                className="flex items-center gap-2 px-6 py-3 bg-md-secondary text-md-on-secondary rounded-lg font-semibold text-sm hover:shadow-xl transition-all"
+              >
                 <Share2 className="w-4 h-4" />
                 Bagikan Momen
               </button>
