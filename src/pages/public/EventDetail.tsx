@@ -205,36 +205,6 @@ export default function EventDetail() {
                 </div>
               </section>
             )}
-
-            {/* Dummy Rundown Section to match HTML design */}
-            <section className="bg-md-surface-container-lowest p-8 rounded-xl shadow-sm border border-md-outline-variant">
-              <h2 className="text-2xl font-bold mb-6 text-md-primary flex items-center gap-3">
-                <span className="material-symbols-outlined text-md-secondary">schedule</span>
-                Rundown Acara (Estimasi)
-              </h2>
-              <div className="space-y-0 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-[2px] before:bg-md-outline-variant">
-                <div className="flex gap-6 pb-6 relative">
-                  <div className="z-10 w-10 h-10 rounded-full bg-md-primary flex items-center justify-center text-white shrink-0">
-                    <span className="material-symbols-outlined text-sm">login</span>
-                  </div>
-                  <div className="bg-md-surface-container-low p-4 rounded-lg flex-1 border border-md-outline-variant">
-                    <span className="text-sm font-bold text-md-secondary">08:00 - 09:00 WIB</span>
-                    <h3 className="font-bold text-lg text-md-on-surface mt-1">Registrasi & Welcoming</h3>
-                    <p className="text-md-on-surface-variant text-sm mt-1">Pembukaan pendaftaran dan persiapan peserta.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6 relative">
-                  <div className="z-10 w-10 h-10 rounded-full bg-md-primary flex items-center justify-center text-white shrink-0">
-                    <span className="material-symbols-outlined text-sm">campaign</span>
-                  </div>
-                  <div className="bg-md-surface-container-low p-4 rounded-lg flex-1 border border-md-outline-variant">
-                    <span className="text-sm font-bold text-md-secondary">09:00 - Selesai</span>
-                    <h3 className="font-bold text-lg text-md-on-surface mt-1">Acara Utama Dimulai</h3>
-                    <p className="text-md-on-surface-variant text-sm mt-1">Pelaksanaan kegiatan inti sesuai jadwal.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
           </div>
 
           {/* RIGHT COLUMN: Floating Widget */}
