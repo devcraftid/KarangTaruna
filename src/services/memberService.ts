@@ -13,6 +13,7 @@ export interface Member {
   foto_url?: string
   status_keanggotaan?: 'calon' | 'aktif' | 'alumni' | 'nonaktif'
   foto_kta?: string
+  email?: string
   is_panitia?: boolean
   jabatan?: string
   divisi?: string
