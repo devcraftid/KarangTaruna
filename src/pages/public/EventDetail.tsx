@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useSearchParams, Link } from 'react-router-dom'
-import { ArrowLeft, Calendar, MapPin, Clock, Users, Trophy, QrCode, CheckCircle2, Ticket, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { supabase } from '@/lib/supabase'
 import toast, { Toaster } from 'react-hot-toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
@@ -114,201 +113,235 @@ export default function EventDetail() {
     }
   }
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 text-emerald-500 animate-spin" /></div>
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-md-surface"><Loader2 className="w-8 h-8 text-md-primary animate-spin" /></div>
   if (!event) return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-md-surface">
       <h2 className="text-3xl font-bold mb-2">Event Tidak Ditemukan</h2>
       <Link to="/lomba"><Button>Kembali ke Agenda</Button></Link>
     </div>
   )
 
   const isLomba = event.type === 'lomba'
-  const primaryColor = isLomba ? 'text-orange-600' : 'text-emerald-600'
-  const bgColor = isLomba ? 'bg-orange-500' : 'bg-emerald-500'
-  const lightBgColor = isLomba ? 'bg-orange-100' : 'bg-emerald-100'
 
   return (
-    <div className="bg-md-surface min-h-screen pb-20 pt-10">
+    <div className="bg-md-surface font-inter text-md-on-surface min-h-screen">
       <Toaster />
-      <div className="container mx-auto px-4 max-w-5xl">
-        
-        <Link to="/lomba" className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-primary mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Kembali ke Agenda
-        </Link>
+      <main className="max-w-[1280px] mx-auto px-6 lg:px-10 py-8">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm font-medium text-md-outline mb-6">
+          <Link to="/" className="hover:text-md-primary">Beranda</Link>
+          <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+          <Link to="/lomba" className="hover:text-md-primary">Program Kerja</Link>
+          <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+          <span className="text-md-on-surface">{event.title}</span>
+        </nav>
 
-        <div className="grid md:grid-cols-3 gap-4 md:p-8">
-          
-          {/* Main Content */}
-          <div className="md:col-span-2 space-y-8">
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-4 md:p-8 shadow-xl border-t-8 border-t-emerald-500" style={{ borderTopColor: isLomba ? '#f97316' : '#10b981' }}>
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className={`text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${lightBgColor} ${primaryColor}`}>
-                  {isLomba ? 'Kompetisi / Lomba' : 'Kegiatan Warga'}
-                </span>
-                <span className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                  Kategori: {event.kategori}
-                </span>
+        {/* Hero Section */}
+        <section className="mb-12 relative overflow-hidden rounded-xl bg-md-primary-container min-h-[400px] flex flex-col justify-end p-8 text-white">
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+              className="w-full h-full object-cover opacity-60" 
+              alt="Event Cover" 
+            />
+          </div>
+          <div className="relative z-10 space-y-4 max-w-2xl">
+            <span className="inline-block px-4 py-1 bg-md-secondary text-md-on-secondary rounded-full text-sm font-bold uppercase tracking-wider">
+              {event.status === 'completed' ? 'Acara Selesai' : 'Acara Mendatang'}
+            </span>
+            <h1 className="font-extrabold text-4xl md:text-5xl">{event.title}</h1>
+            <p className="text-lg text-white/90 leading-relaxed max-w-xl truncate">{event.desc || 'Acara Karang Taruna'}</p>
+          </div>
+        </section>
+
+        {/* Two Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* LEFT COLUMN: Main Information */}
+          <div className="lg:col-span-8 space-y-12">
+            
+            {/* Description */}
+            <article className="bg-md-surface-container-lowest p-8 rounded-xl shadow-sm border border-md-outline-variant">
+              <h2 className="text-2xl font-bold mb-4 text-md-primary">Tentang Acara</h2>
+              <div className="space-y-4 text-md-on-surface-variant text-base leading-relaxed whitespace-pre-wrap">
+                {event.desc || 'Tidak ada deskripsi rinci untuk kegiatan ini.'}
               </div>
-              
-              <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white leading-tight mb-6">
-                {event.title}
-              </h1>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 mb-8">
-                <div className="flex items-start gap-4">
-                   <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${lightBgColor} ${primaryColor}`}>
-                     <Calendar className="w-5 h-5" />
-                   </div>
-                   <div>
-                     <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Tanggal</p>
-                     <p className="font-medium text-slate-900 dark:text-white">
-                       {new Date(event.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                     </p>
-                   </div>
+            </article>
+
+            {/* DAFTAR LOMBA LIST */}
+            {type === 'event' && eventCompetitions.length > 0 && (
+              <section className="bg-md-surface-container-lowest p-8 rounded-xl shadow-sm border border-md-outline-variant">
+                <h2 className="text-2xl font-bold mb-6 text-md-primary flex items-center gap-3">
+                  <span className="material-symbols-outlined text-md-secondary">emoji_events</span>
+                  Daftar Perlombaan
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {eventCompetitions.map((lomba) => (
+                    <div key={lomba.id} className="border border-md-outline-variant rounded-lg p-5 flex flex-col h-full bg-md-surface hover:shadow-md transition-shadow">
+                      <div className="flex-1">
+                        <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-orange-100 text-orange-600 mb-3 inline-block">
+                          {lomba.kategori}
+                        </span>
+                        <h4 className="font-bold text-lg text-md-on-surface mb-2 leading-tight">{lomba.nama_lomba}</h4>
+                        <div className="flex items-center text-sm text-md-on-surface-variant mb-1">
+                          <span className="material-symbols-outlined text-[16px] mr-2">calendar_today</span>
+                          {new Date(lomba.tanggal).toLocaleDateString('id-ID')}
+                        </div>
+                        <div className="flex items-center text-sm text-md-on-surface-variant mb-4">
+                          <span className="material-symbols-outlined text-[16px] mr-2">location_on</span>
+                          {lomba.lokasi}
+                        </div>
+                      </div>
+                      <button 
+                        className="w-full mt-4 py-2 border-2 border-md-secondary text-md-secondary font-bold rounded-lg hover:bg-md-secondary/5 transition-colors"
+                        onClick={() => {
+                          setSelectedLombaForRegistration(lomba)
+                          setShowRegistrationForm(true)
+                        }}
+                      >
+                        Daftar Lomba Ini
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex items-start gap-4">
-                   <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${lightBgColor} ${primaryColor}`}>
-                     <Clock className="w-5 h-5" />
-                   </div>
-                   <div>
-                     <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Waktu</p>
-                     <p className="font-medium text-slate-900 dark:text-white">
-                       {event.time ? event.time.substring(0,5) : 'Tentatif'} WIB - Selesai
-                     </p>
-                   </div>
-                </div>
-                <div className="flex items-start gap-4">
-                   <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${lightBgColor} ${primaryColor}`}>
-                     <MapPin className="w-5 h-5" />
-                   </div>
-                   <div>
-                     <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Lokasi</p>
-                     <p className="font-medium text-slate-900 dark:text-white">
-                       {event.location}
-                     </p>
-                   </div>
-                </div>
-                {event.max_participants > 0 && (
-                  <div className="flex items-start gap-4">
-                     <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${lightBgColor} ${primaryColor}`}>
-                       <Users className="w-5 h-5" />
-                     </div>
-                     <div>
-                       <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Kuota</p>
-                       <p className="font-medium text-slate-900 dark:text-white">
-                         Maksimal {event.max_participants} Peserta
-                       </p>
-                     </div>
+              </section>
+            )}
+
+            {/* Dummy Rundown Section to match HTML design */}
+            <section className="bg-md-surface-container-lowest p-8 rounded-xl shadow-sm border border-md-outline-variant">
+              <h2 className="text-2xl font-bold mb-6 text-md-primary flex items-center gap-3">
+                <span className="material-symbols-outlined text-md-secondary">schedule</span>
+                Rundown Acara (Estimasi)
+              </h2>
+              <div className="space-y-0 relative before:absolute before:left-[19px] before:top-4 before:bottom-4 before:w-[2px] before:bg-md-outline-variant">
+                <div className="flex gap-6 pb-6 relative">
+                  <div className="z-10 w-10 h-10 rounded-full bg-md-primary flex items-center justify-center text-white shrink-0">
+                    <span className="material-symbols-outlined text-sm">login</span>
                   </div>
-                )}
-              </div>
-
-              <hr className="border-slate-100 dark:border-slate-800 my-8" />
-
-              <div>
-                <h3 className="text-xl font-bold mb-4 text-slate-900 dark:text-white">Deskripsi Kegiatan</h3>
-                <div className="prose dark:prose-invert text-slate-600 dark:text-slate-400 max-w-none">
-                  <p className="whitespace-pre-wrap leading-relaxed">{event.desc || 'Tidak ada deskripsi rinci untuk kegiatan ini.'}</p>
-                </div>
-              </div>
-
-              {/* DAFTAR LOMBA LIST */}
-              {type === 'event' && eventCompetitions.length > 0 && (
-                <div className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800">
-                  <h3 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white flex items-center gap-2">
-                    <Trophy className="w-6 h-6 text-orange-500" />
-                    Daftar Lomba Tersedia
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {eventCompetitions.map((lomba) => (
-                      <Card key={lomba.id} className="border border-slate-200 shadow-sm hover:shadow-md transition-shadow dark:border-slate-800">
-                        <CardContent className="p-5 flex flex-col h-full">
-                          <div className="flex-1">
-                            <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full bg-orange-100 text-orange-600 mb-3 inline-block">
-                              {lomba.kategori}
-                            </span>
-                            <h4 className="font-bold text-lg text-slate-900 dark:text-white mb-2 leading-tight">{lomba.nama_lomba}</h4>
-                            <div className="flex items-center text-sm text-slate-500 mb-1">
-                              <Calendar className="w-4 h-4 mr-2 opacity-70" />
-                              {new Date(lomba.tanggal).toLocaleDateString('id-ID')}
-                            </div>
-                            <div className="flex items-center text-sm text-slate-500 mb-4">
-                              <MapPin className="w-4 h-4 mr-2 opacity-70" />
-                              {lomba.lokasi}
-                            </div>
-                          </div>
-                          <Button 
-                            variant="outline" 
-                            className="w-full mt-4 text-orange-600 border-orange-200 hover:bg-orange-50"
-                            onClick={() => {
-                              setSelectedLombaForRegistration(lomba)
-                              setShowRegistrationForm(true)
-                            }}
-                          >
-                            Daftar Lomba Ini
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    ))}
+                  <div className="bg-md-surface-container-low p-4 rounded-lg flex-1 border border-md-outline-variant">
+                    <span className="text-sm font-bold text-md-secondary">08:00 - 09:00 WIB</span>
+                    <h3 className="font-bold text-lg text-md-on-surface mt-1">Registrasi & Welcoming</h3>
+                    <p className="text-md-on-surface-variant text-sm mt-1">Pembukaan pendaftaran dan persiapan peserta.</p>
                   </div>
                 </div>
-              )}
-
-            </div>
+                <div className="flex gap-6 relative">
+                  <div className="z-10 w-10 h-10 rounded-full bg-md-primary flex items-center justify-center text-white shrink-0">
+                    <span className="material-symbols-outlined text-sm">campaign</span>
+                  </div>
+                  <div className="bg-md-surface-container-low p-4 rounded-lg flex-1 border border-md-outline-variant">
+                    <span className="text-sm font-bold text-md-secondary">09:00 - Selesai</span>
+                    <h3 className="font-bold text-lg text-md-on-surface mt-1">Acara Utama Dimulai</h3>
+                    <p className="text-md-on-surface-variant text-sm mt-1">Pelaksanaan kegiatan inti sesuai jadwal.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
 
-          {/* Sidebar Ticket/Action */}
-          <div className="md:col-span-1">
-            <Card className="border-none shadow-xl sticky top-24 overflow-hidden">
-              <div className={`h-2 w-full ${bgColor}`}></div>
-              <CardContent className="p-6">
+          {/* RIGHT COLUMN: Floating Widget */}
+          <aside className="lg:col-span-4">
+            <div className="bg-md-surface-container-lowest rounded-xl shadow-sm border border-md-outline-variant sticky top-24 overflow-hidden">
+              <div className="h-2 w-full bg-md-primary"></div>
+              <div className="p-6">
                 
+                {/* Status or Registration Call to Action */}
                 {isRegistered ? (
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle2 className="w-8 h-8" />
+                  <div className="text-center mb-8 pb-6 border-b border-md-outline-variant">
+                    <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="material-symbols-outlined text-3xl">check_circle</span>
                     </div>
                     <h3 className="font-bold text-lg mb-2">Terdaftar!</h3>
-                    <p className="text-sm text-slate-500 mb-6">Anda telah sukses mendaftar untuk acara ini. Jangan lupa membawa tiket / QR Code Anda.</p>
+                    <p className="text-sm text-md-on-surface-variant mb-6">Anda telah sukses mendaftar untuk acara ini. Jangan lupa membawa tiket / QR Code Anda.</p>
                     
-                    <Button 
-                      className={`w-full gap-2 mb-3 ${bgColor} hover:opacity-90`}
+                    <button 
+                      className="w-full py-3 bg-md-primary text-md-on-primary rounded-lg font-bold flex justify-center items-center gap-2 hover:shadow-lg transition-all"
                       onClick={() => setShowQR(true)}
                     >
-                      <QrCode className="w-4 h-4" /> Tampilkan QR Akses
-                    </Button>
-                    <p className="text-[10px] text-slate-400 uppercase tracking-widest">Gunakan QR ini untuk Check-in Panitia</p>
+                      <span className="material-symbols-outlined">qr_code</span> Tampilkan QR Akses
+                    </button>
+                    <p className="text-[10px] text-md-outline uppercase tracking-widest mt-2">Gunakan QR ini untuk Check-in Panitia</p>
                   </div>
                 ) : (
-                  <div className="text-center">
-                    <div className={`w-16 h-16 ${lightBgColor} ${primaryColor} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                      <Ticket className="w-8 h-8" />
+                  <div className="text-center mb-8 pb-6 border-b border-md-outline-variant">
+                    <div className="w-16 h-16 bg-md-primary-container text-md-on-primary-container rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="material-symbols-outlined text-3xl">confirmation_number</span>
                     </div>
                     <h3 className="font-bold text-lg mb-2">Tertarik Mengikuti?</h3>
-                    <p className="text-sm text-slate-500 mb-6">Amankan kursi Anda sekarang. Proses pendaftaran cepat dan gratis.</p>
+                    <p className="text-sm text-md-on-surface-variant mb-6">Amankan kursi Anda sekarang. Proses pendaftaran cepat dan gratis.</p>
                     
                     {event.status === 'completed' ? (
-                       <Button disabled className="w-full bg-slate-300 text-slate-600">Acara Telah Selesai</Button>
+                       <button disabled className="w-full py-3 bg-md-surface-variant text-md-on-surface-variant rounded-lg font-bold opacity-60 cursor-not-allowed">
+                         Acara Telah Selesai
+                       </button>
                     ) : (
-                       <Button 
-                        className={`w-full gap-2 ${bgColor} hover:opacity-90`}
+                       <button 
+                        className="w-full py-3 bg-md-primary text-md-on-primary rounded-lg font-bold hover:shadow-lg transition-all active:scale-95"
                         onClick={() => {
                           setSelectedLombaForRegistration(null)
                           setShowRegistrationForm(true)
                         }}
                        >
                          Daftar Sekarang
-                       </Button>
+                       </button>
                     )}
                   </div>
                 )}
+
+                {/* Event Details info */}
+                <h4 className="font-bold text-md-on-surface mb-4">Informasi Pelaksanaan</h4>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                     <div className="w-10 h-10 rounded-full bg-md-surface-container flex items-center justify-center shrink-0 text-md-primary">
+                       <span className="material-symbols-outlined">calendar_month</span>
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold text-md-outline uppercase tracking-widest mb-1">Tanggal</p>
+                       <p className="font-medium text-md-on-surface text-sm">
+                         {new Date(event.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                       </p>
+                     </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                     <div className="w-10 h-10 rounded-full bg-md-surface-container flex items-center justify-center shrink-0 text-md-primary">
+                       <span className="material-symbols-outlined">schedule</span>
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold text-md-outline uppercase tracking-widest mb-1">Waktu</p>
+                       <p className="font-medium text-md-on-surface text-sm">
+                         {event.time ? event.time.substring(0,5) : 'Tentatif'} WIB - Selesai
+                       </p>
+                     </div>
+                  </div>
+                  <div className="flex items-start gap-4">
+                     <div className="w-10 h-10 rounded-full bg-md-surface-container flex items-center justify-center shrink-0 text-md-primary">
+                       <span className="material-symbols-outlined">location_on</span>
+                     </div>
+                     <div>
+                       <p className="text-xs font-bold text-md-outline uppercase tracking-widest mb-1">Lokasi</p>
+                       <p className="font-medium text-md-on-surface text-sm">
+                         {event.location}
+                       </p>
+                     </div>
+                  </div>
+                  {event.max_participants > 0 && (
+                    <div className="flex items-start gap-4">
+                       <div className="w-10 h-10 rounded-full bg-md-surface-container flex items-center justify-center shrink-0 text-md-primary">
+                         <span className="material-symbols-outlined">group</span>
+                       </div>
+                       <div>
+                         <p className="text-xs font-bold text-md-outline uppercase tracking-widest mb-1">Kuota</p>
+                         <p className="font-medium text-md-on-surface text-sm">
+                           Maksimal {event.max_participants} Peserta
+                         </p>
+                       </div>
+                    </div>
+                  )}
+                </div>
                 
-              </CardContent>
-            </Card>
-          </div>
-          
+              </div>
+            </div>
+          </aside>
         </div>
-      </div>
+      </main>
 
       {/* Registration Dialog */}
       <Dialog open={showRegistrationForm} onOpenChange={setShowRegistrationForm}>
@@ -348,7 +381,7 @@ export default function EventDetail() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowRegistrationForm(false)}>Batal</Button>
-            <Button onClick={handleSubmitRegistration} disabled={submitting || !formData.nama_peserta || !formData.nomor_telepon}>
+            <Button className="bg-md-primary text-md-on-primary hover:bg-md-primary/90" onClick={handleSubmitRegistration} disabled={submitting || !formData.nama_peserta || !formData.nomor_telepon}>
               {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Kirim Pendaftaran
             </Button>
@@ -368,10 +401,10 @@ export default function EventDetail() {
             <img src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=TICKET-KTBP-${event?.id}`} alt="QR Code Ticket" className="w-[200px] h-[200px]" />
           </div>
           
-          <div className="bg-slate-100 dark:bg-slate-800 w-full p-4 rounded-xl text-left font-mono text-sm">
-             <p className="text-xs text-slate-500 mb-1">Event:</p>
+          <div className="bg-md-surface-container-low w-full p-4 rounded-xl text-left font-mono text-sm border border-md-outline-variant">
+             <p className="text-xs text-md-on-surface-variant mb-1">Event:</p>
              <p className="font-bold truncate mb-3">{event?.title}</p>
-             <p className="text-xs text-slate-500 mb-1">Ticket ID:</p>
+             <p className="text-xs text-md-on-surface-variant mb-1">Ticket ID:</p>
              <p className="font-bold">TKT-{event?.id?.substring(0,8).toUpperCase()}</p>
           </div>
         </DialogContent>
