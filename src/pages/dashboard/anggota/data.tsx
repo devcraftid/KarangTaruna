@@ -1,0 +1,613 @@
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { memberService, Member } from '@/services/memberService'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Plus, Edit2, Trash2, MessageCircle, Printer, Search, Star } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { memberSchema, MemberFormValues } from '@/lib/validations'
+import toast, { Toaster } from 'react-hot-toast'
+import { storageService } from '@/services/storageService'
+import IdCardTemplate from '@/components/IdCardTemplate'
+
+export default function Anggota() {
+  const queryClient = useQueryClient()
+  const [isOpen, setIsOpen] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+  const [printMember, setPrintMember] = useState<Member | null>(null)
+  const [printAllMembers, setPrintAllMembers] = useState(false)
+  const [activeTab, setActiveTab] = useState("utama")
+  const [searchKeahlian, setSearchKeahlian] = useState("")
+  const [profiles, setProfiles] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const { data } = await supabase.from('profiles').select('id, fullname, email')
+      if (data) setProfiles(data)
+    }
+    fetchProfiles()
+  }, [])
+
+  const { data: members, isLoading, error } = useQuery({
+    queryKey: ['members'],
+    queryFn: memberService.getMembers
+  })
+
+  const form = useForm<MemberFormValues>({
+    resolver: zodResolver(memberSchema),
+    defaultValues: {
+      nama: '',
+      nik: '',
+      jenis_kelamin: 'Laki-laki',
+      tanggal_lahir: '',
+      alamat: '',
+      rt: '',
+      rw: '',
+      nomor_hp: '',
+      is_panitia: false,
+      jabatan: 'Anggota',
+      divisi: '',
+      foto_url: '',
+      status_keanggotaan: 'aktif',
+      foto_kta: '',
+      nomor_anggota: '',
+      pendidikan: '',
+      pekerjaan: '',
+      keahlian: [],
+      minat: [],
+      jam_relawan: 0,
+      poin_keaktifan: 0,
+      user_id: null
+    }
+  })
+
+  const createMutation = useMutation({
+    mutationFn: memberService.createMember,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['members'] })
+      toast.success('Anggota berhasil ditambahkan')
+      setIsOpen(false)
+      form.reset()
+    },
+    onError: (err: any) => toast.error(err.message || 'Gagal menambah anggota')
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string, data: MemberFormValues }) => memberService.updateMember(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['members'] })
+      toast.success('Anggota berhasil diupdate')
+      setIsOpen(false)
+      setEditingId(null)
+      form.reset()
+    },
+    onError: (err: any) => toast.error(err.message || 'Gagal mengupdate anggota')
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: memberService.deleteMember,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['members'] })
+      toast.success('Anggota berhasil dihapus')
+    },
+    onError: (err: any) => toast.error(err.message || 'Gagal menghapus anggota')
+  })
+
+  const onSubmit = async (data: MemberFormValues) => {
+    setIsUploading(true)
+    let uploadedUrl = data.foto_url || ''
+    
+    try {
+      if (selectedFile) {
+        uploadedUrl = await storageService.uploadFile('avatars', selectedFile)
+      }
+      
+      const finalData = {
+        ...data,
+        foto_url: uploadedUrl
+      }
+
+      if (editingId) {
+        updateMutation.mutate({ id: editingId, data: finalData })
+      } else {
+        const pseudoNik = `KT-${Date.now().toString().slice(-13)}`
+        const finalNewData = {
+          ...finalData,
+          nik: finalData.nik || pseudoNik,
+          jenis_kelamin: finalData.jenis_kelamin || 'Laki-laki',
+          tanggal_lahir: finalData.tanggal_lahir || '2000-01-01',
+          alamat: finalData.alamat || '-',
+          rt: finalData.rt || '00',
+          rw: finalData.rw || '00',
+          nomor_hp: finalData.nomor_hp || '',
+          status_keanggotaan: finalData.status_keanggotaan || 'aktif'
+        }
+        createMutation.mutate(finalNewData)
+      }
+    } catch (err: any) {
+      toast.error('Gagal mengupload foto: ' + err.message)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  const handleEdit = (member: Member) => {
+    setEditingId(member.id)
+    setSelectedFile(null)
+    form.reset({
+      nama: member.nama,
+      nik: member.nik,
+      jenis_kelamin: member.jenis_kelamin as 'Laki-laki' | 'Perempuan',
+      tanggal_lahir: member.tanggal_lahir,
+      alamat: member.alamat,
+      rt: member.rt,
+      rw: member.rw,
+      nomor_hp: member.nomor_hp,
+      is_panitia: member.is_panitia || false,
+      jabatan: member.jabatan || 'Anggota',
+      divisi: member.divisi || '',
+      foto_url: member.foto_url || '',
+      status_keanggotaan: member.status_keanggotaan || 'aktif',
+      foto_kta: member.foto_kta || '',
+      nomor_anggota: member.nomor_anggota || '',
+      pendidikan: member.pendidikan || '',
+      pekerjaan: member.pekerjaan || '',
+      keahlian: member.keahlian || [],
+      minat: member.minat || [],
+      jam_relawan: member.jam_relawan || 0,
+      poin_keaktifan: member.poin_keaktifan || 0,
+      user_id: member.user_id || null
+    })
+    setActiveTab("utama")
+    setIsOpen(true)
+  }
+
+  const handleDelete = (id: string) => {
+    if (window.confirm('Apakah Anda yakin ingin menghapus anggota ini?')) {
+      deleteMutation.mutate(id)
+    }
+  }
+
+  const handleSendWA = (nomorHp: string | undefined | null, nama: string) => {
+    if (!nomorHp || nomorHp === '-') {
+      toast.error('Nomor HP tidak tersedia')
+      return
+    }
+    const cleanNumber = nomorHp.replace(/[^0-9]/g, '')
+    const formattedNumber = cleanNumber.startsWith('0') ? '62' + cleanNumber.substring(1) : cleanNumber
+    const message = encodeURIComponent(`Halo ${nama},\n\n`)
+    window.open(`https://wa.me/${formattedNumber}?text=${message}`, '_blank')
+  }
+
+  const openCreateDialog = () => {
+    setEditingId(null)
+    setSelectedFile(null)
+    const nextNumber = 'KT-' + String((members?.length || 0) + 1).padStart(3, '0')
+    form.reset({
+      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: '', nomor_anggota: nextNumber, pendidikan: '', pekerjaan: '', keahlian: [], minat: [], jam_relawan: 0, poin_keaktifan: 0, user_id: null
+    })
+    setActiveTab("utama")
+    setIsOpen(true)
+  }
+
+  // Filter members by keahlian
+  const filteredMembers = members?.filter(m => {
+    if (!searchKeahlian) return true;
+    const searchLower = searchKeahlian.toLowerCase();
+    return m.keahlian?.some((k: string) => k.toLowerCase().includes(searchLower)) || 
+           m.nama.toLowerCase().includes(searchLower) ||
+           m.pekerjaan?.toLowerCase().includes(searchLower);
+  });
+
+  return (
+    <div className="space-y-6">
+      <Toaster />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Data Anggota</h2>
+          <p className="text-muted-foreground">Kelola data anggota karang taruna</p>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input 
+              placeholder="Cari nama, keahlian (Cth: MC)..." 
+              className="pl-9 w-full sm:w-[250px]"
+              value={searchKeahlian}
+              onChange={(e) => setSearchKeahlian(e.target.value)}
+            />
+          </div>
+          <Button variant="outline" onClick={() => setPrintAllMembers(true)} disabled={isLoading || !members?.length}>
+            <Printer className="mr-2 h-4 w-4" /> Cetak Kartu
+          </Button>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openCreateDialog}>
+                <Plus className="mr-2 h-4 w-4" /> Tambah Anggota
+              </Button>
+            </DialogTrigger>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editingId ? 'Edit Anggota' : 'Tambah Anggota Baru'}</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="utama">Data Utama</TabsTrigger>
+                  <TabsTrigger value="profesional">Profesional</TabsTrigger>
+                  <TabsTrigger value="aktivitas">Aktivitas</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="utama" className="space-y-4 mt-4 animate-in fade-in">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Nama Lengkap</Label>
+                      <Input {...form.register('nama')} placeholder="Masukkan nama" />
+                      {form.formState.errors.nama && <p className="text-sm text-destructive">{form.formState.errors.nama.message}</p>}
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Nomor Anggota (Opsional)</Label>
+                      <Input {...form.register('nomor_anggota')} placeholder="Cth: KT-001" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Foto Profil</Label>
+                      <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tautkan Akun Aplikasi (Opsional)</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('user_id', val === 'none' ? null : val)}
+                        defaultValue={form.getValues('user_id') || 'none'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih akun pengguna..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">-- Belum Punya Akun --</SelectItem>
+                          {profiles.map((p: any) => (
+                            <SelectItem key={p.id} value={p.id}>{p.fullname} ({p.email})</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mt-4">
+                    <Label>Status Keanggotaan</Label>
+                    <Select 
+                      onValueChange={(val) => form.setValue('status_keanggotaan', val as 'calon' | 'aktif' | 'alumni' | 'nonaktif')}
+                      defaultValue={form.getValues('status_keanggotaan') || 'aktif'}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="calon">Calon Anggota</SelectItem>
+                        <SelectItem value="aktif">Aktif</SelectItem>
+                        <SelectItem value="alumni">Alumni</SelectItem>
+                        <SelectItem value="nonaktif">Non-Aktif</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <input 
+                      type="checkbox" 
+                      id="is_panitia" 
+                      className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      checked={form.watch('is_panitia')} 
+                      onChange={(e) => form.setValue('is_panitia', e.target.checked)} 
+                    />
+                    <Label htmlFor="is_panitia" className="cursor-pointer">Jadikan sebagai Panitia 17-an?</Label>
+                  </div>
+                </div>
+
+                {form.watch('is_panitia') && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in fade-in zoom-in duration-300">
+                    <div className="space-y-2">
+                      <Label>Jabatan Kepanitiaan</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('jabatan', val)}
+                        defaultValue={form.getValues('jabatan') || 'Anggota'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih jabatan" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Ketua">Ketua</SelectItem>
+                          <SelectItem value="Wakil Ketua">Wakil Ketua</SelectItem>
+                          <SelectItem value="Sekretaris">Sekretaris</SelectItem>
+                          <SelectItem value="Bendahara">Bendahara</SelectItem>
+                          <SelectItem value="Koordinator">Koordinator</SelectItem>
+                          <SelectItem value="Anggota">Anggota</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Divisi / Seksi</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('divisi', val)}
+                        defaultValue={form.getValues('divisi') || 'Umum'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih divisi" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Inti">Inti</SelectItem>
+                          <SelectItem value="Acara">Acara</SelectItem>
+                          <SelectItem value="Lomba">Lomba</SelectItem>
+                          <SelectItem value="Konsumsi">Konsumsi</SelectItem>
+                          <SelectItem value="Perlengkapan">Perlengkapan</SelectItem>
+                          <SelectItem value="Dokumentasi">Dokumentasi</SelectItem>
+                          <SelectItem value="Humas">Humas</SelectItem>
+                          <SelectItem value="Keamanan">Keamanan</SelectItem>
+                          <SelectItem value="Umum">Umum</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+                
+                {editingId && (
+                  <>
+                    <div className="space-y-2">
+                      <Label>NIK</Label>
+                      <Input {...form.register('nik')} placeholder="16 digit NIK" />
+                      {form.formState.errors.nik && <p className="text-sm text-destructive">{form.formState.errors.nik.message}</p>}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Jenis Kelamin</Label>
+                        <Select 
+                          onValueChange={(val) => form.setValue('jenis_kelamin', val as 'Laki-laki' | 'Perempuan')}
+                          defaultValue={form.getValues('jenis_kelamin')}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pilih jenis kelamin" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Laki-laki">Laki-laki</SelectItem>
+                            <SelectItem value="Perempuan">Perempuan</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Tanggal Lahir</Label>
+                        <Input type="date" {...form.register('tanggal_lahir')} />
+                        {form.formState.errors.tanggal_lahir && <p className="text-sm text-destructive">{form.formState.errors.tanggal_lahir.message}</p>}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Alamat Lengkap</Label>
+                      <Input {...form.register('alamat')} placeholder="Jalan, No Rumah" />
+                      {form.formState.errors.alamat && <p className="text-sm text-destructive">{form.formState.errors.alamat.message}</p>}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>RT</Label>
+                        <Input {...form.register('rt')} placeholder="001" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>RW</Label>
+                        <Input {...form.register('rw')} placeholder="002" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Nomor HP</Label>
+                        <Input {...form.register('nomor_hp')} placeholder="08..." />
+                      </div>
+                    </div>
+                  </>
+                )}
+              </TabsContent>
+
+              <TabsContent value="profesional" className="space-y-4 mt-4 animate-in fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Pendidikan Terakhir</Label>
+                    <Input {...form.register('pendidikan')} placeholder="Cth: S1 Teknik Informatika" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Pekerjaan Saat Ini</Label>
+                    <Input {...form.register('pekerjaan')} placeholder="Cth: Fotografer, Mahasiswa" />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Keahlian (Pisahkan dengan koma)</Label>
+                  <Input 
+                    placeholder="Cth: Desain, MC, Fotografi, IT" 
+                    value={form.watch('keahlian')?.join(', ')}
+                    onChange={(e) => form.setValue('keahlian', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                  />
+                  <p className="text-xs text-muted-foreground">Membantu pencarian bakat saat pembentukan panitia acara.</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label>Minat / Hobi (Pisahkan dengan koma)</Label>
+                  <Input 
+                    placeholder="Cth: Olahraga, Musik, Membaca" 
+                    value={form.watch('minat')?.join(', ')}
+                    onChange={(e) => form.setValue('minat', e.target.value.split(',').map(s => s.trim()).filter(s => s))}
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="aktivitas" className="space-y-4 mt-4 animate-in fade-in">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Jam Relawan (Total)</Label>
+                    <Input type="number" {...form.register('jam_relawan')} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Poin Keaktifan</Label>
+                    <Input type="number" {...form.register('poin_keaktifan')} />
+                  </div>
+                </div>
+                
+                {/* Note: In a real app, Sertifikat and Prestasi would be complex array fields (e.g. using useFieldArray). For now we just use a placeholder text area or leave them to be managed via a different interface. */}
+                <div className="p-4 bg-blue-50 text-blue-800 rounded-lg text-sm border border-blue-200">
+                  Riwayat kepanitiaan, sertifikat, dan presasi anggota dicatat secara otomatis oleh sistem ketika anggota dimasukkan ke dalam panitia acara atau memenangkan perlombaan.
+                </div>
+              </TabsContent>
+            </Tabs>
+
+              <div className="pt-4 flex justify-end space-x-2">
+                <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>Batal</Button>
+                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending || isUploading}>
+                  {isUploading ? 'Menyimpan...' : editingId ? 'Simpan Perubahan' : 'Tambah Data'}
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+        </div>
+        
+        {/* Print Dialog (Single) */}
+        <Dialog open={!!printMember} onOpenChange={(open) => !open && setPrintMember(null)}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Pratinjau Kartu Anggota</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative max-h-[60vh] overflow-y-auto">
+              {printMember && (
+                <div id="print-section">
+                  <IdCardTemplate member={printMember} />
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setPrintMember(null)}>Tutup</Button>
+              <Button type="button" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-2" />
+                Cetak Sekarang
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Print Dialog (All) */}
+        <Dialog open={printAllMembers} onOpenChange={setPrintAllMembers}>
+          <DialogContent className="sm:max-w-[800px] max-w-[95vw] max-h-[95vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Pratinjau Semua Kartu Anggota</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center py-4 bg-slate-50 rounded-xl overflow-hidden relative">
+              {printAllMembers && members && (
+                <div id="print-section" className="flex flex-wrap gap-4 p-4 justify-center">
+                  {members.map(m => <IdCardTemplate key={m.id} member={m} />)}
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => setPrintAllMembers(false)}>Tutup</Button>
+              <Button type="button" onClick={() => window.print()}>
+                <Printer className="w-4 h-4 mr-2" />
+                Cetak Semua (Simpan PDF)
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      <div className="bg-card border rounded-xl shadow-sm">
+        {isLoading ? (
+          <div className="p-8 text-center text-muted-foreground">Memuat data...</div>
+        ) : error ? (
+          <div className="p-8 text-center text-destructive">Gagal memuat data anggota.</div>
+        ) : members?.length === 0 ? (
+          <div className="p-16 text-center">
+            <h3 className="text-lg font-semibold">Belum ada anggota</h3>
+            <p className="text-muted-foreground mt-2">Mulai tambahkan anggota karang taruna sekarang.</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nama Anggota</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Keahlian / Profesi</TableHead>
+                <TableHead>Keaktifan</TableHead>
+                <TableHead>No. HP</TableHead>
+                <TableHead>Alamat</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredMembers?.map((member) => (
+                <TableRow key={member.id}>
+                  <TableCell>
+                    <div className="font-medium text-slate-900">{member.nama}</div>
+                    <div className="text-xs text-muted-foreground">{member.nomor_anggota || member.nik}</div>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 text-[10px] font-medium rounded-full uppercase ${member.status_keanggotaan === 'aktif' ? 'bg-green-100 text-green-700' : member.status_keanggotaan === 'calon' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-700'}`}>
+                      {member.status_keanggotaan || 'aktif'}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-sm font-medium">{member.pekerjaan || '-'}</div>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {member.keahlian?.slice(0,3).map((k: string, i: number) => (
+                        <span key={i} className="text-[10px] bg-slate-100 border text-slate-600 px-1.5 py-0.5 rounded-full">{k}</span>
+                      ))}
+                      {member.keahlian && member.keahlian.length > 3 && (
+                        <span className="text-[10px] bg-slate-100 border text-slate-600 px-1.5 py-0.5 rounded-full">+{member.keahlian.length - 3}</span>
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1 text-xs text-amber-600 font-medium">
+                      <Star className="w-3 h-3 fill-amber-500" /> {member.poin_keaktifan || 0} Pts
+                    </div>
+                  </TableCell>
+                  <TableCell>{member.nomor_hp}</TableCell>
+                  <TableCell>{member.rt}/{member.rw}</TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-700" onClick={() => setPrintMember(member)} title="Cetak ID Card">
+                      <Printer className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-700" onClick={() => handleSendWA(member.nomor_hp, member.nama)} title="Hubungi WA">
+                      <MessageCircle className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleEdit(member)}>
+                      <Edit2 className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => handleDelete(member.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
+      </div>
+    </div>
+  )
+}

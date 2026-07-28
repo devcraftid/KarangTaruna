@@ -1,117 +1,116 @@
-import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import { getHallOfFameEntries } from '@/services/hallOfFameService'
-import { Award, Star, History, Users, Trophy } from 'lucide-react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent } from "@/components/ui/card"
+import { Award, Trophy, Medal, Star, Crown, Search, Loader2 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { supabase } from '@/lib/supabase'
 
-export default function HallOfFame() {
-  const { data: entries, isLoading } = useQuery({ 
-    queryKey: ['hall_of_fame_public'], 
-    queryFn: getHallOfFameEntries 
-  })
+export default function HallOfFamePublik() {
+  const [winners, setWinners] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const [activeCategory, setActiveCategory] = useState<string>('all')
+  useEffect(() => {
+    fetchWinners()
+  }, [])
 
-  const categories = [
-    { id: 'all', label: 'Semua', icon: Award },
-    { id: 'ketua', label: 'Ketua', icon: Users },
-    { id: 'pengurus_terbaik', label: 'Pengurus Terbaik', icon: Star },
-    { id: 'anggota_inspiratif', label: 'Inspiratif', icon: Star },
-    { id: 'prestasi', label: 'Prestasi', icon: Trophy },
-    { id: 'juara_lomba', label: 'Juara Lomba', icon: Trophy },
-    { id: 'sejarah', label: 'Sejarah', icon: History }
-  ]
+  const fetchWinners = async () => {
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('competitions')
+        .select('*')
+        .not('pemenang', 'is', null)
+        .neq('pemenang', '')
+        .order('tanggal', { ascending: false })
+      
+      if (error) throw error
+      if (data) setWinners(data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const filteredEntries = entries?.filter(e => activeCategory === 'all' || e.kategori === activeCategory) || []
+  const filteredWinners = winners.filter(w => 
+    w.nama_lomba.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    w.pemenang.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-background pb-20">
-      <div className="bg-primary text-primary-foreground py-16 px-4">
-        <div className="container mx-auto max-w-5xl text-center">
-          <Award className="w-16 h-16 mx-auto mb-4 opacity-90" />
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 uppercase">Hall of Fame</h1>
-          <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
-            Mengenang sejarah, mengapresiasi dedikasi, dan merayakan setiap pencapaian luar biasa Karang Taruna Bina Pemuda.
+    <div className="bg-md-surface min-h-screen pb-20">
+      
+      {/* HEADER SECTION */}
+      <div className="bg-primary text-white py-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500 via-transparent to-transparent"></div>
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative z-10 text-center max-w-3xl">
+          <Crown className="w-16 h-16 text-amber-400 mx-auto mb-6 drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" />
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
+            Dinding Prestasi
+          </h1>
+          <p className="text-lg text-white/80 leading-relaxed mb-8">
+            Apresiasi dan penganugerahan bagi warga berprestasi yang telah memenangkan berbagai perlombaan Karang Taruna.
           </p>
+          
+          <div className="relative max-w-xl mx-auto flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <Input 
+                placeholder="Cari nama lomba atau nama pemenang..." 
+                className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-slate-400 rounded-full focus-visible:ring-amber-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto max-w-6xl px-4 mt-8 md:-mt-8 relative z-10">
-        <div className="bg-white dark:bg-card rounded-2xl shadow-lg p-2 md:p-4 border mb-8 flex flex-wrap justify-center gap-2">
-          {categories.map((cat) => {
-            const Icon = cat.icon
-            const isActive = activeCategory === cat.id
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all duration-200
-                  ${isActive 
-                    ? 'bg-primary text-white shadow-md scale-105' 
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
-                  }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : ''}`} />
-                {cat.label}
-              </button>
-            )
-          })}
-        </div>
-
-        {isLoading ? (
-          <div className="py-20 text-center">
-            <div className="animate-spin text-primary inline-block mb-4">
-              <History className="w-10 h-10" />
-            </div>
-            <p className="text-muted-foreground font-medium">Memuat catatan sejarah...</p>
-          </div>
-        ) : filteredEntries.length === 0 ? (
-          <div className="py-20 text-center bg-white dark:bg-card rounded-2xl border">
-            <Award className="w-16 h-16 text-slate-200 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-700">Belum ada catatan</h3>
-            <p className="text-muted-foreground mt-2">Data untuk kategori ini belum ditambahkan oleh pengurus.</p>
+      <div className="container mx-auto px-4 mt-16 max-w-5xl">
+        {loading ? (
+          <div className="flex justify-center p-20"><Loader2 className="w-10 h-10 text-amber-500 animate-spin" /></div>
+        ) : filteredWinners.length === 0 ? (
+          <div className="text-center p-20 bg-white dark:bg-slate-900 rounded-3xl shadow-sm">
+            <Award className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-slate-500">Belum ada data pemenang tercatat.</h3>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEntries.map((entry) => (
-              <Card key={entry.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group border-slate-200 dark:border-slate-800">
-                <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
-                  {entry.foto_url ? (
-                    <img 
-                      src={entry.foto_url} 
-                      alt={entry.judul} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400">
-                      <Award className="w-12 h-12 mb-2 opacity-50" />
-                      <span className="text-xs uppercase tracking-widest font-bold">No Image</span>
-                    </div>
-                  )}
-                  <div className="absolute top-3 right-3 bg-white/90 dark:bg-black/80 backdrop-blur-sm text-primary font-bold px-3 py-1 rounded-full text-sm shadow-sm">
-                    {entry.tahun}
-                  </div>
-                </div>
-                <CardContent className="p-5">
-                  <div className="mb-2">
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400">
-                      {categories.find(c => c.id === entry.kategori)?.label || entry.kategori}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 leading-tight">
-                    {entry.judul}
-                  </h3>
-                  {entry.deskripsi && (
-                    <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3">
-                      {entry.deskripsi}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredWinners.map((item, index) => {
+               // Assign dynamic medal colors based on index just for visual flair if we don't have actual ranking data
+               const isTop = index % 3 === 0
+               return (
+                 <Card key={item.id} className="border-none shadow-xl bg-white dark:bg-slate-900 overflow-hidden relative group hover:-translate-y-2 transition-transform duration-300">
+                    {/* Decorative Background */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-amber-500/20 transition-colors"></div>
+                    
+                    <CardContent className="p-8 relative z-10 text-center">
+                       <div className="w-20 h-20 mx-auto bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/40 dark:to-amber-800/40 rounded-full flex items-center justify-center mb-6 shadow-inner border border-amber-300/30">
+                         {isTop ? <Trophy className="w-10 h-10 text-amber-600 dark:text-amber-400" /> : <Medal className="w-10 h-10 text-amber-600 dark:text-amber-400" />}
+                       </div>
+                       
+                       <div className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                         <Star className="w-3 h-3" /> Pemenang Juara 1
+                       </div>
+
+                       <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-2">{item.pemenang}</h3>
+                       
+                       <div className="w-12 h-1 bg-slate-200 dark:bg-slate-800 mx-auto my-4 rounded-full"></div>
+                       
+                       <p className="text-slate-500 dark:text-slate-400 font-medium mb-1">{item.nama_lomba}</p>
+                       <p className="text-xs text-slate-400">{new Date(item.tanggal).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' })}</p>
+                    </CardContent>
+                 </Card>
+               )
+            })}
           </div>
         )}
       </div>
     </div>
   )
 }
+
+
+
+
+

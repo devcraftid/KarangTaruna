@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { memberService, Member } from '@/services/memberService'
 import { Button } from '@/components/ui/button'
@@ -39,6 +40,15 @@ export default function Anggota() {
   const [printAllMembers, setPrintAllMembers] = useState(false)
   const [activeTab, setActiveTab] = useState("utama")
   const [searchKeahlian, setSearchKeahlian] = useState("")
+  const [profiles, setProfiles] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      const { data } = await supabase.from('profiles').select('id, fullname, email')
+      if (data) setProfiles(data)
+    }
+    fetchProfiles()
+  }, [])
 
   const { data: members, isLoading, error } = useQuery({
     queryKey: ['members'],
@@ -66,7 +76,8 @@ export default function Anggota() {
       keahlian: [],
       minat: [],
       jam_relawan: 0,
-      poin_keaktifan: 0
+      poin_keaktifan: 0,
+      user_id: null
     }
   })
 
@@ -161,7 +172,8 @@ export default function Anggota() {
       keahlian: member.keahlian || [],
       minat: member.minat || [],
       jam_relawan: member.jam_relawan || 0,
-      poin_keaktifan: member.poin_keaktifan || 0
+      poin_keaktifan: member.poin_keaktifan || 0,
+      user_id: member.user_id || null
     })
     setActiveTab("utama")
     setIsOpen(true)
@@ -187,8 +199,9 @@ export default function Anggota() {
   const openCreateDialog = () => {
     setEditingId(null)
     setSelectedFile(null)
+    const nextNumber = 'KT-' + String((members?.length || 0) + 1).padStart(3, '0')
     form.reset({
-      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: '', nomor_anggota: '', pendidikan: '', pekerjaan: '', keahlian: [], minat: [], jam_relawan: 0, poin_keaktifan: 0
+      nama: '', nik: '', jenis_kelamin: 'Laki-laki', tanggal_lahir: '', alamat: '', rt: '', rw: '', nomor_hp: '', is_panitia: false, jabatan: 'Anggota', divisi: '', foto_url: '', nomor_anggota: nextNumber, pendidikan: '', pekerjaan: '', keahlian: [], minat: [], jam_relawan: 0, poin_keaktifan: 0, user_id: null
     })
     setActiveTab("utama")
     setIsOpen(true)
@@ -256,9 +269,28 @@ export default function Anggota() {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label>Foto Profil</Label>
-                    <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Foto Profil</Label>
+                      <Input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files?.[0] || null)} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tautkan Akun Aplikasi (Opsional)</Label>
+                      <Select 
+                        onValueChange={(val) => form.setValue('user_id', val === 'none' ? null : val)}
+                        defaultValue={form.getValues('user_id') || 'none'}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih akun pengguna..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">-- Belum Punya Akun --</SelectItem>
+                          {profiles.map((p: any) => (
+                            <SelectItem key={p.id} value={p.id}>{p.fullname} ({p.email})</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 
                 <div className="space-y-2">

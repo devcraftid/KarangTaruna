@@ -11,9 +11,12 @@ export interface Member {
   rw: string
   nomor_hp: string
   foto_url?: string
+  status_keanggotaan?: 'calon' | 'aktif' | 'alumni' | 'nonaktif'
+  foto_kta?: string
   is_panitia?: boolean
   jabatan?: string
   divisi?: string
+  user_id?: string | null
   nomor_anggota?: string
   pendidikan?: string
   pekerjaan?: string

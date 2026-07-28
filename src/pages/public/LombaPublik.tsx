@@ -1,227 +1,153 @@
-import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { lombaService } from '@/services/lombaService'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect } from 'react'
+import { Card, CardContent } from "@/components/ui/card"
+import { Calendar as CalendarIcon, MapPin, Users, ChevronRight, Trophy, Search, CheckCircle } from 'lucide-react'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import toast, { Toaster } from 'react-hot-toast'
-import { Trophy, Calendar, MapPin, Users, CheckCircle2, BadgeCheck } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { supabase } from '@/lib/supabase'
 
 export default function LombaPublik() {
-  const queryClient = useQueryClient()
-  const [selectedLomba, setSelectedLomba] = useState<any | null>(null)
-  
-  const [formData, setFormData] = useState({
-    nama: '',
-    jenis_kelamin: 'L',
-    umur: '',
-    rt: '',
-    rw: '',
-    nama_ortu: ''
-  })
+  const [events, setEvents] = useState<any[]>([])
+  const [competitions, setCompetitions] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const { data: competitions, isLoading } = useQuery({
-    queryKey: ['public_competitions'],
-    queryFn: lombaService.getPublicCompetitions
-  })
+  useEffect(() => {
+    fetchAgenda()
+  }, [])
 
-  const registerMutation = useMutation({
-    mutationFn: ({ competition_id, payload }: { competition_id: string, payload: any }) => 
-      lombaService.registerPublic(competition_id, payload),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['public_competitions'] })
-      toast.success(`Berhasil mendaftar! Atas nama: ${data.member.nama}`)
-      setSelectedLomba(null)
-      setFormData({ nama: '', jenis_kelamin: 'L', umur: '', rt: '', rw: '', nama_ortu: '' })
-    },
-    onError: (err: any) => toast.error(err.message || 'Gagal mendaftar')
-  })
-
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!selectedLomba || !formData.nama || !formData.nama_ortu) return
-    registerMutation.mutate({ competition_id: selectedLomba.id, payload: formData })
+  const fetchAgenda = async () => {
+    try {
+      setLoading(true)
+      const [eventsRes, compRes] = await Promise.all([
+        supabase.from('events').select('*').in('status', ['published', 'ongoing', 'completed']).order('tanggal_mulai', { ascending: true }),
+        supabase.from('competitions').select('*').in('status', ['published', 'completed']).order('tanggal', { ascending: true })
+      ])
+      
+      if (eventsRes.data) setEvents(eventsRes.data)
+      if (compRes.data) setCompetitions(compRes.data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  // Combine both arrays into one agenda list for display
+  const combinedAgenda = [
+    ...events.map(e => ({
+      id: e.id,
+      title: e.nama_acara,
+      date: e.tanggal_mulai,
+      time: e.waktu,
+      location: e.lokasi,
+      type: 'event',
+      status: e.status,
+      desc: e.deskripsi
+    })),
+    ...competitions.map(c => ({
+      id: c.id,
+      title: c.nama_lomba,
+      date: c.tanggal,
+      time: c.jam,
+      location: c.lokasi,
+      type: 'lomba',
+      status: c.status,
+      desc: c.deskripsi
+    }))
+  ].filter(item => (item.title || '').toLowerCase().includes(searchQuery.toLowerCase()))
+   .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return (
-    <div className="container mx-auto px-4 py-12 animate-in fade-in duration-500">
-      <Toaster />
-      <div className="text-center max-w-2xl mx-auto mb-12">
-        <h1 className="text-4xl font-bold tracking-tight text-primary mb-4">Perlombaan 17 Agustus</h1>
-        <p className="text-lg text-muted-foreground">
-          Ikuti berbagai perlombaan seru untuk memeriahkan hari kemerdekaan. Daftarkan diri Anda sekarang!
-        </p>
+    <div className="bg-md-surface min-h-screen pb-20">
+      
+      {/* HEADER SECTION */}
+      <div className="bg-primary text-white py-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-emerald-500 via-transparent to-transparent"></div>
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative z-10 text-center max-w-3xl">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 uppercase tracking-tight">Agenda & Event</h1>
+          <p className="text-lg text-white/80 leading-relaxed mb-8">
+            Temukan berbagai acara menarik, kegiatan sosial, dan perlombaan yang diselenggarakan oleh Karang Taruna.
+          </p>
+          
+          <div className="relative max-w-xl mx-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <Input 
+              placeholder="Cari nama event atau lomba..." 
+              className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-slate-400 rounded-full focus-visible:ring-emerald-500"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
-      {isLoading ? (
-        <div className="text-center py-20 text-muted-foreground">Memuat data lomba...</div>
-      ) : competitions?.length === 0 ? (
-        <div className="text-center py-20 bg-card rounded-2xl shadow-sm border">
-          <Trophy className="h-12 w-12 mx-auto text-muted-foreground mb-4 opacity-50" />
-          <h2 className="text-xl font-semibold">Belum Ada Perlombaan</h2>
-          <p className="text-muted-foreground mt-2">Saat ini belum ada perlombaan yang dibuka.</p>
-        </div>
-      ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {competitions?.map((lomba: any) => {
-            const isFull = (lomba.registrations?.length || 0) >= lomba.maksimal_peserta
-            const isCompleted = lomba.status === 'completed'
-            
-            return (
-              <div key={lomba.id} className="bg-card border rounded-2xl shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-                <div className="p-6 flex-1">
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-semibold">
-                      {lomba.kategori}
-                    </span>
-                    {isCompleted ? (
-                      <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold flex items-center">
-                        <CheckCircle2 className="w-3 h-3 mr-1" /> Selesai
+      <div className="container mx-auto px-4 mt-12 max-w-5xl">
+        
+        {loading ? (
+          <div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div></div>
+        ) : combinedAgenda.length === 0 ? (
+          <Card className="text-center p-12 border-none shadow-sm">
+            <CalendarIcon className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-slate-500">Belum ada agenda terdekat.</h3>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {combinedAgenda.map((item) => (
+              <Link to={`/lomba/${item.id}?type=${item.type}`} key={item.id} className="group">
+                <Card className="border-none shadow-lg h-full overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 bg-white dark:bg-slate-900 flex flex-col relative">
+                  
+                  {/* Decorative Header Banner */}
+                  <div className={`h-2 w-full ${item.type === 'lomba' ? 'bg-orange-500' : 'bg-emerald-500'}`}></div>
+                  
+                  <div className="absolute top-6 right-6">
+                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.type === 'lomba' ? 'bg-orange-100 text-orange-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                       {item.type === 'lomba' ? <Trophy className="w-5 h-5" /> : <Users className="w-5 h-5" />}
+                     </div>
+                  </div>
+
+                  <CardContent className="p-6 pt-8 flex-1 flex flex-col">
+                    <div className="mb-4">
+                      <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm mr-2 ${item.type === 'lomba' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'}`}>
+                        {item.type === 'lomba' ? 'Kompetisi' : 'Kegiatan'}
                       </span>
-                    ) : isFull ? (
-                      <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold">Penuh</span>
-                    ) : (
-                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Buka</span>
-                    )}
-                  </div>
-                  
-                  <h3 className="text-xl font-bold mb-2">{lomba.nama_lomba}</h3>
-                  <p className="text-muted-foreground text-sm line-clamp-2 mb-4">
-                    {lomba.deskripsi || 'Tidak ada deskripsi.'}
-                  </p>
-                  
-                  <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                    <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-2 text-primary" />
-                      {new Date(lomba.tanggal).toLocaleDateString('id-ID')} | {lomba.jam}
+                      {item.status === 'completed' && (
+                        <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-sm bg-slate-100 text-slate-600 dark:bg-slate-800 flex inline-flex items-center gap-1">
+                          <CheckCircle className="w-3 h-3" /> Selesai
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2 text-primary" />
-                      {lomba.lokasi}
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 mr-2 text-primary" />
-                      Kuota: {lomba.registrations?.length || 0} / {lomba.maksimal_peserta}
-                    </div>
-                    {lomba.registrations && lomba.registrations.length > 0 && (
-                      <div className="flex items-start pt-2 border-t mt-2">
-                        <Users className="w-4 h-4 mr-2 text-primary mt-0.5" />
-                        <div>
-                          <span className="font-semibold block mb-1">Pendaftar ({lomba.registrations.length}):</span>
-                          <div className="flex flex-wrap gap-1">
-                            {lomba.registrations.map((reg: any, idx: number) => (
-                              <span key={idx} className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs border">
-                                {reg.members?.nama}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                    
+                    <h3 className="font-bold text-xl text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 transition-colors">
+                      {item.title}
+                    </h3>
+                    
+                    <div className="space-y-2 text-sm text-slate-500 mb-6 flex-1">
+                      <div className="flex items-center gap-2">
+                        <CalendarIcon className="w-4 h-4 shrink-0" />
+                        <span>{new Date(item.date).toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' })} • {item.time ? item.time.substring(0,5) : ''} WIB</span>
                       </div>
-                    )}
-                    {lomba.pengawas_lomba && lomba.pengawas_lomba.length > 0 && (
-                      <div className="flex items-start pt-2 border-t mt-2">
-                        <BadgeCheck className="w-4 h-4 mr-2 text-primary mt-0.5" />
-                        <div>
-                          <span className="font-semibold block mb-1">Pengawas:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {lomba.pengawas_lomba.map((p: any, idx: number) => (
-                              <span key={idx} className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md text-xs border">
-                                {p.nama_lengkap}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
+                        <span className="line-clamp-2">{item.location}</span>
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                {isCompleted && lomba.pemenang && (
-                  <div className="bg-amber-50 dark:bg-amber-900/20 p-4 border-t border-amber-100 dark:border-amber-900/30">
-                    <h4 className="font-semibold text-amber-800 dark:text-amber-500 mb-1 flex items-center">
-                      <Trophy className="w-4 h-4 mr-2" /> Daftar Pemenang
-                    </h4>
-                    <p className="text-sm text-amber-700 dark:text-amber-400/80">{lomba.pemenang}</p>
-                  </div>
-                )}
-
-                <div className="p-4 border-t bg-slate-50/50 dark:bg-slate-900/20">
-                  <Button 
-                    className="w-full" 
-                    variant={isCompleted || isFull ? "secondary" : "default"}
-                    disabled={isCompleted || isFull}
-                    onClick={() => setSelectedLomba(lomba)}
-                  >
-                    {isCompleted ? 'Lomba Selesai' : isFull ? 'Kuota Penuh' : 'Daftar Sekarang'}
-                  </Button>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
-
-      <Dialog open={!!selectedLomba} onOpenChange={(open) => !open && setSelectedLomba(null)}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Daftar Lomba: {selectedLomba?.nama_lomba}</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleRegister} className="space-y-4 pt-4">
-            
-            <div className="space-y-2">
-              <Label>Nama Lengkap Peserta (Anak)</Label>
-              <Input name="nama" value={formData.nama} onChange={handleChange} placeholder="Contoh: Budi Santoso" required />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Umur (Tahun)</Label>
-                <Input type="number" name="umur" value={formData.umur} onChange={handleChange} placeholder="Contoh: 10" required />
-              </div>
-              <div className="space-y-2">
-                <Label>Jenis Kelamin</Label>
-                <Select value={formData.jenis_kelamin} onValueChange={(val) => setFormData(p => ({...p, jenis_kelamin: val}))}>
-                  <SelectTrigger><SelectValue placeholder="Pilih" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="L">Laki-laki</SelectItem>
-                    <SelectItem value="P">Perempuan</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>RT</Label>
-                <Input name="rt" value={formData.rt} onChange={handleChange} placeholder="Contoh: 01" required />
-              </div>
-              <div className="space-y-2">
-                <Label>RW</Label>
-                <Input name="rw" value={formData.rw} onChange={handleChange} placeholder="Contoh: 05" required />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Nama Orang Tua</Label>
-              <Input name="nama_ortu" value={formData.nama_ortu} onChange={handleChange} placeholder="Contoh: Bapak Andi / Ibu Ani" required />
-            </div>
-
-            <div className="pt-4 flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={() => setSelectedLomba(null)}>Batal</Button>
-              <Button type="submit" disabled={registerMutation.isPending}>
-                {registerMutation.isPending ? 'Mendaftar...' : 'Kirim Pendaftaran'}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+                    </div>
+                    
+                    <div className="mt-auto pt-4 border-t dark:border-slate-800 flex items-center justify-between font-bold text-sm">
+                      <span className={`${item.type === 'lomba' ? 'text-orange-600' : 'text-emerald-600'}`}>Lihat Detail Acara</span>
+                      <ChevronRight className={`w-4 h-4 group-hover:translate-x-1 transition-transform ${item.type === 'lomba' ? 'text-orange-600' : 'text-emerald-600'}`} />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
+
+
+
+
+

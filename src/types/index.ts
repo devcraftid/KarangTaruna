@@ -137,9 +137,50 @@ export interface Event {
   deskripsi?: string
   tanggal_mulai: string
   tanggal_selesai: string
-  is_active: boolean
+  lokasi: string
+  rundown?: any[]
+  status: 'draft' | 'published' | 'ongoing' | 'completed' | 'cancelled'
+  banner_url?: string
   created_by?: string
   created_at?: string
+}
+
+export interface EventCommittee {
+  id: string
+  event_id: string
+  member_id: string
+  divisi: string
+  jabatan: string
+  tugas?: string
+  created_at?: string
+  members?: { nama: string }
+}
+
+export interface EventAttendance {
+  id: string
+  event_id: string
+  member_id: string
+  waktu_check_in: string
+  status: 'hadir' | 'izin' | 'sakit' | 'alpa'
+  metode_check_in: string
+  created_at?: string
+  members?: { nama: string }
+}
+
+export interface Sponsorship {
+  id: string
+  event_id?: string
+  nama_instansi: string
+  kontak_person?: string
+  nomor_hp?: string
+  target_dana: number
+  dana_realisasi: number
+  status: 'draft' | 'dikirim' | 'ditolak' | 'disetujui'
+  proposal_url?: string
+  catatan?: string
+  created_by?: string
+  created_at?: string
+  events?: { nama_acara: string }
 }
 
 export interface Household {
@@ -219,3 +260,13 @@ export interface HallOfFameEntry {
   created_at?: string
 }
 
+export interface Product {
+  id: string
+  nama: string
+  kategori: string
+  harga: number
+  deskripsi?: string
+  gambar_url?: string
+  is_active: boolean
+  created_at?: string
+}

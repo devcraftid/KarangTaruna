@@ -1,239 +1,203 @@
-import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { supabase } from '@/lib/supabase'
-import { Store, Plus, Trash2, Edit2, Loader2, Image as ImageIcon } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Switch } from '@/components/ui/switch'
-import toast from 'react-hot-toast'
-import { Product } from '@/types'
-import { useAuth } from '@/context/AuthContext'
+import { Store, Plus, Loader2, Trash2, Edit2, BadgeCheck } from 'lucide-react'
 
-export default function Bumkt() {
-  const queryClient = useQueryClient()
-  const { profile } = useAuth()
+export default function DataUMKM() {
+  const [umkms, setUmkms] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [file, setFile] = useState<File | null>(null)
+  const [saving, setSaving] = useState(false)
   
   const [formData, setFormData] = useState({
-    nama_produk: '',
-    deskripsi: '',
-    harga: 0,
-    stok: 0,
-    is_active: true
+    nama_usaha: '',
+    nama_pemilik: '',
+    kategori: 'Kuliner',
+    alamat: '',
+    kontak: ''
   })
 
-  const { data: products, isLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
-      if (error) throw error
-      return data as Product[]
-    }
-  })
+  useEffect(() => {
+    fetchUmkms()
+  }, [])
 
-  const saveMutation = useMutation({
-    mutationFn: async (newData: any) => {
-      let gambar = newData.gambar || ''
+  const fetchUmkms = async () => {
+    try {
+      setLoading(true)
+      const { data, error } = await supabase
+        .from('umkm_profiles')
+        .select('*')
+        .order('created_at', { ascending: false })
       
-      if (file) {
-        const fileExt = file.name.split('.').pop()
-        const fileName = `${Math.random()}.${fileExt}`
-        
-        const { error: uploadError } = await supabase.storage.from('bumkt').upload(fileName, file)
-        if (uploadError) throw uploadError
-        
-        const { data: urlData } = supabase.storage.from('bumkt').getPublicUrl(fileName)
-        gambar = urlData.publicUrl
-      }
-
-      const payload = { ...newData, gambar, created_by: profile?.id }
-
-      if (editingId) {
-        const { error } = await supabase.from('products').update(payload).eq('id', editingId)
-        if (error) throw error
-      } else {
-        const { error } = await supabase.from('products').insert([payload])
-        if (error) throw error
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-      toast.success(`Produk berhasil ${editingId ? 'diperbarui' : 'ditambahkan'}`)
-      resetForm()
-    },
-    onError: (error) => toast.error('Gagal menyimpan produk: ' + error.message)
-  })
-
-  const toggleStatusMutation = useMutation({
-    mutationFn: async ({ id, is_active }: { id: string, is_active: boolean }) => {
-      const { error } = await supabase.from('products').update({ is_active }).eq('id', id)
       if (error) throw error
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['products'] })
-  })
-
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase.from('products').delete().eq('id', id)
-      if (error) throw error
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-      toast.success('Produk berhasil dihapus')
+      if (data) setUmkms(data)
+    } catch (error) {
+      console.error('Error fetching UMKM:', error)
+    } finally {
+      setLoading(false)
     }
-  })
-
-  const resetForm = () => {
-    setIsOpen(false)
-    setEditingId(null)
-    setFile(null)
-    setFormData({ nama_produk: '', deskripsi: '', harga: 0, stok: 0, is_active: true })
   }
 
-  const handleEdit = (item: Product) => {
-    setFormData({
-      nama_produk: item.nama_produk,
-      deskripsi: item.deskripsi || '',
-      harga: item.harga,
-      stok: item.stok,
-      is_active: item.is_active
-    })
-    // Note: We don't load the existing image into `file` state, we just keep the URL in the DB if no new file is selected.
-    setEditingId(item.id)
-    setIsOpen(true)
+  const handleSave = async () => {
+    if (!formData.nama_usaha || !formData.nama_pemilik) return
+    setSaving(true)
+    try {
+      const { data, error } = await supabase
+        .from('umkm_profiles')
+        .insert([formData])
+        .select()
+      
+      if (error) throw error
+      if (data) setUmkms([data[0], ...umkms])
+      setIsOpen(false)
+      setFormData({ nama_usaha: '', nama_pemilik: '', kategori: 'Kuliner', alamat: '', kontak: '' })
+    } catch (error: any) {
+      alert(error.message)
+    } finally {
+      setSaving(false)
+    }
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setUploading(true)
-    const existingGambar = editingId ? products?.find(p => p.id === editingId)?.gambar : undefined
-    await saveMutation.mutateAsync({ ...formData, gambar: existingGambar })
-    setUploading(false)
+  const handleDelete = async (id: string) => {
+    if (!confirm('Hapus profil UMKM ini? Data produk dan penjualannya juga mungkin akan terhapus.')) return
+    try {
+      const { error } = await supabase.from('umkm_profiles').delete().eq('id', id)
+      if (error) throw error
+      setUmkms(umkms.filter(u => u.id !== id))
+    } catch (error: any) {
+      alert(error.message)
+    }
   }
 
-  const formatRupiah = (angka: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka)
+  const handleVerify = async (id: string, currentStatus: boolean) => {
+    try {
+      const { error } = await supabase.from('umkm_profiles').update({ is_verified: !currentStatus }).eq('id', id)
+      if (error) throw error
+      setUmkms(umkms.map(u => u.id === id ? { ...u, is_verified: !currentStatus } : u))
+    } catch (error: any) {
+      alert(error.message)
+    }
+  }
+
+  if (loading) {
+    return <div className="flex justify-center p-8"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>
+  }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Store className="h-6 w-6 text-primary" />
-            Etalase BUMKT
-          </h1>
-          <p className="text-muted-foreground">Kelola produk dan layanan Badan Usaha Milik Karang Taruna</p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Store className="w-8 h-8 text-primary" />
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Data UMKM & BUMKT</h1>
+            <p className="text-muted-foreground">
+              Direktori usaha milik warga dan Badan Usaha Milik Karang Taruna.
+            </p>
+          </div>
         </div>
         
-        <Dialog open={isOpen} onOpenChange={(open) => { if(!open) resetForm(); else setIsOpen(true) }}>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto"><Plus className="w-4 h-4 mr-2" /> Tambah Produk</Button>
+            <Button><Plus className="w-4 h-4 mr-2" /> Tambah UMKM</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingId ? 'Edit Produk' : 'Tambah Produk Baru'}</DialogTitle>
+              <DialogTitle>Daftarkan Usaha Baru</DialogTitle>
             </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+            <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label>Nama Produk</Label>
-                <Input required value={formData.nama_produk} onChange={e => setFormData({...formData, nama_produk: e.target.value})} placeholder="Kaos Karang Taruna" />
-              </div>
-              <div className="space-y-2">
-                <Label>Deskripsi</Label>
-                <Input value={formData.deskripsi} onChange={e => setFormData({...formData, deskripsi: e.target.value})} />
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Harga (Rp)</Label>
-                  <Input type="number" required min="0" value={formData.harga} onChange={e => setFormData({...formData, harga: parseInt(e.target.value) || 0})} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Stok</Label>
-                  <Input type="number" required min="0" value={formData.stok} onChange={e => setFormData({...formData, stok: parseInt(e.target.value) || 0})} />
-                </div>
+                <Label>Nama Usaha / Toko</Label>
+                <Input value={formData.nama_usaha} onChange={e => setFormData({...formData, nama_usaha: e.target.value})} placeholder="Warung Makan Berkah" />
               </div>
               <div className="space-y-2">
-                <Label>Gambar Produk (Opsional)</Label>
-                <Input type="file" accept="image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
+                <Label>Nama Pemilik</Label>
+                <Input value={formData.nama_pemilik} onChange={e => setFormData({...formData, nama_pemilik: e.target.value})} placeholder="Bpk. Budi" />
               </div>
-              <div className="flex items-center space-x-2 pt-2">
-                <Switch 
-                  checked={formData.is_active} 
-                  onCheckedChange={(c: boolean) => setFormData({...formData, is_active: c})} 
-                  id="active-mode" 
-                />
-                <Label htmlFor="active-mode">Tampilkan di Etalase Publik</Label>
+              <div className="space-y-2">
+                <Label>Kategori Usaha</Label>
+                <Select value={formData.kategori} onValueChange={(val) => setFormData({...formData, kategori: val})}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Kuliner">F&B / Kuliner</SelectItem>
+                    <SelectItem value="Jasa">Jasa & Servis</SelectItem>
+                    <SelectItem value="Retail">Retail / Sembako</SelectItem>
+                    <SelectItem value="Kerajinan">Kerajinan / Kriya</SelectItem>
+                    <SelectItem value="Lainnya">Lainnya</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <Button type="submit" className="w-full" disabled={uploading}>
-                {uploading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-                Simpan
+              <div className="space-y-2">
+                <Label>Nomor WhatsApp</Label>
+                <Input value={formData.kontak} onChange={e => setFormData({...formData, kontak: e.target.value})} placeholder="0812..." />
+              </div>
+              <div className="space-y-2">
+                <Label>Alamat / RT RW</Label>
+                <Input value={formData.alamat} onChange={e => setFormData({...formData, alamat: e.target.value})} placeholder="RT 01 / RW 02" />
+              </div>
+              <Button className="w-full mt-4" onClick={handleSave} disabled={saving}>
+                {saving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null} Simpan Data
               </Button>
-            </form>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="bg-white dark:bg-card border rounded-lg shadow-sm">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Produk</TableHead>
-              <TableHead>Harga</TableHead>
-              <TableHead>Stok</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[100px]">Aksi</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow><TableCell colSpan={5} className="text-center py-8">Loading...</TableCell></TableRow>
-            ) : products?.length === 0 ? (
-              <TableRow><TableCell colSpan={5} className="text-center py-8">Belum ada produk di etalase</TableCell></TableRow>
-            ) : (
-              products?.map((item) => (
-                <TableRow key={item.id}>
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nama Usaha</TableHead>
+                <TableHead>Pemilik</TableHead>
+                <TableHead>Kategori</TableHead>
+                <TableHead>Kontak & Alamat</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {umkms.length === 0 ? (
+                <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-12">Belum ada UMKM yang terdaftar.</TableCell></TableRow>
+              ) : umkms.map((u) => (
+                <TableRow key={u.id}>
+                  <TableCell className="font-bold">{u.nama_usaha}</TableCell>
+                  <TableCell>{u.nama_pemilik}</TableCell>
+                  <TableCell><span className="px-2 py-1 text-xs bg-slate-100 rounded-full">{u.kategori}</span></TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      {item.gambar ? (
-                        <img src={item.gambar} alt={item.nama_produk} className="w-10 h-10 rounded-md object-cover border" />
-                      ) : (
-                        <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center border">
-                          <ImageIcon className="w-5 h-5 text-muted-foreground" />
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-medium">{item.nama_produk}</p>
-                        <p className="text-xs text-muted-foreground line-clamp-1">{item.deskripsi}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-semibold">{formatRupiah(item.harga)}</TableCell>
-                  <TableCell>{item.stok}</TableCell>
-                  <TableCell>
-                     <Switch 
-                        checked={item.is_active} 
-                        onCheckedChange={(c: boolean) => toggleStatusMutation.mutate({ id: item.id, is_active: c })} 
-                     />
+                    <div className="text-sm">{u.kontak || '-'}</div>
+                    <div className="text-xs text-muted-foreground">{u.alamat}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => handleEdit(item)}><Edit2 className="w-4 h-4 text-blue-500" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => { if(confirm('Hapus produk?')) deleteMutation.mutate(item.id) }}>
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </div>
+                    {u.is_verified ? (
+                      <span className="flex items-center text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full w-fit">
+                        <BadgeCheck className="w-3 h-3 mr-1" /> Terverifikasi
+                      </span>
+                    ) : (
+                      <span className="flex items-center text-xs font-medium text-amber-600 bg-amber-50 px-2 py-1 rounded-full w-fit">
+                        Menunggu
+                      </span>
+                    )}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="ghost" size="sm" onClick={() => handleVerify(u.id, u.is_verified)}>
+                      {u.is_verified ? 'Batal Verif' : 'Verifikasi'}
+                    </Button>
+                    <Button variant="ghost" size="sm" className="text-destructive h-8 w-8 p-0" onClick={() => handleDelete(u.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   )
 }

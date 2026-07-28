@@ -5,7 +5,10 @@ import {
   LayoutDashboard, Users, Trophy, DollarSign, LogOut,
   Megaphone, Newspaper, Image as ImageIcon,
   CreditCard, Wallet, ChevronLeft, ChevronRight, ChevronDown, Menu, X,
-  FileText, Flag, Home as HomeIcon, Award
+  FileText, Flag, Home as HomeIcon, Award,
+  Building, Calendar, Briefcase, Mail, FolderOpen,
+  ShoppingBag, ClipboardList, Settings, BarChart, FileSpreadsheet,
+  CheckSquare, MessageSquare, PieChart, Info, HelpCircle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -13,7 +16,16 @@ export default function DashboardLayout() {
   const { user, profile, loading, signOut } = useAuth()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
-  const [openGroups, setOpenGroups] = useState<string[]>(['Utama', 'Manajemen Acara & Warga', 'Keuangan & Sponsor', 'Publikasi & Info'])
+  const [openGroups, setOpenGroups] = useState<string[]>([
+    'Dasbor & Pengguna',
+    'Organisasi & SDM',
+    'Program & Kegiatan',
+    'Administrasi & Aset',
+    'Keuangan & Transparansi',
+    'Ekonomi Warga',
+    'Humas & Publikasi',
+    'Pengaturan Sistem'
+  ])
   
   const location = useLocation()
 
@@ -34,43 +46,98 @@ export default function DashboardLayout() {
 
   const menuGroups = [
     {
-      title: 'Utama',
+      title: 'Dasbor & Pengguna',
       icon: LayoutDashboard,
       items: [
-        { name: 'Dasbor', href: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'sekretaris', 'bendahara'] },
+        { name: 'Dasbor Utama', href: '/dashboard', icon: LayoutDashboard, roles: ['admin', 'sekretaris', 'bendahara', 'panitia', 'ketua', 'wakil_ketua', 'koordinator', 'admin_media', 'admin_umkm', 'pembina'] },
+        { name: 'Ringkasan Organisasi', href: '/dashboard/ringkasan', icon: PieChart, roles: ['admin', 'ketua', 'wakil_ketua', 'pembina'] },
+        { name: 'Data Hak Akses', href: '/dashboard/users', icon: Users, roles: ['admin'] },
+        { name: 'Log Aktivitas', href: '/dashboard/users/activity', icon: LogOut, roles: ['admin'] },
       ]
     },
     {
-      title: 'Manajemen Acara & Warga',
-      icon: Flag,
+      title: 'Organisasi & SDM',
+      icon: Building,
       items: [
-        { name: 'Acara / Proyek', href: '/dashboard/events', icon: Flag, roles: ['admin', 'sekretaris'] },
-        { name: 'Data Rumah & Iuran', href: '/dashboard/warga', icon: HomeIcon, roles: ['admin', 'sekretaris', 'bendahara'] },
-        { name: 'Pendaftaran Peserta', href: '/dashboard/pendaftaran', icon: Users, roles: ['admin', 'sekretaris'] },
-        { name: 'Katalog Lomba', href: '/dashboard/lomba', icon: Trophy, roles: ['admin', 'sekretaris'] },
+        { name: 'Profil & AD/ART', href: '/dashboard/organisasi/profil', icon: Info, roles: ['admin', 'sekretaris'] },
+        { name: 'Struktur & Periode', href: '/dashboard/organisasi/struktur', icon: Users, roles: ['admin', 'sekretaris'] },
+        { name: 'Data Pembina', href: '/dashboard/organisasi/pembina', icon: Award, roles: ['admin', 'sekretaris'] },
+        { name: 'Data Anggota & Alumni', href: '/dashboard/anggota/data', icon: Users, roles: ['admin', 'sekretaris', 'ketua'] },
+        { name: 'Data Kepengurusan', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris', 'ketua'] },
+        { name: 'Data Warga', href: '/dashboard/warga', icon: HomeIcon, roles: ['admin', 'sekretaris', 'bendahara'] },
+        { name: 'KTA Digital', href: '/dashboard/anggota/kta', icon: CreditCard, roles: ['admin', 'sekretaris'] },
+        { name: 'Absensi Anggota', href: '/dashboard/anggota/absensi', icon: CheckSquare, roles: ['admin', 'sekretaris'] },
       ]
     },
     {
-      title: 'Keuangan & Sponsor',
+      title: 'Program & Kegiatan',
+      icon: Calendar,
+      items: [
+        { name: 'Daftar Program', href: '/dashboard/proker', icon: FileText, roles: ['admin', 'koordinator', 'ketua'] },
+        { name: 'Timeline Proker', href: '/dashboard/proker/timeline', icon: Calendar, roles: ['admin', 'koordinator'] },
+        { name: 'Dashboard Event', href: '/dashboard/events/dashboard', icon: BarChart, roles: ['admin', 'sekretaris', 'ketua', 'panitia'] },
+        { name: 'Acara / Event', href: '/dashboard/events', icon: Flag, roles: ['admin', 'sekretaris', 'panitia'] },
+        { name: 'Katalog Lomba', href: '/dashboard/lomba', icon: Trophy, roles: ['admin', 'sekretaris', 'panitia'] },
+        { name: 'Kepanitiaan & Volunteer', href: '/dashboard/acara/panitia', icon: Users, roles: ['admin', 'sekretaris', 'panitia'] },
+        { name: 'Presensi Event', href: '/dashboard/acara/presensi', icon: CheckSquare, roles: ['admin', 'sekretaris', 'panitia'] },
+        { name: 'Sertifikat Digital', href: '/dashboard/acara/sertifikat', icon: Award, roles: ['admin', 'sekretaris', 'panitia'] },
+      ]
+    },
+    {
+      title: 'Administrasi & Aset',
+      icon: FolderOpen,
+      items: [
+        { name: 'Persuratan', href: '/dashboard/surat', icon: Mail, roles: ['admin', 'sekretaris'] },
+        { name: 'Agenda & Notulen', href: '/dashboard/administrasi/rapat', icon: ClipboardList, roles: ['admin', 'sekretaris'] },
+        { name: 'Proposal & LPJ', href: '/dashboard/administrasi/dokumen', icon: FileText, roles: ['admin', 'sekretaris'] },
+        { name: 'Data Inventaris', href: '/dashboard/inventaris', icon: Briefcase, roles: ['admin', 'sekretaris'] },
+        { name: 'Peminjaman Barang', href: '/dashboard/inventaris/pinjam', icon: ClipboardList, roles: ['admin', 'sekretaris'] },
+      ]
+    },
+    {
+      title: 'Keuangan & Transparansi',
       icon: DollarSign,
       items: [
         { name: 'Kas Masuk', href: '/dashboard/kas-masuk', icon: Wallet, roles: ['admin', 'bendahara'] },
         { name: 'Kas Keluar', href: '/dashboard/kas-keluar', icon: CreditCard, roles: ['admin', 'bendahara'] },
-        { name: 'Kat. Pemasukan', href: '/dashboard/kategori-pemasukan', icon: DollarSign, roles: ['admin', 'bendahara'] },
-        { name: 'Kat. Pengeluaran', href: '/dashboard/kategori-pengeluaran', icon: DollarSign, roles: ['admin', 'bendahara'] },
-        { name: 'Pelacakan Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
-        { name: 'Laporan Kas', href: '/dashboard/laporan', icon: DollarSign, roles: ['admin', 'bendahara'] },
+        { name: 'Iuran & Patungan', href: '/dashboard/patungan', icon: DollarSign, roles: ['admin', 'bendahara'] },
+        { name: 'Kat. Transaksi', href: '/dashboard/kategori-pemasukan', icon: FolderOpen, roles: ['admin', 'bendahara'] },
+        { name: 'Data Sponsor', href: '/dashboard/proposals', icon: FileText, roles: ['admin', 'sekretaris', 'bendahara'] },
+        { name: 'Buku Kas Publik', href: '/dashboard/transparansi', icon: FileSpreadsheet, roles: ['admin', 'bendahara', 'ketua'] },
+        { name: 'Realisasi Anggaran', href: '/dashboard/transparansi/realisasi', icon: PieChart, roles: ['admin', 'bendahara'] },
+        { name: 'Laporan Keuangan', href: '/dashboard/laporan', icon: FileSpreadsheet, roles: ['admin', 'bendahara', 'ketua', 'wakil_ketua', 'pembina'] },
       ]
     },
     {
-      title: 'Publikasi & Info',
+      title: 'Ekonomi Warga',
+      icon: ShoppingBag,
+      items: [
+        { name: 'Data BUMKT / UMKM', href: '/dashboard/bumkt', icon: ShoppingBag, roles: ['admin', 'sekretaris', 'bendahara', 'admin_umkm'] },
+        { name: 'Katalog Produk', href: '/dashboard/umkm/produk', icon: FolderOpen, roles: ['admin', 'sekretaris', 'admin_umkm'] },
+        { name: 'Laporan Penjualan', href: '/dashboard/umkm/laporan', icon: BarChart, roles: ['admin', 'admin_umkm'] },
+      ]
+    },
+    {
+      title: 'Humas & Publikasi',
       icon: Megaphone,
       items: [
-        { name: 'Pengumuman', href: '/dashboard/pengumuman', icon: Megaphone, roles: ['admin', 'sekretaris'] },
-        { name: 'Berita', href: '/dashboard/berita', icon: Newspaper, roles: ['admin', 'sekretaris'] },
-        { name: 'Galeri & Dokumentasi', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris'] },
-        { name: 'Data Kepengurusan', href: '/dashboard/anggota', icon: Users, roles: ['admin', 'sekretaris'] },
-        { name: 'Dinding Prestasi', href: '/dashboard/hall-of-fame', icon: Award, roles: ['admin', 'sekretaris'] },
+        { name: 'Berita & Artikel', href: '/dashboard/berita', icon: Newspaper, roles: ['admin', 'sekretaris', 'admin_media'] },
+        { name: 'Pengumuman', href: '/dashboard/pengumuman', icon: Megaphone, roles: ['admin', 'sekretaris', 'admin_media'] },
+        { name: 'Galeri & Dokumentasi', href: '/dashboard/galeri', icon: ImageIcon, roles: ['admin', 'sekretaris', 'admin_media'] },
+        { name: 'Dinding Prestasi', href: '/dashboard/hall-of-fame', icon: Award, roles: ['admin', 'sekretaris', 'admin_media'] },
+        { name: 'Aspirasi & Pengaduan', href: '/dashboard/publikasi/aspirasi', icon: MessageSquare, roles: ['admin', 'sekretaris', 'ketua'] },
+        { name: 'Forum & Voting', href: '/dashboard/publikasi/forum', icon: HelpCircle, roles: ['admin', 'sekretaris'] },
+      ]
+    },
+    {
+      title: 'Pengaturan Sistem',
+      icon: Settings,
+      items: [
+        { name: 'Dashboard Analitik', href: '/dashboard/analitik', icon: PieChart, roles: ['admin', 'ketua'] },
+        { name: 'Export Laporan', href: '/dashboard/laporan/export', icon: FileText, roles: ['admin', 'ketua'] },
+        { name: 'Profil Website', href: '/dashboard/pengaturan/web', icon: Settings, roles: ['admin'] },
+        { name: 'Role & Permission', href: '/dashboard/pengaturan/akses', icon: Users, roles: ['admin'] },
+        { name: 'Backup & Log', href: '/dashboard/pengaturan/sistem', icon: FolderOpen, roles: ['admin'] },
       ]
     }
   ]

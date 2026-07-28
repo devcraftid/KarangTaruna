@@ -12,7 +12,10 @@ export const memberSchema = z.object({
   is_panitia: z.boolean().optional().default(false),
   jabatan: z.string().optional(),
   divisi: z.string().optional(),
+  user_id: z.string().uuid().optional().nullable(),
   foto_url: z.string().optional(),
+  status_keanggotaan: z.enum(['calon', 'aktif', 'alumni', 'nonaktif']).optional().default('aktif'),
+  foto_kta: z.string().optional(),
   nomor_anggota: z.string().optional(),
   pendidikan: z.string().optional(),
   pekerjaan: z.string().optional(),
@@ -38,6 +41,7 @@ export const lombaSchema = z.object({
   status: z.enum(['draft', 'published', 'completed']),
   deskripsi: z.string().optional(),
   pemenang: z.string().optional(),
+  event_id: z.string().optional().nullable(),
 })
 
 export type LombaFormValues = z.infer<typeof lombaSchema>

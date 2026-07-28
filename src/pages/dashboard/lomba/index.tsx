@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { lombaService, Lomba } from '@/services/lombaService'
 import { Button } from '@/components/ui/button'
@@ -15,22 +15,33 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { lombaSchema, LombaFormValues } from '@/lib/validations'
 import toast, { Toaster } from 'react-hot-toast'
+import { supabase } from '@/lib/supabase'
 
 export default function LombaPage() {
   const queryClient = useQueryClient()
   const [isOpen, setIsOpen] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [viewRegistrantsId, setViewRegistrantsId] = useState<string | null>(null)
+  const [events, setEvents] = useState<any[]>([])
 
   const { data: competitions, isLoading, error } = useQuery({
     queryKey: ['competitions'],
     queryFn: lombaService.getCompetitions
   })
 
+  // Fetch events manually for the dropdown
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const { data } = await supabase.from('events').select('id, nama_acara').order('tanggal_mulai', { ascending: false })
+      if (data) setEvents(data)
+    }
+    fetchEvents()
+  }, [])
+
   const form = useForm<LombaFormValues>({
     resolver: zodResolver(lombaSchema),
     defaultValues: {
-      nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: ''
+      nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', event_id: ''
     }
   })
 
@@ -85,7 +96,8 @@ export default function LombaPage() {
       maksimal_peserta: lomba.maksimal_peserta,
       status: lomba.status,
       deskripsi: lomba.deskripsi || '',
-      pemenang: lomba.pemenang || ''
+      pemenang: lomba.pemenang || '',
+      event_id: lomba.event_id || ''
     })
     setIsOpen(true)
   }
@@ -202,7 +214,7 @@ export default function LombaPage() {
 
   const openCreateDialog = () => {
     setEditingId(null)
-    form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '' })
+    form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '', event_id: '' })
     setIsOpen(true)
   }
 
@@ -260,6 +272,23 @@ export default function LombaPage() {
                 <div className="space-y-2">
                   <Label>Maksimal Peserta</Label>
                   <Input type="number" {...form.register('maksimal_peserta')} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tautkan ke Acara (Opsional)</Label>
+                  <Select 
+                    onValueChange={(val) => form.setValue('event_id', val === 'none' ? null : val)}
+                    defaultValue={form.getValues('event_id') || 'none'}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih Acara" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">-- Berdiri Sendiri / Tidak Ada --</SelectItem>
+                      {events.map((ev: any) => (
+                        <SelectItem key={ev.id} value={ev.id}>{ev.nama_acara}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 

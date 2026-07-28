@@ -22,12 +22,27 @@ export default function Login() {
     setLoading(true)
     
     try {
+      const deviceInfo = navigator.userAgent
+      let ipAddress = 'Unknown'
+      try {
+        const ipRes = await fetch('https://api.ipify.org?format=json')
+        const ipData = await ipRes.json()
+        ipAddress = ipData.ip
+      } catch (e) {
+        console.error('Failed to get IP', e)
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
 
-      if (error) throw error
+      if (error) {
+        await supabase.from('auth_logs').insert([{ email, status: 'Failed', device_info: deviceInfo, ip_address: ipAddress }])
+        throw error
+      }
+      
+      await supabase.from('auth_logs').insert([{ email, status: 'Success', device_info: deviceInfo, ip_address: ipAddress }])
       
       toast.success('Login berhasil')
       navigate('/dashboard')

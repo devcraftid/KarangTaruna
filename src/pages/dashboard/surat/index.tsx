@@ -25,7 +25,9 @@ export default function Surat() {
     tanggal: new Date().toISOString().split('T')[0],
     pihak_terkait: '',
     perihal: '',
-    keterangan: ''
+    keterangan: '',
+    disposisi_kepada: '',
+    status_surat: 'diproses'
   })
 
   const { data: letters, isLoading } = useQuery({
@@ -79,7 +81,9 @@ export default function Surat() {
         tanggal: new Date().toISOString().split('T')[0],
         pihak_terkait: '',
         perihal: '',
-        keterangan: ''
+        keterangan: '',
+        disposisi_kepada: '',
+        status_surat: 'diproses'
       })
       setFile(null)
     },
@@ -159,6 +163,10 @@ export default function Surat() {
                 <Input type="file" accept=".pdf,image/*" onChange={e => setFile(e.target.files?.[0] || null)} />
               </div>
               <div className="space-y-2">
+                <Label>Disposisi Ke (Opsional)</Label>
+                <Input value={formData.disposisi_kepada} onChange={e => setFormData({...formData, disposisi_kepada: e.target.value})} placeholder="Ketua RT, Bidang Olahraga..." />
+              </div>
+              <div className="space-y-2">
                 <Label>Keterangan Tambahan</Label>
                 <Input value={formData.keterangan} onChange={e => setFormData({...formData, keterangan: e.target.value})} />
               </div>
@@ -180,6 +188,7 @@ export default function Surat() {
               <TableHead>Tanggal</TableHead>
               <TableHead>Pihak Terkait</TableHead>
               <TableHead>Perihal</TableHead>
+              <TableHead>Disposisi</TableHead>
               <TableHead className="w-[100px]">Aksi</TableHead>
             </TableRow>
           </TableHeader>
@@ -204,6 +213,13 @@ export default function Surat() {
                   <TableCell>{new Date(item.tanggal).toLocaleDateString('id-ID')}</TableCell>
                   <TableCell>{item.pihak_terkait}</TableCell>
                   <TableCell>{item.perihal}</TableCell>
+                  <TableCell>
+                    {item.disposisi_kepada ? (
+                       <span className="px-2 py-1 bg-slate-100 rounded-md text-xs border">{item.disposisi_kepada}</span>
+                    ) : (
+                       <span className="text-muted-foreground text-xs">-</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {item.file_url && (

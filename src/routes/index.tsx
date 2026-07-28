@@ -6,15 +6,27 @@ import Login from '@/pages/auth/Login'
 import Transparansi from '@/pages/public/Transparansi'
 import LombaPublik from '@/pages/public/LombaPublik'
 import InformasiPublik from '@/pages/public/InformasiPublik'
+import BeritaDetail from '@/pages/public/BeritaDetail'
 import GaleriPublik from '@/pages/public/GaleriPublik'
+import EventDetail from '@/pages/public/EventDetail'
 import PanitiaPublik from '@/pages/public/PanitiaPublik'
 import PatunganPublik from '@/pages/public/Patungan'
 import PatunganDetail from '@/pages/public/PatunganDetail'
 import Etalase from '@/pages/public/Etalase'
 import VotingPublik from '@/pages/public/VotingPublik'
 import HallOfFamePublik from '@/pages/public/HallOfFame'
+import TentangKami from '@/pages/public/TentangKami'
+import KepengurusanPublik from '@/pages/public/KepengurusanPublik'
+import ProgramKerjaPublik from '@/pages/public/ProgramKerjaPublik'
+import Faq from '@/pages/public/Faq'
+import Kontak from '@/pages/public/Kontak'
+import AspirasiPublik from '@/pages/public/AspirasiPublik'
+import DokumenPublik from '@/pages/public/DokumenPublik'
+import NotFound from '@/pages/public/NotFound'
+import PendaftaranPublik from '@/pages/public/PendaftaranPublik'
 
 import DashboardHome from '@/pages/dashboard/DashboardHome'
+import UnderConstruction from '@/pages/dashboard/UnderConstruction'
 import Anggota from '@/pages/dashboard/anggota'
 import Lomba from '@/pages/dashboard/lomba'
 import Pendaftaran from '@/pages/dashboard/pendaftaran'
@@ -38,6 +50,36 @@ import Warga from '@/pages/dashboard/warga'
 import Proposals from '@/pages/dashboard/proposals'
 import HallOfFameDashboard from '@/pages/dashboard/hall-of-fame'
 
+// New Modules Placeholder Imports
+import ProfilOrganisasi from '@/pages/dashboard/organisasi/profil'
+import StrukturOrganisasi from '@/pages/dashboard/organisasi/struktur'
+import PembinaOrganisasi from '@/pages/dashboard/organisasi/pembina'
+import DataAnggota from '@/pages/dashboard/anggota/data'
+import KtaDigital from '@/pages/dashboard/anggota/kta'
+import AbsensiAnggota from '@/pages/dashboard/anggota/absensi'
+import Kepanitiaan from '@/pages/dashboard/acara/panitia'
+import PresensiEvent from '@/pages/dashboard/acara/presensi'
+import SertifikatDigital from '@/pages/dashboard/acara/sertifikat'
+import Rapat from '@/pages/dashboard/administrasi/rapat'
+import Dokumen from '@/pages/dashboard/administrasi/dokumen'
+import Aspirasi from '@/pages/dashboard/publikasi/aspirasi'
+import Forum from '@/pages/dashboard/publikasi/forum'
+import ProdukUmkm from '@/pages/dashboard/umkm/produk'
+import Analitik from '@/pages/dashboard/analitik'
+import ExportLaporan from '@/pages/dashboard/laporan/export'
+import ProfilWeb from '@/pages/dashboard/pengaturan/web'
+import AksesSistem from '@/pages/dashboard/pengaturan/akses'
+import BackupSistem from '@/pages/dashboard/pengaturan/sistem'
+import RingkasanOrganisasi from '@/pages/dashboard/ringkasan'
+import UsersManagement from '@/pages/dashboard/users'
+import UsersActivity from '@/pages/dashboard/users/activity'
+import DashboardEvent from '@/pages/dashboard/events/dashboard'
+import TimelineProker from '@/pages/dashboard/proker/timeline'
+import TransparansiDashboard from '@/pages/dashboard/transparansi'
+import RealisasiAnggaran from '@/pages/dashboard/transparansi/realisasi'
+import LaporanUmkm from '@/pages/dashboard/umkm/laporan'
+import PinjamInventaris from '@/pages/dashboard/inventaris/pinjam'
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -56,8 +98,16 @@ const router = createBrowserRouter([
         element: <LombaPublik />,
       },
       {
+        path: 'lomba/:id',
+        element: <EventDetail />,
+      },
+      {
         path: 'informasi',
         element: <InformasiPublik />,
+      },
+      {
+        path: 'informasi/:id',
+        element: <BeritaDetail />,
       },
       {
         path: 'galeri',
@@ -90,7 +140,43 @@ const router = createBrowserRouter([
       {
         path: 'hall-of-fame',
         element: <HallOfFamePublik />,
-      }
+      },
+      {
+        path: 'tentang',
+        element: <TentangKami />,
+      },
+      {
+        path: 'kepengurusan',
+        element: <KepengurusanPublik />,
+      },
+      {
+        path: 'program-kerja',
+        element: <ProgramKerjaPublik />,
+      },
+      {
+        path: 'faq',
+        element: <Faq />,
+      },
+      {
+        path: 'kontak',
+        element: <Kontak />,
+      },
+      {
+        path: 'aspirasi',
+        element: <AspirasiPublik />,
+      },
+      {
+        path: 'dokumen',
+        element: <DokumenPublik />,
+      },
+      {
+        path: 'pendaftaran',
+        element: <PendaftaranPublik />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
     ],
   },
   {
@@ -188,11 +274,128 @@ const router = createBrowserRouter([
       {
         path: 'hall-of-fame',
         element: <HallOfFameDashboard />,
+      },
+      // New Routes
+      {
+        path: 'organisasi/profil',
+        element: <ProfilOrganisasi />,
+      },
+      {
+        path: 'organisasi/struktur',
+        element: <StrukturOrganisasi />,
+      },
+      {
+        path: 'organisasi/pembina',
+        element: <PembinaOrganisasi />,
+      },
+      {
+        path: 'anggota/data',
+        element: <DataAnggota />,
+      },
+      {
+        path: 'anggota/kta',
+        element: <KtaDigital />,
+      },
+      {
+        path: 'anggota/absensi',
+        element: <AbsensiAnggota />,
+      },
+      {
+        path: 'acara/panitia',
+        element: <Kepanitiaan />,
+      },
+      {
+        path: 'acara/presensi',
+        element: <PresensiEvent />,
+      },
+      {
+        path: 'acara/sertifikat',
+        element: <SertifikatDigital />,
+      },
+      {
+        path: 'administrasi/rapat',
+        element: <Rapat />,
+      },
+      {
+        path: 'administrasi/dokumen',
+        element: <Dokumen />,
+      },
+      {
+        path: 'publikasi/aspirasi',
+        element: <Aspirasi />,
+      },
+      {
+        path: 'publikasi/forum',
+        element: <Forum />,
+      },
+      {
+        path: 'umkm/produk',
+        element: <ProdukUmkm />,
+      },
+      {
+        path: 'analitik',
+        element: <Analitik />,
+      },
+      {
+        path: 'laporan/export',
+        element: <ExportLaporan />,
+      },
+      {
+        path: 'pengaturan/web',
+        element: <ProfilWeb />,
+      },
+      {
+        path: 'pengaturan/akses',
+        element: <AksesSistem />,
+      },
+      {
+        path: 'pengaturan/sistem',
+        element: <BackupSistem />,
+      },
+      {
+        path: 'ringkasan',
+        element: <RingkasanOrganisasi />,
+      },
+      {
+        path: 'users',
+        element: <UsersManagement />,
+      },
+      {
+        path: 'users/activity',
+        element: <UsersActivity />,
+      },
+      {
+        path: 'events/dashboard',
+        element: <DashboardEvent />,
+      },
+      {
+        path: 'proker/timeline',
+        element: <TimelineProker />,
+      },
+      {
+        path: 'transparansi',
+        element: <TransparansiDashboard />,
+      },
+      {
+        path: 'transparansi/realisasi',
+        element: <RealisasiAnggaran />,
+      },
+      {
+        path: 'umkm/laporan',
+        element: <LaporanUmkm />,
+      },
+      {
+        path: 'inventaris/pinjam',
+        element: <PinjamInventaris />,
+      },
+      {
+        path: '*',
+        element: <UnderConstruction />,
       }
     ],
   },
 ])
 
 export function AppRouter() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} future={{ v7_startTransition: true }} />
 }
