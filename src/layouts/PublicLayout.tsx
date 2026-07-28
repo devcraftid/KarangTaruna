@@ -392,16 +392,6 @@ export default function PublicLayout() {
       </Dialog>
 
       {/* ======= FAB ======= */}
-      <Link
-        to="/lomba"
-        className="fixed bottom-8 right-8 z-40 w-14 h-14 bg-secondary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
-        title="Lihat Agenda"
-      >
-        <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6" stroke="currentColor" strokeWidth={2.5}>
-          <path d="M12 5v14M5 12h14" strokeLinecap="round" />
-        </svg>
-      </Link>
-
     </div>
   )
 }
