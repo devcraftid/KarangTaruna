@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { supabase } from '@/lib/supabase'
-import { ClipboardList, Loader2, Save, ArrowLeftRight } from 'lucide-react'
+import { Loader2, Save, ArrowLeftRight } from 'lucide-react'
 
 export default function PeminjamanInventaris() {
   const [loans, setLoans] = useState<any[]>([])

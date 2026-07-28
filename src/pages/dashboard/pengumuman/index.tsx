@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { supabase } from '@/lib/supabase'
-import { Megaphone, Plus, Loader2, Trash2, Edit2, Calendar } from 'lucide-react'
+import { Megaphone, Plus, Loader2, Trash2, Calendar } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Pengumuman() {

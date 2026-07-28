@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { supabase } from '@/lib/supabase'
-import { MessageSquare, Plus, Loader2, CheckCircle2, Clock, Trash2, ArrowRight } from 'lucide-react'
+import { MessageSquare, Plus, Loader2, Trash2, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function AspirasiWarga() {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Image as ImageIcon, Filter, Loader2, Share2, Sparkles, Play, Upload, Instagram } from 'lucide-react'
+import { Search, Image as ImageIcon, Filter, Loader2, Share2, Upload, Instagram } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function GaleriPublik() {

@@ -41,7 +41,7 @@ export default function LombaPage() {
   const form = useForm<LombaFormValues>({
     resolver: zodResolver(lombaSchema),
     defaultValues: {
-      nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', event_id: ''
+      nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', event_name: ''
     }
   })
 
@@ -97,7 +97,7 @@ export default function LombaPage() {
       status: lomba.status,
       deskripsi: lomba.deskripsi || '',
       pemenang: lomba.pemenang || '',
-      event_id: lomba.event_id || ''
+      event_name: (lomba as any).event_name || ""
     })
     setIsOpen(true)
   }
@@ -214,7 +214,7 @@ export default function LombaPage() {
 
   const openCreateDialog = () => {
     setEditingId(null)
-    form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '', event_id: '' })
+    form.reset({ nama_lomba: '', kategori: '', lokasi: '', tanggal: '', jam: '', maksimal_peserta: 10, status: 'draft', deskripsi: '', pemenang: '', event_name: '' })
     setIsOpen(true)
   }
 
@@ -276,8 +276,8 @@ export default function LombaPage() {
                 <div className="space-y-2">
                   <Label>Tautkan ke Acara (Opsional)</Label>
                   <Select 
-                    onValueChange={(val) => form.setValue('event_id', val === 'none' ? null : val)}
-                    defaultValue={form.getValues('event_id') || 'none'}
+                    onValueChange={(val) => form.setValue('event_name', val === 'none' ? null : val)}
+                    defaultValue={form.getValues('event_name') || 'none'}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Pilih Acara" />

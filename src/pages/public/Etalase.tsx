@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { Store, ShoppingBag, Search, Filter, MessageCircle, ArrowRight, Loader2, Star, TrendingUp } from 'lucide-react'
+import { Store, ShoppingBag, Search, Filter, MessageCircle, Loader2, Star, TrendingUp } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Product } from '@/types'
 import { Card, CardContent } from '@/components/ui/card'

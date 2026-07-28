@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 import { 
   Building, Users, Book, Scale, Rocket, Eye, CheckCircle, 
   Lightbulb, Handshake, HeartHandshake, Download, ShieldCheck, 
-  FileText, BarChart, Calendar, X, Mail, Share2 
+  FileText, X, Mail, Share2 
 } from 'lucide-react'
 
 type Member = { id: string; nama: string; jabatan: string; foto_profil?: string; deskripsi?: string }

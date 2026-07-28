@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { supabase } from '@/lib/supabase'
-import { Store, Plus, Loader2, Trash2, Edit2, BadgeCheck } from 'lucide-react'
+import { Store, Plus, Loader2, Trash2, BadgeCheck } from 'lucide-react'
 
 export default function DataUMKM() {
   const [umkms, setUmkms] = useState<any[]>([])
